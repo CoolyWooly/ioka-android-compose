@@ -3,6 +3,10 @@
     package="kz.ioka.android.ioka">
 
     <application>
+        <activity
+            android:name=".flows.bindCard.BindCardActivity" />
+        <activity
+            android:name=".flows.payWithCard.PayWithCardActivity" />
     </application>
 
 </manifest>
