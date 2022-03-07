@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ioka Demo App</string>
+
+    <!--  Common  -->
+    <string name="common_save">Сохранить</string>
+
+    <!--  Bottom Navigation View  -->
+    <string name="cart_page_item">Корзина</string>
+    <string name="profile_page_item">Профиль</string>
+
+    <!--  Profile Tab  -->
+    <string name="profile_toolbar_title">Профиль</string>
+    <string name="setting_saved_cards_title">Сохраненные карты</string>
+    <string name="setting_language">Язык</string>
+    <string name="setting_dark_mode">Темная тема</string>
+
+    <!--  Cart Tab  -->
+    <string name="cart_toolbar_title">Корзина</string>
+    <string name="cart_start_order">Перейти к оформлению</string>
+
+    <!--  Order Details  -->
+    <string name="order_details_toolbar_title">Оформление заказа</string>
+    <string name="order_details_address">улица Абая, 328</string>
+    <string name="order_details_time">14 февраля, 15:00</string>
+    <string name="order_details_processing">Переходим к оплате…</string>
+
+    <!--  Languages  -->
+    <string name="language_ru" translatable="false">Русский</string>
+    <string name="language_en" translatable="false">English</string>
+    <string name="language_kz" translatable="false">Қазақша</string>
+
+    <!--  Saved Cards  -->
+    <string name="settings_add_card">Добавить новую карту</string>
+
+</resources>

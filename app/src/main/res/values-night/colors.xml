@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Background  -->
+    <color name="ui_color_background">#3B3B53</color>
+    <color name="ui_color_background_secondary">#14FFFFFF</color>
+
+    <!--  BottomNavigationView  -->
+    <color name="bnv_background">#1A1A2B</color>
+    <color name="bnv_unchecked">#9494A6</color>
+    <color name="bnv_checked">#94AA64</color>
+
+    <!--  TextView  -->
+    <color name="text_primary_color">#FFFFFF</color>
+</resources>

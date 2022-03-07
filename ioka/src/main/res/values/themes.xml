@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  TextView  -->
+    <style name="PrimaryTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/ioka_color_text_primary</item>
+    </style>
+
+    <style name="PrimaryTextView.14" parent="PrimaryTextView">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PrimaryTextView.16" parent="PrimaryTextView">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediumPrimaryTextView" parent="PrimaryTextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="MediumPrimaryTextView.16">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="WhiteTextView" parent="PrimaryTextView">
+        <item name="android:textColor">@color/ioka_color_static_white</item>
+    </style>
+
+    <style name="WhiteTextView.16">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--  EditText  -->
+    <style name="PrimaryEditText">
+        <item name="android:background">@color/ioka_color_static_transparent</item>
+        <item name="android:textColorHint">@color/ioka_color_text_secondary</item>
+        <item name="android:textColor">@color/ioka_color_text_primary</item>
+    </style>
+
+    <style name="PrimaryEditText.16" parent="PrimaryEditText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--  Button  -->
+    <style name="PrimaryButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/ioka_color_static_white</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:background">@drawable/bg_primary_button</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="PrimaryButton.16">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+</resources>

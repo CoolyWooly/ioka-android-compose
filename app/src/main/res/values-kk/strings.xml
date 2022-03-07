@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ioka Demo App</string>
+
+    <!--  Common  -->
+    <string name="common_save">Save</string>
+
+    <!--  Bottom Navigation View  -->
+    <string name="cart_page_item">Cart</string>
+    <string name="profile_page_item">Profile</string>
+
+    <!--  Profile Tab  -->
+    <string name="profile_toolbar_title">Profile</string>
+    <string name="setting_saved_cards_title">Saved Cards</string>
+    <string name="setting_language">Language</string>
+    <string name="setting_dark_mode">Dark Mode</string>
+
+    <!--  Cart Tab  -->
+    <string name="cart_toolbar_title">Cart</string>
+    <string name="cart_start_order">Continue order</string>
+
+    <!--  Order Details  -->
+    <string name="order_details_toolbar_title">Checkout</string>
+    <string name="order_details_address">Abay street, 328</string>
+    <string name="order_details_time">February 14th, 15:00</string>
+    <string name="settings_add_card" translatable="false">Add new card</string>
+    <string name="order_details_processing">Processing the order...</string>
+
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:cardBackgroundColor="@color/ioka_color_primary"
+    tools:cardCornerRadius="12dp"
+    tools:cardElevation="0dp"
+    tools:parentTag="androidx.cardview.widget.CardView">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/MediumPrimaryTextView.16"
+            android:textColor="@color/ioka_color_static_white"
+            tools:text="Save" />
+
+        <ProgressBar
+            android:id="@+id/vProgress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/ioka_color_static_white"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivState"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            tools:srcCompat="@drawable/ic_check" />
+
+    </FrameLayout>
+</merge>

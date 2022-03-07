@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivCardType"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/ic_ps_visa" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvCardPan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:textAppearance="@style/PrimaryTextView.16"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardType"
+        app:layout_constraintEnd_toStartOf="@id/btnRemove"
+        app:layout_constraintStart_toEndOf="@id/ivCardType"
+        app:layout_constraintTop_toTopOf="@id/ivCardType"
+        tools:text="•••• 9842" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnRemove"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/static_transparent"
+        android:src="@drawable/ic_remove"
+        app:layout_constraintBottom_toBottomOf="@id/ivCardType"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivCardType" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="btnRemove,tvCardPan,ivCardType" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/ui_color_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tvCardPan"
+        app:layout_constraintTop_toBottomOf="@id/barrier" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

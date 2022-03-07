@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Save Card  -->
+    <string name="new_card">Новая карта</string>
+    <string name="card_number_hint">Введите номер карты</string>
+    <string name="expire_date_hint">ММ/ГГ</string>
+    <string name="cvv_hint">CVV</string>
+    <string name="common_save">Сохранить</string>
+
+    <!--  Common  -->
+    <string name="common_server_error">Ошибка на стороне сервера. \nПопробуйте еще раз</string>
+    <string name="common_wrong_format_error">Неправильный формат поля</string>
+</resources>

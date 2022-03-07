@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ui_color_primary">#94AA64</color>
+    <color name="ui_color_secondary">#9494A6</color>
+
+    <!--  Background  -->
+    <color name="ui_color_background">#F0F0F5</color>
+    <color name="ui_color_background_secondary">#FFFFFF</color>
+    <color name="ui_color_background_overlay_64">#A31A1A2B</color>
+
+    <!--  Static color  -->
+    <color name="static_transparent">#00000000</color>
+    <color name="static_white">#FFFFFF</color>
+
+    <!--  BottomNavigationView  -->
+    <color name="bnv_background">#FFFFFF</color>
+    <color name="bnv_unchecked">#9494A6</color>
+    <color name="bnv_checked">@color/ui_color_primary</color>
+
+    <!--  TextView  -->
+    <color name="text_primary_color">#1A1A2B</color>
+    <color name="text_secondary_color">#9494A6</color>
+</resources>
