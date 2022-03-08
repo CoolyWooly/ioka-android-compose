@@ -79,10 +79,23 @@ class StateButton @JvmOverloads constructor(
     fun setState(state: ButtonState) {
         this.state = state
 
+        val backgroundColor =
+            if (state == ButtonState.Disabled) R.color.ioka_color_text_secondary
+            else backgroundColorRes
+        this.setCardBackgroundColor(ContextCompat.getColor(context, backgroundColor))
+
         when (state) {
             ButtonState.Default -> {
                 isClickable = true
                 isFocusable = true
+
+                tvTitle.isInvisible = false
+                vProgress.isInvisible = true
+                ivState.isInvisible = true
+            }
+            ButtonState.Disabled -> {
+                isClickable = false
+                isFocusable = false
 
                 tvTitle.isInvisible = false
                 vProgress.isInvisible = true
@@ -134,6 +147,7 @@ class StateButton @JvmOverloads constructor(
 sealed class ButtonState {
 
     object Default : ButtonState()
+    object Disabled : ButtonState()
     object Loading : ButtonState()
     object Success : ButtonState()
 

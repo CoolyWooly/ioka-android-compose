@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isInvisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -169,22 +168,9 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         }
 
         with(saveCardViewModel) {
-            observeAndSetError(cardPanError, etCardNumber)
-            observeAndSetError(expireDateError, etExpireDate)
-            observeAndSetError(cvvError, etCvv)
-
             bindRequestState.observe(this@BindCardActivity) {
                 handleState(it)
             }
-        }
-    }
-
-    private fun observeAndSetError(observable: LiveData<Boolean>, edittext: AppCompatEditText) {
-        observable.observe(this) {
-            var errorText: String? = null
-            if (it) errorText = getString(R.string.common_wrong_format_error)
-
-            edittext.error = errorText
         }
     }
 
@@ -193,6 +179,8 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
             SUCCESS -> ButtonState.Success
 
             LOADING -> ButtonState.Loading
+
+            DISABLED -> ButtonState.Disabled
 
             else -> ButtonState.Default
         }

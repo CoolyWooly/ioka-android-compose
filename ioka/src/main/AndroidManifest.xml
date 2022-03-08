@@ -4,9 +4,11 @@
 
     <application>
         <activity
-            android:name=".flows.bindCard.BindCardActivity" />
+            android:name=".flows.bindCard.BindCardActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".flows.payWithCard.PayWithCardActivity" />
+            android:name=".flows.payWithCard.PayWithCardActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

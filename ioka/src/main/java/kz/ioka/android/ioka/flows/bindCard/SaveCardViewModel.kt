@@ -3,8 +3,7 @@ package kz.ioka.android.ioka.flows.bindCard
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.domain.bindCard.CardBindingResultModel
 import kz.ioka.android.ioka.domain.bindCard.CardRepository
@@ -20,20 +19,17 @@ class SaveCardViewModel @Inject constructor(
 
     private val launcher = savedStateHandle.get<BindCardLauncher>("BaseActivity_LAUNCHER")
 
-    private val _cardPanError = MutableLiveData(false)
-    val cardPanError = _cardPanError as LiveData<Boolean>
+    private val _isCardPanValid = MutableStateFlow(false)
+    private val _isExpireDateValid = MutableStateFlow(false)
+    private val _isCvvValid = MutableStateFlow(false)
 
-    private val _expireDateError = MutableLiveData(false)
-    val expireDateError = _expireDateError as LiveData<Boolean>
-
-    private val _cvvError = MutableLiveData(false)
-    val cvvError = _cvvError as LiveData<Boolean>
-
-    private var isCardPanValid = false
-    private var isExpireDateValid = false
-    private var isCvvValid = false
-
-    private var needToValidate = MutableStateFlow(false)
+    private val allFieldsAreValid: Flow<Boolean> = combine(
+        _isCardPanValid,
+        _isExpireDateValid,
+        _isCvvValid
+    ) { isCardPanValid, isExpireDateValid, isCvvValid ->
+        isCardPanValid && isExpireDateValid && isCvvValid
+    }
 
     private val _bindRequestState =
         MutableLiveData<BindCardRequestState>(BindCardRequestState.DEFAULT)
@@ -41,26 +37,22 @@ class SaveCardViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            needToValidate.collect {
-                if (it) {
-                    _cardPanError.postValue(!isCardPanValid)
-                    _expireDateError.postValue(!isExpireDateValid)
-                    _cvvError.postValue(!isCvvValid)
+            allFieldsAreValid.collect { areAllFieldsValid ->
+                if (areAllFieldsValid) {
+                    _bindRequestState.postValue(BindCardRequestState.DEFAULT)
+                } else {
+                    _bindRequestState.postValue(BindCardRequestState.DISABLED)
                 }
             }
         }
     }
 
     fun onCardPanEntered(cardPan: String) {
-        isCardPanValid = cardPan.length in 15..19
-
-        if (needToValidate.value) {
-            _cardPanError.value = !isCardPanValid
-        }
+        _isCardPanValid.value = cardPan.length in 15..19
     }
 
     fun onExpireDateEntered(expireDate: String) {
-        isExpireDateValid = if (expireDate.length < 4) {
+        _isExpireDateValid.value = if (expireDate.length < 4) {
             false
         } else {
             val month = expireDate.substring(0..1).toInt()
@@ -72,25 +64,19 @@ class SaveCardViewModel @Inject constructor(
 
             month <= 12 && (year > currentYear || (year == currentYear && month >= currentMonth))
         }
-
-        if (needToValidate.value) {
-            _expireDateError.value = !isExpireDateValid
-        }
     }
 
     fun onCvvEntered(cvv: String) {
-        isCvvValid = cvv.length == 3
-
-        if (needToValidate.value) {
-            _cvvError.value = !isCvvValid
-        }
+        _isCvvValid.value = cvv.length == 3
     }
 
     fun onSaveClicked(cardPan: String, expireDate: String, cvv: String) {
-        if (isCvvValid && isExpireDateValid && isCardPanValid) {
-            _bindRequestState.value = BindCardRequestState.LOADING
+        viewModelScope.launch {
+            val areAllFieldsValid = allFieldsAreValid.first()
 
-            viewModelScope.launch {
+            if (areAllFieldsValid) {
+                _bindRequestState.value = BindCardRequestState.LOADING
+
                 val bindCard = repository.saveCard(
                     launcher?.customerToken ?: "",
                     launcher?.apiKey ?: "",
@@ -112,8 +98,6 @@ class SaveCardViewModel @Inject constructor(
                     }
                 }
             }
-        } else {
-            needToValidate.value = true
         }
     }
 
@@ -122,7 +106,9 @@ class SaveCardViewModel @Inject constructor(
 sealed class BindCardRequestState {
 
     object DEFAULT : BindCardRequestState()
+    object DISABLED : BindCardRequestState()
     object LOADING : BindCardRequestState()
     object SUCCESS : BindCardRequestState()
+
     class ERROR(val cause: String? = null) : BindCardRequestState()
 }
