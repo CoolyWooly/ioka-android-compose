@@ -1,8 +1,10 @@
-package kz.ioka.android.ioka.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.bindCard
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -21,8 +23,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.flows.bindCard.BindCardRequestState.*
-import kz.ioka.android.ioka.flows.bindCard.Configuration.Companion.DEFAULT_FONT
+import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardRequestState.*
+import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.DEFAULT_FONT
+import kz.ioka.android.ioka.presentation.webView.WebViewActivity
+import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.Callback
 import kz.ioka.android.ioka.uikit.ErrorView
@@ -47,6 +51,16 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
     private lateinit var btnScan: AppCompatImageButton
     private lateinit var vError: ErrorView
     private lateinit var btnSave: StateButton
+
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                btnSave.setState(ButtonState.Success)
+            } else {
+                btnSave.setState(ButtonState.Default)
+                vError.show()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -191,6 +205,15 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
             vError.show(state.cause ?: getString(R.string.common_server_error))
         } else {
             vError.hide()
+        }
+
+        if (state is PENDING) {
+            val intent = Intent(this, WebViewActivity::class.java)
+            intent.putExtra(
+                LAUNCHER, WebViewLauncher(getString(R.string.toolbar_title_3ds), state.actionUrl)
+            )
+
+            startForResult.launch(intent)
         }
     }
 

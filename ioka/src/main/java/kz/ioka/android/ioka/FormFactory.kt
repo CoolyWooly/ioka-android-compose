@@ -2,10 +2,10 @@ package kz.ioka.android.ioka
 
 import android.content.Context
 import android.content.Intent
-import kz.ioka.android.ioka.flows.bindCard.BindCardActivity
-import kz.ioka.android.ioka.flows.bindCard.BindCardLauncher
-import kz.ioka.android.ioka.flows.payWithCard.PayWithCardActivity
-import kz.ioka.android.ioka.flows.payWithCard.PayWithCardLauncher
+import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardActivity
+import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardLauncher
+import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardActivity
+import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardLauncher
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
 internal class FormFactory {

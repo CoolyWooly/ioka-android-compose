@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.flows.payWithCard
+package kz.ioka.android.ioka.presentation.flows.payWithCard
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

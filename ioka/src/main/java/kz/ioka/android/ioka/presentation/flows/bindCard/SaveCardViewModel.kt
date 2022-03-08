@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.bindCard
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -91,10 +91,15 @@ class SaveCardViewModel @Inject constructor(
                         _bindRequestState.postValue(BindCardRequestState.ERROR())
                     }
                     is ResultWrapper.Success -> {
-                        if (bindCard.value is CardBindingResultModel.Declined)
-                            _bindRequestState.postValue(BindCardRequestState.ERROR(bindCard.value.cause))
-                        else
-                            _bindRequestState.postValue(BindCardRequestState.SUCCESS)
+                        when (bindCard.value) {
+                            is CardBindingResultModel.Declined -> _bindRequestState.postValue(
+                                BindCardRequestState.ERROR(bindCard.value.cause)
+                            )
+                            is CardBindingResultModel.Pending -> _bindRequestState.postValue(
+                                BindCardRequestState.PENDING(bindCard.value.actionUrl)
+                            )
+                            else -> _bindRequestState.postValue(BindCardRequestState.SUCCESS)
+                        }
                     }
                 }
             }
@@ -108,6 +113,7 @@ sealed class BindCardRequestState {
     object DEFAULT : BindCardRequestState()
     object DISABLED : BindCardRequestState()
     object LOADING : BindCardRequestState()
+    class PENDING(val actionUrl: String) : BindCardRequestState()
     object SUCCESS : BindCardRequestState()
 
     class ERROR(val cause: String? = null) : BindCardRequestState()

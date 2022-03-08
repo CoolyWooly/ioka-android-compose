@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.bindCard
 
 import android.os.Parcelable
 import androidx.annotation.ColorRes

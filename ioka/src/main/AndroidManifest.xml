@@ -4,11 +4,12 @@
 
     <application>
         <activity
-            android:name=".flows.bindCard.BindCardActivity"
+            android:name="kz.ioka.android.ioka.presentation.flows.bindCard.BindCardActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".flows.payWithCard.PayWithCardActivity"
+            android:name="kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".presentation.webView.WebViewActivity" />
     </application>
 
 </manifest>

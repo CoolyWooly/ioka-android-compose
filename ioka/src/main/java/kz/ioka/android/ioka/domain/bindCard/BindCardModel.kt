@@ -7,8 +7,8 @@ sealed class CardBindingResultModel {
         const val STATUS_DECLINED = "DECLINED"
     }
 
-    object Pending : CardBindingResultModel()
     object Success : CardBindingResultModel()
+    class Pending(val actionUrl: String) : CardBindingResultModel()
     class Declined(val cause: String) : CardBindingResultModel()
 
 }

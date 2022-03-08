@@ -46,7 +46,7 @@ class CardRepositoryImpl @Inject constructor(
                 CardBindingResultModel.STATUS_DECLINED -> CardBindingResultModel.Declined(
                     bindCardResult.error.message
                 )
-                else -> CardBindingResultModel.Pending
+                else -> CardBindingResultModel.Pending(bindCardResult.action.url)
             }
         }
     }
