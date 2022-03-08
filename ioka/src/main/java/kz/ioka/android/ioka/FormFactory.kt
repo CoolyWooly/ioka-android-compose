@@ -12,7 +12,7 @@ internal class FormFactory {
 
     fun provideIntent(apiKey: String, paymentFlow: PaymentFlow, context: Context): Intent {
         return when (paymentFlow) {
-            is PaymentFlow.SaveCardFlow -> {
+            is PaymentFlow.BindCardFlow -> {
                 val intent = Intent(context, BindCardActivity::class.java)
                 intent.putExtra(
                     BaseActivity.LAUNCHER,

@@ -2,7 +2,7 @@ package kz.ioka.android.ioka
 
 sealed interface PaymentFlow {
 
-    class SaveCardFlow(
+    class BindCardFlow(
         val customerToken: String
     ) : PaymentFlow
 

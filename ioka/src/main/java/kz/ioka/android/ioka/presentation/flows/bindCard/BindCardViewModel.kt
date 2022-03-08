@@ -12,7 +12,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class SaveCardViewModel @Inject constructor(
+class BindCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: CardRepository
 ) : ViewModel() {
@@ -77,7 +77,7 @@ class SaveCardViewModel @Inject constructor(
             if (areAllFieldsValid) {
                 _bindRequestState.value = BindCardRequestState.LOADING
 
-                val bindCard = repository.saveCard(
+                val bindCard = repository.bindCard(
                     launcher?.customerToken ?: "",
                     launcher?.apiKey ?: "",
                     cardPan, expireDate, cvv
@@ -113,8 +113,8 @@ sealed class BindCardRequestState {
     object DEFAULT : BindCardRequestState()
     object DISABLED : BindCardRequestState()
     object LOADING : BindCardRequestState()
-    class PENDING(val actionUrl: String) : BindCardRequestState()
     object SUCCESS : BindCardRequestState()
 
+    class PENDING(val actionUrl: String) : BindCardRequestState()
     class ERROR(val cause: String? = null) : BindCardRequestState()
 }

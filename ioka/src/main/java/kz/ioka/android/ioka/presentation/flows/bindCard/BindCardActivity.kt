@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardRequestState.*
 import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.DEFAULT_FONT
+import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.*
@@ -28,7 +29,7 @@ import kz.ioka.android.ioka.viewBase.BaseActivity
 internal class BindCardActivity : BaseActivity(), View.OnClickListener {
 
     private val infoViewModel: CardInfoViewModel by viewModels()
-    private val saveCardViewModel: SaveCardViewModel by viewModels()
+    private val bindCardViewModel: BindCardViewModel by viewModels()
 
     private lateinit var vToolbar: MaterialToolbar
     private lateinit var etCardNumber: CardNumberEditText
@@ -46,6 +47,10 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
                 vError.show()
             }
         }
+
+    override fun onCardScanned(cardNumber: String) {
+        etCardNumber.setCardNumber(cardNumber)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +112,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
 
     private fun setupListeners() {
         etCardNumber.onTextChanged = {
-            saveCardViewModel.onCardPanEntered(it)
+            bindCardViewModel.onCardPanEntered(it)
         }
 
         etCardNumber.onTextChangedWithDebounce = {
@@ -117,11 +122,11 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         etCardNumber.flowTextChangedWithDebounce.launchIn(lifecycleScope)
 
         etExpireDate.doOnTextChanged { text, _, _, _ ->
-            saveCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
+            bindCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
         }
 
         etCvv.doOnTextChanged { text, _, _, _ ->
-            saveCardViewModel.onCvvEntered(text.toString())
+            bindCardViewModel.onCvvEntered(text.toString())
         }
 
         vToolbar.setNavigationOnClickListener(this)
@@ -139,7 +144,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
             }
         }
 
-        with(saveCardViewModel) {
+        with(bindCardViewModel) {
             bindRequestState.observe(this@BindCardActivity) {
                 handleState(it)
             }
@@ -178,7 +183,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             btnSave -> {
-                saveCardViewModel.onSaveClicked(
+                bindCardViewModel.onSaveClicked(
                     etCardNumber.getCardNumber(),
                     etExpireDate.text.toString(),
                     etCvv.text.toString()

@@ -61,8 +61,7 @@ class SavedCardsViewModel @Inject constructor(
             val customerToken = customerRepository.getCustomerToken()
 
             val ioka = Ioka()
-
-            ioka.setup(BuildConfig.API_KEY, PaymentFlow.SaveCardFlow(customerToken))
+            ioka.setup(BuildConfig.API_KEY, PaymentFlow.BindCardFlow(customerToken))
 
             _ioka.postValue(ioka)
         }

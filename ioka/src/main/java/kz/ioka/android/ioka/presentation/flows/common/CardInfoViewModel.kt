@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.common
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

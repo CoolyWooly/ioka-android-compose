@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 interface CardRepository {
 
-    suspend fun saveCard(
+    suspend fun bindCard(
         customerToken: String,
         apiKey: String,
         cardPan: String,
@@ -26,7 +26,7 @@ class CardRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : CardRepository {
 
-    override suspend fun saveCard(
+    override suspend fun bindCard(
         customerToken: String,
         apiKey: String,
         cardPan: String,

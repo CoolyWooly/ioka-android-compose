@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.flows.payWithCard.PayWithCardViewModel
-import kz.ioka.android.ioka.presentation.flows.bindCard.CardInfoViewModel
+import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.StateButton
 import kz.ioka.android.ioka.viewBase.BaseActivity
@@ -28,8 +28,12 @@ class PayWithCardActivity : BaseActivity() {
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
     private lateinit var etCvv: AppCompatEditText
-    private lateinit var switchSaveCard: SwitchCompat
+    private lateinit var switchBindCard: SwitchCompat
     private lateinit var btnPay: StateButton
+
+    override fun onCardScanned(cardNumber: String) {
+        etCardNumber.setCardNumber(cardNumber)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +50,7 @@ class PayWithCardActivity : BaseActivity() {
         etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
         etCvv = findViewById(R.id.etCvv)
-        switchSaveCard = findViewById(R.id.vSaveCardSwitch)
+        switchBindCard = findViewById(R.id.vBindCardSwitch)
         btnPay = findViewById(R.id.btnPay)
     }
 
