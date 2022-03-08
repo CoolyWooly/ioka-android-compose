@@ -7,6 +7,13 @@
     <string name="cvv_hint">CVV</string>
     <string name="common_save">Сохранить</string>
 
+    <!--  Pay With Card  -->
+    <string name="pay_with_card_toolbar">К оплате %s</string>
+    <string name="or_pay_with_card">Или оплатите картой</string>
+    <string name="save_card">Сохранить карту</string>
+    <string name="pay_with_amount">Оплатить %s</string>
+    <string name="all_transactions_protected">Все транзакции защищены</string>
+
     <!--  3DSecure  -->
     <string name="toolbar_title_3ds">Подтверждение оплаты</string>
 

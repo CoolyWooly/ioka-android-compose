@@ -1,19 +1,13 @@
 package kz.ioka.android.ioka.util
 
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.EditText
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.onStart
+import kz.ioka.android.ioka.R
 
 fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {
@@ -29,4 +23,11 @@ fun EditText.textChanges(): Flow<CharSequence?> {
         addTextChangedListener(listener)
         awaitClose { removeTextChangedListener(listener) }
     }.onStart { emit(text) }
+}
+
+fun EditText.setWrongFormatError(isWrong: Boolean) {
+    var errorText: String? = null
+    if (isWrong) errorText = context.getString(R.string.common_wrong_format_error)
+
+    error = errorText
 }

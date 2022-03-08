@@ -7,31 +7,20 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isInvisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardRequestState.*
 import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.DEFAULT_FONT
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
-import kz.ioka.android.ioka.uikit.ButtonState
-import kz.ioka.android.ioka.uikit.Callback
-import kz.ioka.android.ioka.uikit.ErrorView
-import kz.ioka.android.ioka.uikit.StateButton
-import kz.ioka.android.ioka.util.textChanges
+import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
@@ -42,13 +31,9 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
     private val saveCardViewModel: SaveCardViewModel by viewModels()
 
     private lateinit var vToolbar: MaterialToolbar
-    private lateinit var cardNumberContainer: LinearLayoutCompat
-    private lateinit var etCardNumber: AppCompatEditText
+    private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
     private lateinit var etCvv: AppCompatEditText
-    private lateinit var ivEmitter: AppCompatImageView
-    private lateinit var ivBrand: AppCompatImageView
-    private lateinit var btnScan: AppCompatImageButton
     private lateinit var vError: ErrorView
     private lateinit var btnSave: StateButton
 
@@ -75,13 +60,9 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
 
     private fun bindViews() {
         vToolbar = findViewById(R.id.vToolbar)
-        cardNumberContainer = findViewById(R.id.cardNumberContainer)
-        etCardNumber = findViewById(R.id.etCardNumber)
+        etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
         etCvv = findViewById(R.id.etCvv)
-        ivEmitter = findViewById(R.id.ivEmitter)
-        ivBrand = findViewById(R.id.ivBrand)
-        btnScan = findViewById(R.id.btnScan)
         vError = findViewById(R.id.vError)
         btnSave = findViewById(R.id.btnSave)
     }
@@ -102,8 +83,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         launcher<BindCardLauncher>()?.configuration?.apply {
             vToolbar.setTitle(toolbarTitleRes)
 
-            (cardNumberContainer.background as GradientDrawable).cornerRadius =
-                fieldCornerRadius.toPx
+            etCardNumber.setRadius(fieldCornerRadius.toPx)
             (etExpireDate.background as GradientDrawable).cornerRadius = fieldCornerRadius.toPx
             (etCvv.background as GradientDrawable).cornerRadius = fieldCornerRadius.toPx
 
@@ -117,7 +97,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
                 val typeface = ResourcesCompat.getFont(this@BindCardActivity, fontRes)
                 checkNotNull(typeface)
 
-                etCardNumber.typeface = typeface
+                etCardNumber.setTypeface(typeface)
                 etExpireDate.typeface = typeface
                 etCvv.typeface = typeface
                 btnSave.setTypeface(typeface)
@@ -126,14 +106,15 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun setupListeners() {
-        etCardNumber.textChanges().debounce(200).onEach {
-            infoViewModel.onCardPanEntered(it.toString().replace(" ", ""))
+        etCardNumber.onTextChanged = {
+            saveCardViewModel.onCardPanEntered(it)
         }
-            .launchIn(lifecycleScope)
 
-        etCardNumber.doOnTextChanged { text, _, _, _ ->
-            saveCardViewModel.onCardPanEntered(text.toString().replace(" ", ""))
+        etCardNumber.onTextChangedWithDebounce = {
+            infoViewModel.onCardPanEntered(it)
         }
+
+        etCardNumber.flowTextChangedWithDebounce.launchIn(lifecycleScope)
 
         etExpireDate.doOnTextChanged { text, _, _, _ ->
             saveCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
@@ -143,41 +124,18 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
             saveCardViewModel.onCvvEntered(text.toString())
         }
 
-        etCardNumber.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            val strokeWidth = if (hasFocus) 1.toPx.toInt() else 0
-
-            val back = cardNumberContainer.background as GradientDrawable
-
-            back.mutate()
-            back.setStroke(
-                strokeWidth,
-                ContextCompat.getColor(this, R.color.ioka_color_primary)
-            )
-
-            cardNumberContainer.background = back
-        }
-
         vToolbar.setNavigationOnClickListener(this)
-        btnScan.setOnClickListener(this)
         btnSave.setOnClickListener(this)
     }
 
     private fun observeData() {
         with(infoViewModel) {
             cardBrand.observe(this@BindCardActivity) {
-                if (it.isPresent()) {
-                    ivBrand.setImageDrawable(getDrawableFromRes(it.get()))
-                }
-
-                ivBrand.isInvisible = it.isNotPresent()
+                etCardNumber.setBrand(it)
             }
 
             cardEmitter.observe(this@BindCardActivity) {
-                if (it.isPresent()) {
-                    ivEmitter.setImageDrawable(getDrawableFromRes(it.get()))
-                }
-
-                ivEmitter.isInvisible = it.isNotPresent()
+                etCardNumber.setEmitter(it)
             }
         }
 
@@ -221,13 +179,10 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         when (v) {
             btnSave -> {
                 saveCardViewModel.onSaveClicked(
-                    etCardNumber.text.toString().replace(" ", ""),
+                    etCardNumber.getCardNumber(),
                     etExpireDate.text.toString(),
                     etCvv.text.toString()
                 )
-            }
-            btnScan -> {
-                // todo implement scanner
             }
             else -> {
                 onBackPressed()

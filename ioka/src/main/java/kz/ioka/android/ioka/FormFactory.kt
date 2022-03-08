@@ -25,7 +25,12 @@ internal class FormFactory {
                 val intent = Intent(context, PayWithCardActivity::class.java)
                 intent.putExtra(
                     BaseActivity.LAUNCHER,
-                    PayWithCardLauncher(apiKey, paymentFlow.customerToken, paymentFlow.orderToken)
+                    PayWithCardLauncher(
+                        apiKey,
+                        paymentFlow.customerToken,
+                        paymentFlow.orderToken,
+                        paymentFlow.price
+                    )
                 )
                 intent
             }

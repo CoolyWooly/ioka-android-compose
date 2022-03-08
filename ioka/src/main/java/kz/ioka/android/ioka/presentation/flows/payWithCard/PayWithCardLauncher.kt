@@ -8,4 +8,5 @@ data class PayWithCardLauncher(
     val apiKey: String,
     val customerToken: String,
     val orderToken: String,
+    val price: Int
 ) : Parcelable

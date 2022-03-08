@@ -36,7 +36,11 @@ class OrderDetailsViewModel @Inject constructor(
             val ioka = Ioka()
             ioka.setup(
                 BuildConfig.API_KEY,
-                PaymentFlow.PayWithCardFlow(checkout.customerToken ?: "", checkout.orderToken ?: "")
+                PaymentFlow.PayWithCardFlow(
+                    checkout.customerToken ?: "",
+                    checkout.orderToken ?: "",
+                    itemPrice ?: 0
+                )
             )
 
             _ioka.postValue(ioka)

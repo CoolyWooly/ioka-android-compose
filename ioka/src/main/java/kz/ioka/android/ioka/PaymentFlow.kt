@@ -8,7 +8,8 @@ sealed interface PaymentFlow {
 
     class PayWithCardFlow(
         val customerToken: String,
-        val orderToken: String
+        val orderToken: String,
+        val price: Int
     ) : PaymentFlow
 
 }

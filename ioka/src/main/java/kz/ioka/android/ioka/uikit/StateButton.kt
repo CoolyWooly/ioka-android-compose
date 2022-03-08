@@ -56,9 +56,15 @@ class StateButton @JvmOverloads constructor(
         val buttonText = arr.getResourceId(R.styleable.StateButton_sbText, 0)
         arr.recycle()
 
-        tvTitle.text = context.getString(buttonText)
+        if (buttonText != 0)
+            tvTitle.text = context.getString(buttonText)
+        cardElevation = 0f
         setCardBackgroundColor(ContextCompat.getColor(context, backgroundColorRes))
         radius = 12.toPx
+    }
+
+    fun setText(text: String) {
+        tvTitle.text = text
     }
 
     fun setConfiguration(radius: Int, @ColorRes backgroundColor: Int, @StringRes textRes: Int) {
