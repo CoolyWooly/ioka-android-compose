@@ -11,7 +11,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.flows.bindCard.CardInfoViewModel
+import kz.ioka.android.ioka.flows.payWithCard.PayWithCardViewModel
+import kz.ioka.android.ioka.presentation.flows.bindCard.CardInfoViewModel
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.StateButton
 import kz.ioka.android.ioka.viewBase.BaseActivity
