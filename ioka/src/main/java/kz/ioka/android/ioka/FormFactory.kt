@@ -29,7 +29,8 @@ internal class FormFactory {
                         apiKey,
                         paymentFlow.customerToken,
                         paymentFlow.orderToken,
-                        paymentFlow.price
+                        paymentFlow.price,
+                        paymentFlow.withGooglePay
                     )
                 )
                 intent

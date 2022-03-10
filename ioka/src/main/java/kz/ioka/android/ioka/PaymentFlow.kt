@@ -9,7 +9,8 @@ sealed interface PaymentFlow {
     class PayWithCardFlow(
         val customerToken: String,
         val orderToken: String,
-        val price: Int
+        val price: Int,
+        val withGooglePay: Boolean
     ) : PaymentFlow
 
 }

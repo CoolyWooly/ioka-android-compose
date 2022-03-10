@@ -39,7 +39,8 @@ class OrderDetailsViewModel @Inject constructor(
                 PaymentFlow.PayWithCardFlow(
                     checkout.customerToken ?: "",
                     checkout.orderToken ?: "",
-                    itemPrice ?: 0
+                    itemPrice ?: 0,
+                    true
                 )
             )
 

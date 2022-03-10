@@ -8,5 +8,6 @@ data class PayWithCardLauncher(
     val apiKey: String,
     val customerToken: String,
     val orderToken: String,
-    val price: Int
+    val price: Int,
+    val withGooglePay: Boolean
 ) : Parcelable

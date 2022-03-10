@@ -141,4 +141,11 @@ class CardNumberEditText @JvmOverloads constructor(
         etCardNumber.setText(cardNumber, TextView.BufferType.EDITABLE)
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        etCardNumber.isEnabled = enabled
+        btnScan.isEnabled = enabled
+
+        super.setEnabled(enabled)
+    }
+
 }

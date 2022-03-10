@@ -183,7 +183,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             btnSave -> {
-                bindCardViewModel.onSaveClicked(
+                bindCardViewModel.onBindClicked(
                     etCardNumber.getCardNumber(),
                     etExpireDate.text.toString(),
                     etCvv.text.toString()

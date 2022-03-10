@@ -2,7 +2,6 @@ package kz.ioka.android.ioka.presentation.webView
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.android.material.appbar.MaterialToolbar
@@ -41,14 +40,10 @@ class WebViewActivity : BaseActivity() {
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                Log.d("Webviewactivity", url)
+                setResult(RESULT_OK)
+                finish()
 
-                if (url.startsWith("https://stage-checkout.ioka.kz/customers/")) {
-                    setResult(RESULT_OK)
-                    finish()
-                }
-
-                return url.startsWith("https://stage-checkout.ioka.kz/customers/")
+                return true
             }
         }
         webView.loadUrl(launcher?.actionUrl ?: "https://ioka.kz")

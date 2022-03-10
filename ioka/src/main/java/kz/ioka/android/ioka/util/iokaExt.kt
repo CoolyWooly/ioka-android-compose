@@ -5,3 +5,9 @@ fun String.getCustomerId(): String {
 
     return substring(0, customerIdEndIndex)
 }
+
+fun String.getOrderId(): String {
+    val customerIdEndIndex = indexOf("_secret")
+
+    return substring(0, customerIdEndIndex)
+}

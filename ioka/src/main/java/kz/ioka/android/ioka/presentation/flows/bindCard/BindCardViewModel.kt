@@ -70,7 +70,7 @@ class BindCardViewModel @Inject constructor(
         _isCvvValid.value = cvv.length == 3
     }
 
-    fun onSaveClicked(cardPan: String, expireDate: String, cvv: String) {
+    fun onBindClicked(cardPan: String, expireDate: String, cvv: String) {
         viewModelScope.launch {
             val areAllFieldsValid = allFieldsAreValid.first()
 

@@ -17,6 +17,14 @@
     <!--  3DSecure  -->
     <string name="toolbar_title_3ds">Подтверждение оплаты</string>
 
+    <!--  Result  -->
+    <string name="success_result_title">Заказ оплачен</string>
+    <string name="success_result_subtitle">Заказ №%s</string>
+    <string name="success_result_button">Понятно</string>
+    <string name="error_result_title">Платеж не прошел</string>
+    <string name="error_result_button">Попробовать заново</string>
+    <string name="error_common_cause">Проверьте, открыт ли доступ к интернет-покупкам и попробуйте снова</string>
+
     <!--  Common  -->
     <string name="common_server_error">Ошибка на стороне сервера. \nПопробуйте еще раз</string>
     <string name="common_wrong_format_error">Неправильный формат поля</string>

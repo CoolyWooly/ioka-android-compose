@@ -10,6 +10,7 @@
             android:name="kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".presentation.webView.WebViewActivity" />
+        <activity android:name=".presentation.result.ResultActivity" />
     </application>
 
 </manifest>

@@ -9,3 +9,6 @@ val Number.toPx
         this.toFloat(),
         Resources.getSystem().displayMetrics
     )
+
+val Number.toAmount
+    get() = String.format("%s ₸", toString())

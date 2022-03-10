@@ -14,12 +14,20 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="PrimaryTextView.24">
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="MediumPrimaryTextView" parent="PrimaryTextView">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="MediumPrimaryTextView.16">
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MediumPrimaryTextView.28">
+        <item name="android:textSize">28sp</item>
     </style>
 
     <style name="WhiteTextView" parent="PrimaryTextView">
@@ -38,11 +46,15 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="SecondaryTextView.14">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <!--  EditText  -->
     <style name="PrimaryEditText">
         <item name="android:background">@color/ioka_color_static_transparent</item>
         <item name="android:textColorHint">@color/ioka_color_text_secondary</item>
-        <item name="android:textColor">@color/ioka_color_text_primary</item>
+        <item name="android:textColor">@color/edittext_primary_text</item>
     </style>
 
     <style name="PrimaryEditText.16" parent="PrimaryEditText">
