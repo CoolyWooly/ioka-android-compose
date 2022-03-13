@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.cart.orderDetail.OrderDetailsActivity
 import kz.ioka.android.iokademoapp.cart.orderDetail.OrderLauncher
@@ -94,6 +93,3 @@ class CartFragment : Fragment(R.layout.fragment_cart), View.OnClickListener {
 
 }
 
-class MyViewModel: ViewModel() {
-
-}

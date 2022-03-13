@@ -23,6 +23,11 @@
     <string name="order_details_address">улица Абая, 328</string>
     <string name="order_details_time">14 февраля, 15:00</string>
     <string name="order_details_processing">Переходим к оплате…</string>
+    <string name="order_details_select_payment_type">Выберите способ оплаты</string>
+    <string name="order_details_payment_type">Способ оплаты</string>
+    <string name="order_details_payment_type_google_pay" translatable="false">Google Pay</string>
+    <string name="order_details_payment_type_with_card">Банковской картой</string>
+    <string name="order_details_payment_type_with_cash">Наличными курьеру</string>
 
     <!--  Languages  -->
     <string name="language_ru" translatable="false">Русский</string>

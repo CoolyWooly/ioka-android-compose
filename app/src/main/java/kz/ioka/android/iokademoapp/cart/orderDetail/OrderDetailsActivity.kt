@@ -1,19 +1,23 @@
 package kz.ioka.android.iokademoapp.cart.orderDetail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.iokademoapp.cart.PaymentTypeDvo
+import kz.ioka.android.iokademoapp.cart.paymentType.SelectPaymentTypeActivity
+import kz.ioka.android.iokademoapp.cart.paymentType.SelectedPaymentTypeView
 
 @AndroidEntryPoint
 class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
@@ -28,8 +32,19 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
     private lateinit var tvItemName: TextView
     private lateinit var ivItemImage: ImageView
     private lateinit var tvPrice: TextView
+    private lateinit var vPaymentType: SelectedPaymentTypeView
     private lateinit var btnContinueOrder: Button
     private lateinit var vProgress: FrameLayout
+
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                it.data?.getParcelableExtra<PaymentTypeDvo>(SelectPaymentTypeActivity.LAUNCHER)
+                    ?.let { paymentType ->
+                        viewModel.onPaymentTypeSelected(paymentType)
+                    }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +60,7 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
         tvItemName = findViewById(R.id.tvItemName)
         ivItemImage = findViewById(R.id.ivItemImage)
         tvPrice = findViewById(R.id.tvPrice)
+        vPaymentType = findViewById(R.id.vPaymentType)
         btnContinueOrder = findViewById(R.id.btnContinueOrder)
         vProgress = findViewById(R.id.vProgress)
     }
@@ -64,6 +80,10 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
                 vProgress.isVisible = it
             }
 
+            selectedPaymentType.observe(this@OrderDetailsActivity) {
+                vPaymentType.setPaymentType(it)
+            }
+
             ioka.observe(this@OrderDetailsActivity) {
                 it.showForm().invoke(this@OrderDetailsActivity)
             }
@@ -71,15 +91,28 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun setupListeners() {
+        vPaymentType.setOnClickListener(this)
         btnContinueOrder.setOnClickListener(this)
         vToolbar.setNavigationOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        if (v == btnContinueOrder) {
-            viewModel.onContinueClicked()
-        } else {
-            onBackPressed()
+        when (v) {
+            btnContinueOrder -> {
+                viewModel.onContinueClicked()
+            }
+            vPaymentType -> {
+                val intent = Intent(this, SelectPaymentTypeActivity::class.java)
+
+                viewModel.selectedPaymentType.value?.let {
+                    intent.putExtra(SelectPaymentTypeActivity.LAUNCHER, it)
+                }
+
+                startForResult.launch(Intent(this, SelectPaymentTypeActivity::class.java))
+            }
+            else -> {
+                onBackPressed()
+            }
         }
     }
 }

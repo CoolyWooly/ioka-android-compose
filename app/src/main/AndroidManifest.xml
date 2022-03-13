@@ -23,6 +23,7 @@
         </activity>
 
         <activity android:name=".cart.orderDetail.OrderDetailsActivity" />
+        <activity android:name=".cart.paymentType.SelectPaymentTypeActivity" />
         <activity android:name=".profile.language.SelectLanguageActivity" />
         <activity android:name=".profile.savedCards.SavedCardsActivity" />
     </application>

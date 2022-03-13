@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Ioka
 import kz.ioka.android.ioka.PaymentFlow
 import kz.ioka.android.iokademoapp.BuildConfig
+import kz.ioka.android.iokademoapp.cart.PaymentTypeDvo
 import kz.ioka.android.iokademoapp.data.OrderRepository
 import javax.inject.Inject
 
@@ -27,6 +28,9 @@ class OrderDetailsViewModel @Inject constructor(
     private val _ioka = MutableLiveData<Ioka>()
     val ioka = _ioka as LiveData<Ioka>
 
+    private val _selectedPaymentType = MutableLiveData<PaymentTypeDvo>()
+    var selectedPaymentType = _selectedPaymentType as LiveData<PaymentTypeDvo>
+
     fun onContinueClicked() {
         viewModelScope.launch {
             _progress.postValue(true)
@@ -47,6 +51,10 @@ class OrderDetailsViewModel @Inject constructor(
             _ioka.postValue(ioka)
             _progress.postValue(false)
         }
+    }
+
+    fun onPaymentTypeSelected(paymentType: PaymentTypeDvo) {
+        _selectedPaymentType.value = paymentType
     }
 
 }
