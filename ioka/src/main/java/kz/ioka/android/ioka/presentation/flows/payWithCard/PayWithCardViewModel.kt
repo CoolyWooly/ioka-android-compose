@@ -1,25 +1,30 @@
 package kz.ioka.android.ioka.presentation.flows.payWithCard
 
 import androidx.lifecycle.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepository
 import kz.ioka.android.ioka.util.getOrderId
-import kz.ioka.android.ioka.viewBase.BaseActivity
 import java.util.*
-import javax.inject.Inject
 
-@HiltViewModel
-class PayWithCardViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@Suppress("UNCHECKED_CAST")
+class PayWithCardViewModelFactory(
+    val launcher: PayWithCardLauncher,
+    private val paymentRepository: PaymentRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return PayWithCardViewModel(launcher, paymentRepository) as T
+    }
+}
+
+class PayWithCardViewModel constructor(
+    val launcher: PayWithCardLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
-    private val launcher = savedStateHandle.get<PayWithCardLauncher>(BaseActivity.LAUNCHER)
-    val price = launcher?.price
+    val price = launcher.price
     private var paymentId: String = ""
 
     private val _isCardPanValid = MutableStateFlow(false)

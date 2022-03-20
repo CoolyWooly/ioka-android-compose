@@ -22,10 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".cart.orderDetail.OrderDetailsActivity" />
-        <activity android:name=".cart.paymentType.SelectPaymentTypeActivity" />
-        <activity android:name=".profile.language.SelectLanguageActivity" />
-        <activity android:name=".profile.savedCards.SavedCardsActivity" />
+        <activity android:name="kz.ioka.android.iokademoapp.presentation.cart.orderDetail.OrderDetailsActivity" />
+        <activity android:name="kz.ioka.android.iokademoapp.presentation.cart.paymentType.SelectPaymentTypeActivity" />
+        <activity android:name="kz.ioka.android.iokademoapp.presentation.profile.language.SelectLanguageActivity" />
+        <activity android:name="kz.ioka.android.iokademoapp.presentation.profile.savedCards.SavedCardsActivity" />
     </application>
 
 </manifest>

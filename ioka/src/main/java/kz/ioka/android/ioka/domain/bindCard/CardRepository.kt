@@ -1,13 +1,11 @@
 package kz.ioka.android.ioka.domain.bindCard
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kz.ioka.android.ioka.data.card.BindCardRequestDto
 import kz.ioka.android.ioka.data.card.CardApi
 import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getCustomerId
-import javax.inject.Inject
 
 interface CardRepository {
 
@@ -21,9 +19,8 @@ interface CardRepository {
 
 }
 
-class CardRepositoryImpl @Inject constructor(
-    private val cardApi: CardApi,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+class CardRepositoryImpl constructor(
+    private val cardApi: CardApi
 ) : CardRepository {
 
     override suspend fun bindCard(
@@ -33,7 +30,7 @@ class CardRepositoryImpl @Inject constructor(
         expireDate: String,
         cvv: String
     ): ResultWrapper<CardBindingResultModel> {
-        return safeApiCall(dispatcher) {
+        return safeApiCall(Dispatchers.IO) {
             val bindCardResult = cardApi.bindCard(
                 customerToken.getCustomerId(),
                 customerToken,

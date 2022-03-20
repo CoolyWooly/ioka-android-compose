@@ -127,7 +127,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.google.android.material.card.MaterialCardView>
 
-    <kz.ioka.android.iokademoapp.cart.paymentType.SelectedPaymentTypeView
+    <kz.ioka.android.iokademoapp.presentation.cart.paymentType.SelectedPaymentTypeView
         android:id="@+id/vPaymentType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

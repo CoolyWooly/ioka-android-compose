@@ -2,6 +2,22 @@ package kz.ioka.android.ioka.data.card
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kz.ioka.android.ioka.data.ActionDto
+import kz.ioka.android.ioka.data.ErrorDto
+
+data class CardResultDto(
+    @Expose @SerializedName("id") val id: String?,
+    @Expose @SerializedName("customer_id") val customer_id: String?,
+    @Expose @SerializedName("created_at") val created_at: String?,
+    @Expose @SerializedName("pan_masked") val pan_masked: String?,
+    @Expose @SerializedName("expiry_date") val expiry_date: String?,
+    @Expose @SerializedName("holder") val holder: String?,
+    @Expose @SerializedName("payment_system") val payment_system: String?,
+    @Expose @SerializedName("emitter") val emitter: String?,
+    @Expose @SerializedName("cvc_required") val cvc_required: Boolean?,
+    @Expose @SerializedName("error") val error: ErrorDto?,
+    @Expose @SerializedName("action") val action: ActionDto?
+)
 
 data class BindCardRequestDto(
     @Expose @SerializedName("pan") val pan: String,
@@ -21,15 +37,6 @@ data class BindCardResponseDto(
     @Expose @SerializedName("payment_system") val paymentSystem: String,
     @Expose @SerializedName("emitter") val emitter: String,
     @Expose @SerializedName("cvc_required") val cvcRequired: Boolean,
-    @Expose @SerializedName("error") val error: BindCardErrorDto,
-    @Expose @SerializedName("action") val action: BindCardActionDto,
-)
-
-data class BindCardErrorDto(
-    @Expose @SerializedName("code") val code: String,
-    @Expose @SerializedName("message") val message: String,
-)
-
-data class BindCardActionDto(
-    @Expose @SerializedName("url") val url: String,
+    @Expose @SerializedName("error") val error: ErrorDto,
+    @Expose @SerializedName("action") val action: ActionDto,
 )

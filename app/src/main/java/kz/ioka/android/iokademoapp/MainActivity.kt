@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kz.ioka.android.iokademoapp.common.DARK_MODE_ENABLED
 import kz.ioka.android.iokademoapp.common.dataStore
-import kz.ioka.android.iokademoapp.profile.language.SelectLanguageActivity.Companion.LANGUAGE_SELECTED_REQUEST_CODE
+import kz.ioka.android.iokademoapp.presentation.profile.language.SelectLanguageActivity.Companion.LANGUAGE_SELECTED_REQUEST_CODE
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {

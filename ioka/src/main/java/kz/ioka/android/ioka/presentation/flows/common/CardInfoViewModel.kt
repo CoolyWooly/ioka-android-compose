@@ -1,10 +1,6 @@
 package kz.ioka.android.ioka.presentation.flows.common
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
@@ -13,10 +9,17 @@ import kz.ioka.android.ioka.domain.cardInfo.CardEmitterModel
 import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepository
 import kz.ioka.android.ioka.util.Optional
 import kz.ioka.android.ioka.util.optional
-import javax.inject.Inject
 
-@HiltViewModel
-class CardInfoViewModel @Inject constructor(
+@Suppress("UNCHECKED_CAST")
+class CardInfoViewModelFactory(
+    private val cardInfoRepository: CardInfoRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return CardInfoViewModel(cardInfoRepository) as T
+    }
+}
+
+class CardInfoViewModel constructor(
     private val cardInfoRepository: CardInfoRepository
 ) : ViewModel() {
 

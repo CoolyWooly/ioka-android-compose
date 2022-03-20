@@ -6,13 +6,11 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
-import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.util.getDrawableFromRes
 import kz.ioka.android.ioka.util.toAmount
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-@AndroidEntryPoint
 class ResultActivity : BaseActivity() {
 
     private var launcher: ResultLauncher? = null

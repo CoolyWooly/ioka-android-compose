@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id "dagger.hilt.android.plugin"
     id "kotlin-kapt"
     id "kotlin-parcelize"
 }
@@ -18,9 +17,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", 'BASE_URL', '"https://stage-api.ioka.kz"'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", 'BASE_URL', '"https://stage-api.ioka.kz"'
         }
     }
     compileOptions {
@@ -38,8 +42,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
 
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
-    implementation "com.google.dagger:hilt-android:2.38.1"
-    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

@@ -12,10 +12,13 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.di.DependencyInjector
+import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
+import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
+import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
@@ -27,13 +30,21 @@ import kz.ioka.android.ioka.uikit.StateButton
 import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-@AndroidEntryPoint
 class PayWithCardActivity : BaseActivity() {
 
     private var launcher: PayWithCardLauncher? = null
 
-    private val cardInfoViewModel: CardInfoViewModel by viewModels()
-    private val viewModel: PayWithCardViewModel by viewModels()
+    private val cardInfoViewModel: CardInfoViewModel by viewModels {
+        CardInfoViewModelFactory(
+            CardInfoRepositoryImpl(DependencyInjector.cardInfoApi)
+        )
+    }
+    private val viewModel: PayWithCardViewModel by viewModels {
+        PayWithCardViewModelFactory(
+            launcher()!!,
+            PaymentRepositoryImpl(DependencyInjector.paymentApi)
+        )
+    }
 
     private lateinit var vToolbar: MaterialToolbar
     private lateinit var groupGooglePay: Group

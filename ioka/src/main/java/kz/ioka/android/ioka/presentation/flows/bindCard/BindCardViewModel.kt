@@ -1,7 +1,6 @@
 package kz.ioka.android.ioka.presentation.flows.bindCard
 
 import androidx.lifecycle.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -9,15 +8,21 @@ import kz.ioka.android.ioka.domain.bindCard.CardBindingResultModel
 import kz.ioka.android.ioka.domain.bindCard.CardRepository
 import kz.ioka.android.ioka.domain.common.ResultWrapper
 import java.util.*
-import javax.inject.Inject
 
-@HiltViewModel
-class BindCardViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@Suppress("UNCHECKED_CAST")
+class BindCardViewModelFactory(
+    val launcher: BindCardLauncher,
+    private val repository: CardRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return BindCardViewModel(launcher, repository) as T
+    }
+}
+
+class BindCardViewModel constructor(
+    private val launcher: BindCardLauncher,
     private val repository: CardRepository
 ) : ViewModel() {
-
-    private val launcher = savedStateHandle.get<BindCardLauncher>("BaseActivity_LAUNCHER")
 
     private val _isCardPanValid = MutableStateFlow(false)
     private val _isExpireDateValid = MutableStateFlow(false)

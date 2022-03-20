@@ -1,13 +1,11 @@
 package kz.ioka.android.ioka.domain.payment
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kz.ioka.android.ioka.data.payment.PaymentApi
 import kz.ioka.android.ioka.data.payment.PaymentRequestDto
 import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getOrderId
-import javax.inject.Inject
 
 interface PaymentRepository {
 
@@ -30,9 +28,8 @@ interface PaymentRepository {
 
 }
 
-class PaymentRepositoryImpl @Inject constructor(
-    private val paymentApi: PaymentApi,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+class PaymentRepositoryImpl constructor(
+    private val paymentApi: PaymentApi
 ) : PaymentRepository {
 
     override suspend fun createCardPayment(
@@ -44,7 +41,7 @@ class PaymentRepositoryImpl @Inject constructor(
         cvv: String,
         bindCard: Boolean
     ): ResultWrapper<PaymentModel> {
-        return safeApiCall(dispatcher) {
+        return safeApiCall(Dispatchers.IO) {
             val paymentResult = paymentApi.createPayment(
                 orderId,
                 customerToken,
@@ -70,7 +67,7 @@ class PaymentRepositoryImpl @Inject constructor(
         orderToken: String,
         paymentId: String
     ): ResultWrapper<Boolean> {
-        return safeApiCall(dispatcher) {
+        return safeApiCall(Dispatchers.IO) {
             val payment = paymentApi.getPaymentById(
                 orderToken.getOrderId(),
                 paymentId,

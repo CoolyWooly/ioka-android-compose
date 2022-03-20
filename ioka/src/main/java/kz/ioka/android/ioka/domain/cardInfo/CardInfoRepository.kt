@@ -4,7 +4,6 @@ import android.util.Log
 import kz.ioka.android.ioka.data.cardInfo.CardInfoApi
 import kz.ioka.android.ioka.data.cardInfo.EmitterResponseDto
 import retrofit2.Response
-import javax.inject.Inject
 
 interface CardInfoRepository {
 
@@ -13,7 +12,7 @@ interface CardInfoRepository {
 
 }
 
-class CardInfoRepositoryImpl @Inject constructor(
+class CardInfoRepositoryImpl constructor(
     private val cardInfoApi: CardInfoApi
 ) : CardInfoRepository {
 

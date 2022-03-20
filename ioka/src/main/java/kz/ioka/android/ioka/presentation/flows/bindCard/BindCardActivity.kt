@@ -11,25 +11,36 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.di.DependencyInjector
+import kz.ioka.android.ioka.domain.bindCard.CardRepositoryImpl
+import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardRequestState.*
 import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.DEFAULT_FONT
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
+import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-@AndroidEntryPoint
 internal class BindCardActivity : BaseActivity(), View.OnClickListener {
 
-    private val infoViewModel: CardInfoViewModel by viewModels()
-    private val bindCardViewModel: BindCardViewModel by viewModels()
+    private val infoViewModel: CardInfoViewModel by viewModels {
+        CardInfoViewModelFactory(
+            CardInfoRepositoryImpl(DependencyInjector.cardInfoApi)
+        )
+    }
+    private val bindCardViewModel: BindCardViewModel by viewModels {
+        BindCardViewModelFactory(
+            launcher()!!,
+            CardRepositoryImpl(DependencyInjector.cardApi)
+        )
+    }
 
     private lateinit var vToolbar: MaterialToolbar
     private lateinit var etCardNumber: CardNumberEditText

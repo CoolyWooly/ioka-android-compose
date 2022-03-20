@@ -9,7 +9,6 @@ import dagger.hilt.components.SingletonComponent
 import kz.ioka.android.iokademoapp.data.*
 import kz.ioka.android.iokademoapp.data.local.ProfileDao
 import kz.ioka.android.iokademoapp.data.remote.DemoApi
-import kz.ioka.android.iokademoapp.data.remote.CardsApi
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,14 +28,6 @@ internal object RepositoriesModule {
         profileDao: ProfileDao
     ): SettingsRepository {
         return SettingsRepositoryImpl(context, demoApi, profileDao)
-    }
-
-    @Provides
-    fun provideCardsRepository(
-        cardsApi: CardsApi,
-        profileDao: ProfileDao
-    ): CardsRepository {
-        return CardsRepositoryImpl(cardsApi, profileDao)
     }
 
     @Provides
