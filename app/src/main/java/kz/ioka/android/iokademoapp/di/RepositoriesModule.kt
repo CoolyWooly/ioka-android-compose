@@ -32,9 +32,10 @@ internal object RepositoriesModule {
 
     @Provides
     fun provideOrderRepository(
-        demoApi: DemoApi
+        demoApi: DemoApi,
+        profileDao: ProfileDao
     ): OrderRepository {
-        return OrderRepositoryImpl(demoApi)
+        return OrderRepositoryImpl(demoApi, profileDao)
     }
 
 }

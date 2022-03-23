@@ -85,9 +85,9 @@ class PayWithCardViewModel constructor(
                 _payState.postValue(PayState.LOADING)
 
                 val cardPayment = paymentRepository.createCardPayment(
-                    launcher?.orderToken?.getOrderId() ?: "",
-                    launcher?.customerToken ?: "",
-                    launcher?.apiKey ?: "",
+                    launcher.orderToken.getOrderId(),
+                    launcher.customerToken,
+                    launcher.apiKey,
                     cardPan, expireDate, cvv, bindCard
                 )
 
@@ -122,9 +122,9 @@ class PayWithCardViewModel constructor(
             _payState.postValue(PayState.LOADING)
 
             val cardPayment = paymentRepository.isPaymentSuccessful(
-                launcher?.apiKey ?: "",
-                launcher?.customerToken ?: "",
-                launcher?.orderToken ?: "",
+                launcher.apiKey,
+                launcher.customerToken,
+                launcher.orderToken,
                 paymentId
             )
 

@@ -14,7 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.iokademoapp.common.toCardType
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
+import kz.ioka.android.iokademoapp.presentation.profile.savedCards.CardDvo
 
 @AndroidEntryPoint
 class SelectPaymentTypeActivity : BaseActivity() {
@@ -68,7 +70,7 @@ class SelectPaymentTypeActivity : BaseActivity() {
             bindedCards.observe(this@SelectPaymentTypeActivity) {
                 it.forEach { card ->
                     val cardView = BindedCardView(this@SelectPaymentTypeActivity)
-                    cardView.setCard(card)
+                    cardView.setCard(CardDvo(card.id!!, R.drawable.ic_ps_visa, card.panMasked!!))
 
                     val dividerView = View(this@SelectPaymentTypeActivity)
                     dividerView.layoutParams =
@@ -87,9 +89,10 @@ class SelectPaymentTypeActivity : BaseActivity() {
                     cardView.setOnClickListener {
                         viewModel.onPaymentTypeSelected(
                             PaymentTypeDvo.PayWithSavedCardDvo(
-                                card.id,
-                                card.cardPan,
-                                card.cardType,
+                                card.id ?: "",
+                                card.panMasked ?: "",
+                                card.paymentSystem.toCardType(),
+                                card.cvcRequired ?: true
                             )
                         )
                     }

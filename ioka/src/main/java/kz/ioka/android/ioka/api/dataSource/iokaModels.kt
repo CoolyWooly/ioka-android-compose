@@ -1,5 +1,9 @@
 package kz.ioka.android.ioka.api.dataSource
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class CardModel(
     val id: String?,
     val customerId: String?,
@@ -10,4 +14,4 @@ data class CardModel(
     val paymentSystem: String?,
     val emitter: String?,
     val cvcRequired: Boolean?,
-)
+) : Parcelable

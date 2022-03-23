@@ -123,7 +123,7 @@ class PayWithCardActivity : BaseActivity() {
         viewModel.apply {
             vToolbar.title = getString(R.string.pay_with_card_toolbar, price.toString().plus(" ₸"))
             btnPay.setText(getString(R.string.pay_with_amount, price.toString().plus(" ₸")))
-            groupGooglePay.isVisible = launcher?.withGooglePay ?: true
+            groupGooglePay.isVisible = launcher.withGooglePay
 
             payState.observe(this@PayWithCardActivity) {
                 handleState(it)

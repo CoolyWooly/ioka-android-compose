@@ -1,6 +1,6 @@
 package kz.ioka.android.ioka.api
 
-import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
 
@@ -14,13 +14,13 @@ object Ioka {
         DependencyInjector.createDependencies()
     }
 
-    fun showForm(paymentFlow: PaymentFlow): (Context) -> Unit {
+    fun showForm(paymentFlow: PaymentFlow): (AppCompatActivity) -> Unit {
         if (Config.apiKey == null) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
         return { context ->
-            context.startActivity(formFactory.provideIntent(Config.apiKey!!, paymentFlow, context))
+            formFactory.provideAction(Config.apiKey!!, paymentFlow, context).invoke(context)
         }
     }
 

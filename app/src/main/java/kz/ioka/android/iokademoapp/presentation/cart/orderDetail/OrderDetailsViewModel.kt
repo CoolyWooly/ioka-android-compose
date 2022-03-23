@@ -72,11 +72,16 @@ class OrderDetailsViewModel @Inject constructor(
                 )
             }
             is PaymentTypeDvo.PayWithSavedCardDvo -> {
-                PaymentFlow.PayWithCardFlow(
+                val cardDvo = selectedPaymentType.value as PaymentTypeDvo.PayWithSavedCardDvo
+
+                PaymentFlow.PayWithBindedCardFlow(
                     customerToken,
                     orderToken,
-                    itemPrice ?: 0,
-                    false
+                    launcher?.price ?: 0,
+                    cardDvo.cardId,
+                    cardDvo.maskedCardNumber,
+                    cardDvo.cardType.code,
+                    cardDvo.cvvRequired
                 )
             }
             null -> {

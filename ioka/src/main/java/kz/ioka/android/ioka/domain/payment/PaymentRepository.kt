@@ -19,6 +19,14 @@ interface PaymentRepository {
         bindCard: Boolean
     ): ResultWrapper<PaymentModel>
 
+    suspend fun createPaymentWithCardId(
+        orderId: String,
+        customerToken: String,
+        apiKey: String,
+        cardId: String,
+        cvv: String
+    ): ResultWrapper<PaymentModel>
+
     suspend fun isPaymentSuccessful(
         apiKey: String,
         customerToken: String,
@@ -46,7 +54,34 @@ class PaymentRepositoryImpl constructor(
                 orderId,
                 customerToken,
                 apiKey,
-                PaymentRequestDto(panNumber, expiryDate, cvv, bindCard)
+                PaymentRequestDto(pan = panNumber, exp = expiryDate, cvc = cvv, bindCard = bindCard)
+            )
+
+            when (paymentResult.status) {
+                PaymentModel.STATUS_APPROVED -> PaymentModel.Success
+                PaymentModel.STATUS_CAPTURED -> PaymentModel.Success
+                PaymentModel.REQUIRES_ACTION -> PaymentModel.Pending(
+                    paymentResult.id,
+                    paymentResult.action.url
+                )
+                else -> PaymentModel.Declined
+            }
+        }
+    }
+
+    override suspend fun createPaymentWithCardId(
+        orderId: String,
+        customerToken: String,
+        apiKey: String,
+        cardId: String,
+        cvv: String
+    ): ResultWrapper<PaymentModel> {
+        return safeApiCall(Dispatchers.IO) {
+            val paymentResult = paymentApi.createPayment(
+                orderId,
+                customerToken,
+                apiKey,
+                PaymentRequestDto(cardId = cardId, cvc = cvv)
             )
 
             when (paymentResult.status) {

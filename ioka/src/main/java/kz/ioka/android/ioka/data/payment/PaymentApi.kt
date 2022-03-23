@@ -4,7 +4,11 @@ import retrofit2.http.*
 
 interface PaymentApi {
 
-    @POST("/v2/orders/{order_id}/payments/card")
+    companion object {
+        const val PREFIX = "/v2/orders"
+    }
+
+    @POST("$PREFIX/{order_id}/payments/card")
     suspend fun createPayment(
         @Path("order_id") orderId: String,
         @Header("X-Customer-Access-Token") customerToken: String,
@@ -12,7 +16,7 @@ interface PaymentApi {
         @Body requestDto: PaymentRequestDto
     ): PaymentResponseDto
 
-    @GET("/v2/orders/{order_id}/payments/{payment_id}")
+    @GET("$PREFIX/{order_id}/payments/{payment_id}")
     suspend fun getPaymentById(
         @Path("order_id") orderId: String,
         @Path("payment_id") paymentId: String,

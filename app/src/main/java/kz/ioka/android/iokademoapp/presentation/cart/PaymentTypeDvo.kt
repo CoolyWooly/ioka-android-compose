@@ -1,7 +1,6 @@
 package kz.ioka.android.iokademoapp.presentation.cart
 
 import android.os.Parcelable
-import androidx.annotation.DrawableRes
 import kotlinx.parcelize.Parcelize
 
 sealed class PaymentTypeDvo : Parcelable {
@@ -19,7 +18,8 @@ sealed class PaymentTypeDvo : Parcelable {
     class PayWithSavedCardDvo(
         val cardId: String,
         val maskedCardNumber: String,
-        @DrawableRes val cardTypeRes: Int,
+        val cardType: CardType,
+        val cvvRequired: Boolean
     ) : PaymentTypeDvo()
 
 }

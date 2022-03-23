@@ -1,5 +1,6 @@
 package kz.ioka.android.iokademoapp.data
 
+import kz.ioka.android.iokademoapp.data.local.ProfileDao
 import kz.ioka.android.iokademoapp.data.remote.CheckoutRequestDto
 import kz.ioka.android.iokademoapp.data.remote.CheckoutResponseDto
 import kz.ioka.android.iokademoapp.data.remote.DemoApi
@@ -12,11 +13,18 @@ interface OrderRepository {
 }
 
 class OrderRepositoryImpl @Inject constructor(
-    private val demoApi: DemoApi
+    private val demoApi: DemoApi,
+    private val profileDao: ProfileDao
 ) : OrderRepository {
 
     override suspend fun checkout(price: Int): CheckoutResponseDto {
-        return demoApi.checkout(CheckoutRequestDto(price))
+        val response = demoApi.checkout(CheckoutRequestDto(price))
+
+        response.customerToken?.let {
+            profileDao.setCustomerToken(it)
+        }
+
+        return response
     }
 
 }

@@ -59,7 +59,7 @@ class SelectedPaymentTypeView @JvmOverloads constructor(
             }
             is PaymentTypeDvo.PayWithSavedCardDvo -> {
                 ivPaymentIcon.setImageDrawable(
-                    ContextCompat.getDrawable(context, paymentType.cardTypeRes)
+                    ContextCompat.getDrawable(context, paymentType.cardType.cardTypeRes)
                 )
                 tvPaymentType.text = paymentType.maskedCardNumber
             }

@@ -6,10 +6,11 @@ import kz.ioka.android.ioka.data.ActionDto
 import kz.ioka.android.ioka.data.ErrorDto
 
 data class PaymentRequestDto(
-    @Expose @SerializedName("pan") val pan: String,
-    @Expose @SerializedName("exp") val exp: String,
-    @Expose @SerializedName("cvc") val cvc: String,
-    @Expose @SerializedName("save") val bindCard: Boolean,
+    @Expose @SerializedName("pan") val pan: String? = null,
+    @Expose @SerializedName("exp") val exp: String? = null,
+    @Expose @SerializedName("cvc") val cvc: String? = null,
+    @Expose @SerializedName("save") val bindCard: Boolean? = null,
+    @Expose @SerializedName("card_id") val cardId: String? = null,
 )
 
 data class PaymentResponseDto(

@@ -14,6 +14,10 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="PrimaryTextView.18">
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="PrimaryTextView.24">
         <item name="android:textSize">24sp</item>
     </style>
@@ -32,6 +36,10 @@
 
     <style name="WhiteTextView" parent="PrimaryTextView">
         <item name="android:textColor">@color/ioka_color_static_white</item>
+    </style>
+
+    <style name="WhiteTextView.12">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="WhiteTextView.16">

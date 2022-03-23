@@ -2,7 +2,6 @@ package kz.ioka.android.iokademoapp.data.local
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class ProfileDao @Inject constructor() {
 
@@ -14,16 +13,6 @@ class ProfileDao @Inject constructor() {
 
     fun getCustomerToken(): String {
         return customerToken.value ?: ""
-    }
-
-    fun getCustomerId(): String {
-        val customerToken = customerToken.value
-
-        return customerToken?.let {
-            val customerIdEndIndex = it.indexOf("_secret")
-
-            it.substring(0, customerIdEndIndex)
-        } ?: ""
     }
 
 }
