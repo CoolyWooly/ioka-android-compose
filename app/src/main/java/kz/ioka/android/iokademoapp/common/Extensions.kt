@@ -1,6 +1,8 @@
 package kz.ioka.android.iokademoapp.common
 
 import android.content.Context
+import android.content.res.Resources
+import android.util.TypedValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -15,3 +17,14 @@ fun String?.toCardType(): CardType {
 
     return CardType.values().first { it.code == this }
 }
+
+fun String.shortPanMask(): String {
+    return "•••• ${takeLast(4)}"
+}
+
+internal val Number.toPx
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    )

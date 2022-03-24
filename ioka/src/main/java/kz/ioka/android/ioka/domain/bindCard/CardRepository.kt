@@ -7,7 +7,7 @@ import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getCustomerId
 
-interface CardRepository {
+internal interface CardRepository {
 
     suspend fun bindCard(
         customerToken: String,
@@ -19,7 +19,7 @@ interface CardRepository {
 
 }
 
-class CardRepositoryImpl constructor(
+internal class CardRepositoryImpl constructor(
     private val cardApi: CardApi
 ) : CardRepository {
 

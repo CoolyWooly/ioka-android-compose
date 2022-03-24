@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 
-abstract class BaseActivity : AppCompatActivity() {
+internal abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
         const val LAUNCHER = "BaseActivity_LAUNCHER"

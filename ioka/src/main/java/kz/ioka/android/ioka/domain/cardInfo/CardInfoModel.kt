@@ -1,6 +1,6 @@
 package kz.ioka.android.ioka.domain.cardInfo
 
-sealed interface CardBrandModel {
+internal sealed interface CardBrandModel {
 
     object Visa : CardBrandModel
     object MasterCard : CardBrandModel
@@ -8,7 +8,7 @@ sealed interface CardBrandModel {
 
 }
 
-sealed interface CardEmitterModel {
+internal sealed interface CardEmitterModel {
 
     object Alfa : CardEmitterModel
     object Kaspi : CardEmitterModel

@@ -10,8 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
-import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.iokademoapp.common.toPx
 import kz.ioka.android.iokademoapp.presentation.profile.savedCards.CardDvo
 
 class BindedCardView @JvmOverloads constructor(

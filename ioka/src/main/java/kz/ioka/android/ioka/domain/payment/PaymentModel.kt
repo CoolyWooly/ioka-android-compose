@@ -1,6 +1,6 @@
 package kz.ioka.android.ioka.domain.payment
 
-sealed class PaymentModel {
+internal sealed class PaymentModel {
 
     companion object {
         // Нужно подтверждение 3DSecure

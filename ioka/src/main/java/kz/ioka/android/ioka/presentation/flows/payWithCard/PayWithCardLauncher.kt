@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PayWithCardLauncher(
+internal data class PayWithCardLauncher(
     val apiKey: String,
     val customerToken: String,
     val orderToken: String,

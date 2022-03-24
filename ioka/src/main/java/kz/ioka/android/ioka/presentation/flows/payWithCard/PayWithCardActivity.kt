@@ -30,7 +30,7 @@ import kz.ioka.android.ioka.uikit.StateButton
 import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-class PayWithCardActivity : BaseActivity() {
+internal class PayWithCardActivity : BaseActivity() {
 
     private var launcher: PayWithCardLauncher? = null
 

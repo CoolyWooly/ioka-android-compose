@@ -3,7 +3,7 @@ package kz.ioka.android.ioka.presentation.flows.common
 import androidx.annotation.DrawableRes
 import kz.ioka.android.ioka.R
 
-enum class CardType(@DrawableRes val cardTypeRes: Int, val code: String) {
+internal enum class CardType(@DrawableRes val cardTypeRes: Int, val code: String) {
 
     AMEX(R.drawable.ic_ps_amex, "AMERICAN_EXPRESS"),
     DINERS_CLUB(R.drawable.ic_ps_diners_club, "DINER_CLUB"),

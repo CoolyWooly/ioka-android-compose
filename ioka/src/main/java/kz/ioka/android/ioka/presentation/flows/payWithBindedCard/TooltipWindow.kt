@@ -11,8 +11,7 @@ import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
 import kz.ioka.android.ioka.R
 
-
-class TooltipWindow(ctx: Context) {
+internal class TooltipWindow(ctx: Context) {
 
     private val tipWindow: PopupWindow?
     private val contentView: View

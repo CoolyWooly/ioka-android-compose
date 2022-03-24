@@ -150,6 +150,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/ui_color_background_overlay_64"
+        android:clickable="true"
+        android:focusable="true"
         android:visibility="gone">
 
         <androidx.appcompat.widget.LinearLayoutCompat

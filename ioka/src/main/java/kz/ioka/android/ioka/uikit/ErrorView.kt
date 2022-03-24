@@ -1,9 +1,14 @@
 package kz.ioka.android.ioka.uikit
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
+import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
@@ -13,14 +18,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.coroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.util.toPx
 
 
-class ErrorView @JvmOverloads constructor(
+internal class ErrorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr), LifecycleObserver {
 
@@ -29,7 +30,15 @@ class ErrorView @JvmOverloads constructor(
 
     private lateinit var scope: LifecycleCoroutineScope
 
-    private var autoInvisibilityJob: Job? = null
+    private val visibilityHandler = Handler(Looper.getMainLooper())
+    private val callback = Runnable {
+        val fadeOut = AlphaAnimation(1f, 0f)
+        fadeOut.interpolator = AccelerateInterpolator()
+        fadeOut.duration = 200
+        this.animation = fadeOut
+
+        isVisible = false
+    }
 
     init {
         val root = LayoutInflater.from(context).inflate(R.layout.view_error, this, true)
@@ -57,25 +66,24 @@ class ErrorView @JvmOverloads constructor(
 
         isVisible = true
 
-        autoInvisibilityJob = scope.launch {
-            delay(2000)
+        val fadeIn = AlphaAnimation(0f, 1f)
+        fadeIn.interpolator = DecelerateInterpolator()
+        fadeIn.duration = 200
+        this.animation = fadeIn
 
-            isVisible = false
-        }
+        visibilityHandler.postDelayed(callback, 3000)
     }
 
     fun hide() {
-        isVisible = false
-
-        autoInvisibilityJob?.cancel()
-        autoInvisibilityJob = null
+        visibilityHandler.removeCallbacks(callback)
+        visibilityHandler.post(callback)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
 
-        autoInvisibilityJob?.cancel()
-        autoInvisibilityJob = null
+        visibilityHandler.removeCallbacks(callback)
+        this.animation = null
     }
 
 }

@@ -1,10 +1,9 @@
 package kz.ioka.android.ioka.data.card
 
-import okhttp3.ResponseBody
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
-interface CardApi {
+internal interface CardApi {
 
     @POST("/v2/customers/{customer_id}/bindings")
     suspend fun bindCard(
@@ -27,6 +26,6 @@ interface CardApi {
         @Header("X-Customer-Access-Token") customerToken: String,
         @Path("customer_id") customerId: String,
         @Path("card_id") cardId: String,
-    ): Call<ResponseBody>
+    ): Response<Void>
 
 }

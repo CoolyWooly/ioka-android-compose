@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import kz.ioka.android.ioka.R
 
-open class FormattedNumberEditText : AppCompatEditText {
+internal class FormattedNumberEditText : AppCompatEditText {
 
     var prefix = ""
         private set

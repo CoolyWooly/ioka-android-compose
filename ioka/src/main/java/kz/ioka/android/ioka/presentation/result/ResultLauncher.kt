@@ -7,7 +7,7 @@ import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.R
 
-abstract class ResultLauncher(
+internal abstract class ResultLauncher(
     @DrawableRes open val statusIconRes: Int,
     @StringRes open val titleRes: Int,
     @ColorRes open val titleColorRes: Int,
@@ -17,7 +17,7 @@ abstract class ResultLauncher(
 ) : Parcelable
 
 @Parcelize
-class SuccessResultLauncher(
+internal class SuccessResultLauncher(
     override val statusIconRes: Int = R.drawable.ic_success,
     override val titleRes: Int = R.string.success_result_title,
     override val titleColorRes: Int = R.color.ioka_color_static_green,
@@ -27,7 +27,7 @@ class SuccessResultLauncher(
 ) : ResultLauncher(statusIconRes, titleRes, titleColorRes, subtitle, amount, btnTitleRes)
 
 @Parcelize
-class ErrorResultLauncher(
+internal class ErrorResultLauncher(
     override val statusIconRes: Int = R.drawable.ic_error,
     override val titleRes: Int = R.string.error_result_title,
     override val titleColorRes: Int = R.color.ioka_color_text_primary,

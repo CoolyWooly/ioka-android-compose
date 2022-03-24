@@ -11,7 +11,7 @@ import kz.ioka.android.ioka.util.Optional
 import kz.ioka.android.ioka.util.optional
 
 @Suppress("UNCHECKED_CAST")
-class CardInfoViewModelFactory(
+internal class CardInfoViewModelFactory(
     private val cardInfoRepository: CardInfoRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -19,7 +19,7 @@ class CardInfoViewModelFactory(
     }
 }
 
-class CardInfoViewModel constructor(
+internal class CardInfoViewModel constructor(
     private val cardInfoRepository: CardInfoRepository
 ) : ViewModel() {
 

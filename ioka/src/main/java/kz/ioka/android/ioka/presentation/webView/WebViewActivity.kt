@@ -9,7 +9,7 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
 
-class WebViewActivity : BaseActivity() {
+internal class WebViewActivity : BaseActivity() {
 
     private var launcher: WebViewLauncher? = null
 

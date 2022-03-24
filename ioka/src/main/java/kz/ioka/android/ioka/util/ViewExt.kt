@@ -8,9 +8,8 @@ import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
-import kz.ioka.android.ioka.R
 
-fun EditText.textChanges(): Flow<CharSequence?> {
+internal fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {
         val listener = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit
@@ -24,11 +23,4 @@ fun EditText.textChanges(): Flow<CharSequence?> {
         addTextChangedListener(listener)
         awaitClose { removeTextChangedListener(listener) }
     }.onStart { emit(text) }
-}
-
-fun EditText.setWrongFormatError(isWrong: Boolean) {
-    var errorText: String? = null
-    if (isWrong) errorText = context.getString(R.string.common_wrong_format_error)
-
-    error = errorText
 }

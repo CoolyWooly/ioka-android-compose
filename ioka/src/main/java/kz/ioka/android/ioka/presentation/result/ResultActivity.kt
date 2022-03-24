@@ -11,7 +11,7 @@ import kz.ioka.android.ioka.util.getDrawableFromRes
 import kz.ioka.android.ioka.util.toAmount
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-class ResultActivity : BaseActivity() {
+internal class ResultActivity : BaseActivity() {
 
     private var launcher: ResultLauncher? = null
 

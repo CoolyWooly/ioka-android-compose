@@ -10,7 +10,7 @@ import kz.ioka.android.ioka.util.getOrderId
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
-class PayWithCardViewModelFactory(
+internal class PayWithCardViewModelFactory(
     val launcher: PayWithCardLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModelProvider.Factory {
@@ -19,7 +19,7 @@ class PayWithCardViewModelFactory(
     }
 }
 
-class PayWithCardViewModel constructor(
+internal class PayWithCardViewModel constructor(
     val launcher: PayWithCardLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {

@@ -7,7 +7,7 @@ import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getOrderId
 
-interface PaymentRepository {
+internal interface PaymentRepository {
 
     suspend fun createCardPayment(
         orderId: String,
@@ -36,7 +36,7 @@ interface PaymentRepository {
 
 }
 
-class PaymentRepositoryImpl constructor(
+internal class PaymentRepositoryImpl constructor(
     private val paymentApi: PaymentApi
 ) : PaymentRepository {
 

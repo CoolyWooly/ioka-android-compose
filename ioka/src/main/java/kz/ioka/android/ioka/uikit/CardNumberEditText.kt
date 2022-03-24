@@ -33,8 +33,7 @@ import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import kz.ioka.android.ioka.viewBase.BaseActivity.Companion.SCAN_REQUEST_CODE
 
-
-class CardNumberEditText @JvmOverloads constructor(
+internal class CardNumberEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr) {
 

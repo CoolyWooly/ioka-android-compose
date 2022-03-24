@@ -1,11 +1,11 @@
-package kz.ioka.android.ioka.util
+package kz.ioka.android.iokademoapp.common
 
 /**
  * A container object which may or may not contain a non-null value.
  * If a value is present, {@code isPresent()} will return {@code true} and
  * {@code get()} will return the value.
  */
-internal data class Optional<T>(private val reference: T?) {
+data class Optional<T>(private val reference: T?) {
     fun isPresent() = reference != null
     fun isNotPresent() = !isPresent()
     fun get() = reference!!
@@ -26,5 +26,5 @@ internal data class Optional<T>(private val reference: T?) {
 
 }
 
-internal fun <T> T?.optional(): Optional<T> =
+fun <T> T?.optional(): Optional<T> =
     Optional(this)

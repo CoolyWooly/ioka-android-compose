@@ -1,6 +1,6 @@
 package kz.ioka.android.ioka.domain.bindCard
 
-sealed class CardBindingResultModel {
+internal sealed class CardBindingResultModel {
 
     companion object {
         const val STATUS_APPROVED = "APPROVED"

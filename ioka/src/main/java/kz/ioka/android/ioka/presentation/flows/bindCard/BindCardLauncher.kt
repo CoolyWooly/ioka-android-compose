@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.R
 
 @Parcelize
-data class BindCardLauncher(
+internal data class BindCardLauncher(
     val apiKey: String,
     val customerToken: String,
     val configuration: Configuration = Configuration()

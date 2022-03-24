@@ -3,11 +3,11 @@ package kz.ioka.android.ioka.data.cardInfo
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class BrandResponseDto(
+internal data class BrandResponseDto(
     @Expose @SerializedName("brand") val brand: String
 )
 
-data class EmitterResponseDto(
+internal data class EmitterResponseDto(
     @Expose @SerializedName("code") val code: String,
     @Expose @SerializedName("brand") val brand: String,
     @Expose @SerializedName("type") val type: String,

@@ -1,9 +1,11 @@
 package kz.ioka.android.ioka.data.cardInfo
 
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-interface CardInfoApi {
+internal interface CardInfoApi {
 
     @GET("/v2/brands")
     suspend fun getBrand(

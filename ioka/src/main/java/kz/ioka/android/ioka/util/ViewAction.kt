@@ -2,7 +2,7 @@ package kz.ioka.android.ioka.util
 
 import androidx.appcompat.app.AppCompatActivity
 
-open class ViewAction(
+internal open class ViewAction(
     open var singleAction: (AppCompatActivity) -> Unit
 ) {
 

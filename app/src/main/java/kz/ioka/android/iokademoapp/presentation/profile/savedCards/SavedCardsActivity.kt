@@ -41,6 +41,12 @@ class SavedCardsActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.fetchCards()
+    }
+
     private fun setupCardsList() {
         rvSavedCards.layoutManager = LinearLayoutManager(this)
 

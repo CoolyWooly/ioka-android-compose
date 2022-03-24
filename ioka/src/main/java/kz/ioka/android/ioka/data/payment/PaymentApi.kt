@@ -2,7 +2,7 @@ package kz.ioka.android.ioka.data.payment
 
 import retrofit2.http.*
 
-interface PaymentApi {
+internal interface PaymentApi {
 
     companion object {
         const val PREFIX = "/v2/orders"

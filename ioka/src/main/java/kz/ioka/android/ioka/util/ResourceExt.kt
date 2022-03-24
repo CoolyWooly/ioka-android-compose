@@ -5,6 +5,6 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 
-fun Context.getDrawableFromRes(@DrawableRes drawableRes: Int): Drawable? {
+internal fun Context.getDrawableFromRes(@DrawableRes drawableRes: Int): Drawable? {
     return ContextCompat.getDrawable(this, drawableRes)
 }

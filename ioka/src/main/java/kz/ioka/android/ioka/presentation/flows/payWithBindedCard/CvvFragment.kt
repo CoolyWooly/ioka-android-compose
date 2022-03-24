@@ -1,9 +1,13 @@
 package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
@@ -26,11 +30,11 @@ import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.StateButton
 import kz.ioka.android.ioka.util.getOrderId
+import kz.ioka.android.ioka.util.shortPanMask
 import kz.ioka.android.ioka.util.toCardType
-import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener {
+internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener {
 
     companion object {
         const val LAUNCHER = "CvvFragment_LAUNCHER"
@@ -69,21 +73,24 @@ class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener 
             }
         }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupDialogWindow()
         bindViews(view)
         setupListeners()
         setInitialData()
         observeViewModel()
-    }
-
-    private fun setupDialogWindow() {
-        dialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        dialog?.window?.attributes?.horizontalMargin = 16.toPx
     }
 
     private fun bindViews(root: View) {
@@ -114,7 +121,8 @@ class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener 
                 requireContext(), launcher.cardType.toCardType().cardTypeRes
             )
         )
-        tvCardNumber.text = launcher.cardNumber
+        tvCardNumber.text = launcher.cardNumber.shortPanMask()
+        etCvv.requestFocus()
     }
 
     private fun observeViewModel() {
@@ -140,6 +148,8 @@ class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener 
         btnContinue.setState(buttonState)
 
         val launcher = requireArguments().getParcelable<CvvLauncher>(LAUNCHER)!!
+
+        etCvv.isEnabled = state != PayState.LOADING
 
         when (state) {
             PayState.LOADING -> {
@@ -177,9 +187,6 @@ class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener 
                     WebViewLauncher(getString(R.string.toolbar_title_3ds), state.actionUrl)
                 )
                 startForResult.launch(intent)
-            }
-            else -> {
-                etCvv.isEnabled = true
             }
         }
     }

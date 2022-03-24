@@ -5,14 +5,14 @@ import kz.ioka.android.ioka.data.cardInfo.CardInfoApi
 import kz.ioka.android.ioka.data.cardInfo.EmitterResponseDto
 import retrofit2.Response
 
-interface CardInfoRepository {
+internal interface CardInfoRepository {
 
     suspend fun getBrand(partialCardBin: String): CardBrandModel
     suspend fun getEmitter(cardBin: String): CardEmitterModel
 
 }
 
-class CardInfoRepositoryImpl constructor(
+internal class CardInfoRepositoryImpl constructor(
     private val cardInfoApi: CardInfoApi
 ) : CardInfoRepository {
 

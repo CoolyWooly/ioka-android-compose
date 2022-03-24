@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kz.ioka.android.ioka.data.ActionDto
 import kz.ioka.android.ioka.data.ErrorDto
 
-data class CardResultDto(
+internal data class CardResultDto(
     @Expose @SerializedName("id") val id: String?,
     @Expose @SerializedName("customer_id") val customer_id: String?,
     @Expose @SerializedName("created_at") val created_at: String?,
@@ -19,14 +19,14 @@ data class CardResultDto(
     @Expose @SerializedName("action") val action: ActionDto?
 )
 
-data class BindCardRequestDto(
+internal data class BindCardRequestDto(
     @Expose @SerializedName("pan") val pan: String,
     @Expose @SerializedName("exp") val exp: String,
     @Expose @SerializedName("cvc") val cvc: String,
     @Expose @SerializedName("holder") val holder: String? = null,
 )
 
-data class BindCardResponseDto(
+internal data class BindCardResponseDto(
     @Expose @SerializedName("id") val id: String,
     @Expose @SerializedName("customer_id") val customerId: String,
     @Expose @SerializedName("status") val status: String,

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CvvLauncher(
+internal data class CvvLauncher(
     val customerToken: String,
     val orderToken: String,
     val price: Int,

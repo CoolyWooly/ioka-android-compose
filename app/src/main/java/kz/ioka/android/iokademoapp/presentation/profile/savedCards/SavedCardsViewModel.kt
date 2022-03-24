@@ -12,6 +12,7 @@ import kz.ioka.android.ioka.api.dataSource.IokaDataSource
 import kz.ioka.android.ioka.api.dataSource.IokaDataSourceImpl
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.ListItem
+import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.data.CustomerRepository
 import javax.inject.Inject
 
@@ -27,32 +28,28 @@ class SavedCardsViewModel @Inject constructor(
     private val _paymentFlow = MutableLiveData<PaymentFlow>()
     val paymentFlow = _paymentFlow as LiveData<PaymentFlow>
 
-    init {
+    fun fetchCards() {
         viewModelScope.launch(Dispatchers.IO) {
-            fetchCards()
+            val cardsList = mutableListOf<ListItem>()
+
+            cardsList.addAll(iokaDataSource.getCards(customerRepository.getCustomerToken()).map {
+                CardDvo(
+                    id = it.id ?: "",
+                    cardType = R.drawable.ic_ps_visa,
+                    cardPan = it.panMasked?.shortPanMask() ?: "",
+                )
+            })
+            cardsList.add(AddCardDvo() as ListItem)
+
+            _savedCards.postValue(cardsList)
         }
-    }
-
-    private suspend fun fetchCards() {
-        val cardsList = mutableListOf<ListItem>()
-
-        cardsList.addAll(iokaDataSource.getCards(customerRepository.getCustomerToken()).map {
-            CardDvo(
-                id = it.id ?: "",
-                cardType = R.drawable.ic_ps_visa,
-                cardPan = it.panMasked ?: "",
-            )
-        })
-        cardsList.add(AddCardDvo() as ListItem)
-
-        _savedCards.postValue(cardsList)
     }
 
     fun onRemoveCardClicked(cardId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val customerToken = customerRepository.getCustomerToken()
-            iokaDataSource.removeCard(customerToken, cardId)
-            fetchCards()
+            if (iokaDataSource.removeCard(customerToken, cardId))
+                fetchCards()
         }
     }
 

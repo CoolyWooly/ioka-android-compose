@@ -46,11 +46,14 @@ class IokaDataSourceImpl : IokaDataSource {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
-        val request =
-            cardApi.removeCard(apiKey!!, customerToken, customerToken.getCustomerId(), cardId)
-                .execute()
+        val response = cardApi.removeCard(
+            apiKey!!,
+            customerToken,
+            customerToken.getCustomerId(),
+            cardId
+        )
 
-        return request.isSuccessful
+        return response.isSuccessful
     }
 
 }

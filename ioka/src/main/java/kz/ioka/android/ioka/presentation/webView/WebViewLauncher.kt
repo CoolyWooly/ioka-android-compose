@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class WebViewLauncher(
+internal data class WebViewLauncher(
     val toolbarTitle: String,
     val actionUrl: String
 ) : Parcelable

@@ -10,7 +10,7 @@ import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
 import kz.ioka.android.ioka.util.getOrderId
 
 @Suppress("UNCHECKED_CAST")
-class CvvViewModelFactory(
+internal class CvvViewModelFactory(
     val launcher: CvvLauncher,
     private val repository: PaymentRepository
 ) : ViewModelProvider.Factory {
@@ -20,14 +20,14 @@ class CvvViewModelFactory(
 }
 
 
-class CvvViewModel(
+internal class CvvViewModel(
     private val launcher: CvvLauncher,
     private val repository: PaymentRepository
 ) : ViewModel() {
 
     private var paymentId: String = ""
 
-    private val _payState = MutableLiveData<PayState>(PayState.DEFAULT)
+    private val _payState = MutableLiveData<PayState>(PayState.DISABLED)
     val payState = _payState as LiveData<PayState>
 
     fun onContinueClicked(cvv: String) {

@@ -177,8 +177,6 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
 
         if (state is ERROR) {
             vError.show(state.cause ?: getString(R.string.common_server_error))
-        } else {
-            vError.hide()
         }
 
         if (state is PENDING) {

@@ -19,7 +19,7 @@ import androidx.core.view.isInvisible
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.util.toPx
 
-class StateButton @JvmOverloads constructor(
+internal class StateButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
 

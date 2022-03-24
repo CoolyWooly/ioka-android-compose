@@ -10,7 +10,7 @@ import kz.ioka.android.ioka.domain.common.ResultWrapper
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
-class BindCardViewModelFactory(
+internal class BindCardViewModelFactory(
     val launcher: BindCardLauncher,
     private val repository: CardRepository
 ) : ViewModelProvider.Factory {
@@ -19,7 +19,7 @@ class BindCardViewModelFactory(
     }
 }
 
-class BindCardViewModel constructor(
+internal class BindCardViewModel constructor(
     private val launcher: BindCardLauncher,
     private val repository: CardRepository
 ) : ViewModel() {
