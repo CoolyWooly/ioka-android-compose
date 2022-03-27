@@ -15,7 +15,7 @@
         app:navigationIcon="@drawable/ic_close"
         app:titleCentered="true"
         app:titleTextColor="@color/ioka_color_text_primary"
-        tools:title="@string/new_card" />
+        tools:title="@string/ioka_bind_card_toolbar" />
 
     <kz.ioka.android.ioka.uikit.CardNumberEditText
         android:id="@+id/vCardNumberInput"
@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:autofillHints="creditCardNumber"
             android:background="@drawable/bg_edittext"
-            android:hint="@string/expire_date_hint"
+            android:hint="@string/ioka_common_expiry_date_hint"
             android:inputType="date"
             android:maxLength="5"
             android:padding="16dp"
@@ -57,7 +57,7 @@
             android:layout_weight="1"
             android:autofillHints="creditCardNumber"
             android:background="@drawable/bg_edittext"
-            android:hint="@string/cvv_hint"
+            android:hint="@string/ioka_common_cvv_hint"
             android:inputType="numberPassword"
             android:maxLength="3"
             android:padding="16dp" />
@@ -85,6 +85,6 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
-        app:sbText="@string/common_save" />
+        app:sbText="@string/ioka_bind_card_save" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:hint="@string/card_number_hint"
+        android:hint="@string/ioka_common_card_number_hint"
         android:inputType="number"
         android:maxLength="19"
         app:groupLength="4"
@@ -48,10 +48,10 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnScan"
+        style="@style/SecondaryImageView"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@color/ioka_color_static_transparent"
-        android:tint="@color/ioka_color_text_secondary"
         app:srcCompat="@drawable/ic_camera" />
 
 </merge>

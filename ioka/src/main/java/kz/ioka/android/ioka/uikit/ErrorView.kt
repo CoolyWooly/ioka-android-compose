@@ -20,7 +20,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.coroutineScope
 import kz.ioka.android.ioka.R
 
-
 internal class ErrorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr), LifecycleObserver {
@@ -74,7 +73,7 @@ internal class ErrorView @JvmOverloads constructor(
         visibilityHandler.postDelayed(callback, 3000)
     }
 
-    fun hide() {
+    private fun hide() {
         visibilityHandler.removeCallbacks(callback)
         visibilityHandler.post(callback)
     }

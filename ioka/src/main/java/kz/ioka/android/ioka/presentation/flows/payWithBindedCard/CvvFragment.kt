@@ -22,8 +22,8 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
-import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
+import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
@@ -161,7 +161,8 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
                     BaseActivity.LAUNCHER,
                     SuccessResultLauncher(
                         subtitle = getString(
-                            R.string.success_result_subtitle, launcher.orderToken.getOrderId()
+                            R.string.ioka_result_success_payment_subtitle,
+                            launcher.orderToken.getOrderId()
                         ),
                         amount = launcher.price
                     )
@@ -169,22 +170,20 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
 
                 startActivity(intent)
             }
-            PayState.ERROR -> {
-                val intent = Intent(requireContext(), ResultActivity::class.java)
-                intent.putExtra(
-                    BaseActivity.LAUNCHER,
-                    ErrorResultLauncher(
-                        subtitle = getString(R.string.error_common_cause), amount = 0
-                    )
-                )
+            is PayState.ERROR -> {
+                dismiss()
 
-                startActivity(intent)
+                val a = ResultFragment.newInstance(state.cause)
+                a.show(requireActivity().supportFragmentManager, ResultFragment::class.simpleName)
             }
             is PayState.PENDING -> {
                 val intent = Intent(requireContext(), WebViewActivity::class.java)
                 intent.putExtra(
                     BaseActivity.LAUNCHER,
-                    WebViewLauncher(getString(R.string.toolbar_title_3ds), state.actionUrl)
+                    WebViewLauncher(
+                        getString(R.string.ioka_common_payment_confirmation),
+                        state.actionUrl
+                    )
                 )
                 startForResult.launch(intent)
             }

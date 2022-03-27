@@ -16,10 +16,10 @@ internal data class BindCardLauncher(
 
 @Parcelize
 data class Configuration(
-    @StringRes val toolbarTitleRes: Int = R.string.new_card,
+    @StringRes val toolbarTitleRes: Int = R.string.ioka_bind_card_toolbar,
     val fieldCornerRadius: Int = 12,
     val saveButtonCornerRadius: Int = 12,
-    @StringRes val saveButtonTextRes: Int = R.string.common_save,
+    @StringRes val saveButtonTextRes: Int = R.string.ioka_bind_card_save,
     @ColorRes val saveButtonBackgroundColorRes: Int = R.color.ioka_color_primary,
     @FontRes val fontRes: Int = DEFAULT_FONT
 ) : Parcelable {

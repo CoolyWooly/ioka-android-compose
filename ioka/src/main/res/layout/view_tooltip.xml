@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/ioka_color_text_primary"
+    android:padding="12dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/tooltip_nav_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/ic_cvv" />
+        app:srcCompat="@drawable/ic_cvv" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tooltip_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:text="@string/cvv_description"
+        android:text="@string/ioka_common_cvv_description"
         android:textAppearance="@style/WhiteTextView.12" />
 </androidx.appcompat.widget.LinearLayoutCompat>

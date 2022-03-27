@@ -64,7 +64,7 @@ internal class PaymentRepositoryImpl constructor(
                     paymentResult.id,
                     paymentResult.action.url
                 )
-                else -> PaymentModel.Declined
+                else -> PaymentModel.Declined(paymentResult.error.message)
             }
         }
     }
@@ -91,7 +91,7 @@ internal class PaymentRepositoryImpl constructor(
                     paymentResult.id,
                     paymentResult.action.url
                 )
-                else -> PaymentModel.Declined
+                else -> PaymentModel.Declined(paymentResult.error.message)
             }
         }
     }

@@ -176,13 +176,17 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         btnSave.setState(buttonState)
 
         if (state is ERROR) {
-            vError.show(state.cause ?: getString(R.string.common_server_error))
+            vError.show(state.cause ?: getString(R.string.ioka_common_server_error))
         }
 
         if (state is PENDING) {
             val intent = Intent(this, WebViewActivity::class.java)
             intent.putExtra(
-                LAUNCHER, WebViewLauncher(getString(R.string.toolbar_title_3ds), state.actionUrl)
+                LAUNCHER,
+                WebViewLauncher(
+                    getString(R.string.ioka_common_payment_confirmation),
+                    state.actionUrl
+                )
             )
 
             startForResult.launch(intent)

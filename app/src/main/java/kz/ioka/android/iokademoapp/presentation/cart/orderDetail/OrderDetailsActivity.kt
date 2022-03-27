@@ -16,9 +16,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.iokademoapp.common.toAmountFormat
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
 import kz.ioka.android.iokademoapp.presentation.cart.paymentType.SelectPaymentTypeActivity
 import kz.ioka.android.iokademoapp.presentation.cart.paymentType.SelectedPaymentTypeView
+import java.math.BigDecimal
 
 @AndroidEntryPoint
 class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
@@ -75,7 +77,7 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
                     itemImage ?: R.drawable.ic_cart
                 )
             )
-            tvPrice.text = itemPrice.toString()
+            tvPrice.text = (itemPrice ?: BigDecimal.ZERO).toAmountFormat()
 
             progress.observe(this@OrderDetailsActivity) {
                 vProgress.isVisible = it

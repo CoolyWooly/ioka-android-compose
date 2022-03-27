@@ -16,7 +16,11 @@ internal sealed class PaymentModel {
     }
 
     object Success : PaymentModel()
-    object Declined : PaymentModel()
+
+    class Declined(
+        val cause: String
+    ) : PaymentModel()
+
     class Pending(
         val paymentId: String,
         val actionUrl: String

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ioka_color_primary">#6467AA</color>
+    <color name="ioka_color_primary_48">#7A6467AA</color>
+
+    <color name="ioka_color_background_primary">#FFFFFF</color>
+    <color name="ioka_color_background_secondary">#F0F0F5</color>
+
+    <color name="ioka_color_text_primary">#FFFFFF</color>
+    <color name="ioka_color_text_secondary">#9494A6</color>
+
+    <color name="ioka_color_divider">#3B3B53</color>
+</resources>

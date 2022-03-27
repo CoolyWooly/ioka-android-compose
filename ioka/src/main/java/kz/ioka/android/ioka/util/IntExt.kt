@@ -2,6 +2,9 @@ package kz.ioka.android.ioka.util
 
 import android.content.res.Resources
 import android.util.TypedValue
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 internal val Number.toPx
     get() = TypedValue.applyDimension(
@@ -10,5 +13,8 @@ internal val Number.toPx
         Resources.getSystem().displayMetrics
     )
 
-internal val Number.toAmount
-    get() = String.format("%s ₸", toString())
+fun BigDecimal.toAmountFormat(): String {
+    val formatter: NumberFormat = DecimalFormat("#,###.##")
+    val myNumber = this
+    return "${formatter.format(myNumber)} ₸"
+}

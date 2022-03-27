@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.api.PaymentFlow
 import kz.ioka.android.iokademoapp.data.OrderRepository
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +37,7 @@ class OrderDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _progress.postValue(true)
 
-            val checkout = orderRepository.checkout(itemPrice ?: 0)
+            val checkout = orderRepository.checkout(itemPrice ?: BigDecimal.ZERO)
 
             orderToken = checkout.orderToken ?: ""
             customerToken = checkout.customerToken ?: ""
@@ -51,7 +52,7 @@ class OrderDetailsViewModel @Inject constructor(
                 PaymentFlow.PayWithCardFlow(
                     customerToken,
                     orderToken,
-                    itemPrice ?: 0,
+                    itemPrice ?: BigDecimal.ZERO,
                     false
                 )
             }
@@ -59,7 +60,7 @@ class OrderDetailsViewModel @Inject constructor(
                 PaymentFlow.PayWithCardFlow(
                     customerToken,
                     orderToken,
-                    itemPrice ?: 0,
+                    itemPrice ?: BigDecimal.ZERO,
                     false
                 )
             }
@@ -67,7 +68,7 @@ class OrderDetailsViewModel @Inject constructor(
                 PaymentFlow.PayWithCardFlow(
                     customerToken,
                     orderToken,
-                    itemPrice ?: 0,
+                    itemPrice ?: BigDecimal.ZERO,
                     false
                 )
             }
@@ -77,18 +78,18 @@ class OrderDetailsViewModel @Inject constructor(
                 PaymentFlow.PayWithBindedCardFlow(
                     customerToken,
                     orderToken,
-                    launcher?.price ?: 0,
+                    itemPrice ?: BigDecimal.ZERO,
                     cardDvo.cardId,
                     cardDvo.maskedCardNumber,
                     cardDvo.cardType.code,
-                    cardDvo.cvvRequired
+                    cardDvo.cvvRequired,
                 )
             }
             null -> {
                 PaymentFlow.PayWithCardFlow(
                     customerToken,
                     orderToken,
-                    itemPrice ?: 0,
+                    itemPrice ?: BigDecimal.ZERO,
                     true
                 )
             }

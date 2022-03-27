@@ -15,7 +15,7 @@
         app:navigationIcon="@drawable/ic_close"
         app:titleCentered="true"
         app:titleTextColor="@color/ioka_color_text_primary"
-        tools:title="@string/toolbar_title_3ds" />
+        tools:title="@string/ioka_common_payment_confirmation" />
 
     <WebView
         android:id="@+id/webView"

@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.common.toPx
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
 
@@ -61,7 +62,7 @@ class SelectedPaymentTypeView @JvmOverloads constructor(
                 ivPaymentIcon.setImageDrawable(
                     ContextCompat.getDrawable(context, paymentType.cardType.cardTypeRes)
                 )
-                tvPaymentType.text = paymentType.maskedCardNumber
+                tvPaymentType.text = paymentType.maskedCardNumber.shortPanMask()
             }
         }
     }

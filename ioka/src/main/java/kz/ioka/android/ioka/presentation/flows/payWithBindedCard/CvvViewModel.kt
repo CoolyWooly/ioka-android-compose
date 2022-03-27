@@ -44,10 +44,10 @@ internal class CvvViewModel(
 
             when (cardPayment) {
                 is ResultWrapper.GenericError -> {
-                    _payState.postValue(PayState.ERROR)
+                    _payState.postValue(PayState.ERROR())
                 }
                 is ResultWrapper.NetworkError -> {
-                    _payState.postValue(PayState.ERROR)
+                    _payState.postValue(PayState.ERROR())
                 }
                 is ResultWrapper.Success -> {
                     processSuccessfulResponse(cardPayment.value)
@@ -62,7 +62,7 @@ internal class CvvViewModel(
                 paymentId = cardPayment.paymentId
                 _payState.postValue(PayState.PENDING(cardPayment.actionUrl))
             }
-            is PaymentModel.Declined -> _payState.postValue(PayState.ERROR)
+            is PaymentModel.Declined -> _payState.postValue(PayState.ERROR(cardPayment.cause))
             else -> _payState.postValue(PayState.SUCCESS)
         }
     }
@@ -80,14 +80,14 @@ internal class CvvViewModel(
 
             when (cardPayment) {
                 is ResultWrapper.GenericError -> {
-                    _payState.postValue(PayState.ERROR)
+                    _payState.postValue(PayState.ERROR())
                 }
                 is ResultWrapper.NetworkError -> {
-                    _payState.postValue(PayState.ERROR)
+                    _payState.postValue(PayState.ERROR())
                 }
                 is ResultWrapper.Success -> {
                     if (cardPayment.value) _payState.postValue(PayState.SUCCESS)
-                    else _payState.postValue(PayState.ERROR)
+                    else _payState.postValue(PayState.ERROR())
                 }
             }
         }

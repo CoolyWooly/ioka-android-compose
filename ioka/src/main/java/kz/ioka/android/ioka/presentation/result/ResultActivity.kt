@@ -8,8 +8,9 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.util.getDrawableFromRes
-import kz.ioka.android.ioka.util.toAmount
+import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
+import java.math.BigDecimal
 
 internal class ResultActivity : BaseActivity() {
 
@@ -48,8 +49,8 @@ internal class ResultActivity : BaseActivity() {
             tvSubtitle.text = it.subtitle
             btnAction.setText(it.btnTitleRes)
 
-            if (it.amount != 0)
-                tvAmount.text = it.amount.toAmount
+            if (it.amount != BigDecimal.ZERO)
+                tvAmount.text = it.amount.toAmountFormat()
         }
 
         vToolbar.setNavigationOnClickListener {

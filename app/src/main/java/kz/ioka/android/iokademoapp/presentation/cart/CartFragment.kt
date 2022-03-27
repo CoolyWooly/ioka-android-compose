@@ -9,8 +9,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.iokademoapp.common.toAmountFormat
 import kz.ioka.android.iokademoapp.presentation.cart.orderDetail.OrderDetailsActivity
 import kz.ioka.android.iokademoapp.presentation.cart.orderDetail.OrderLauncher
+import java.math.BigDecimal
 import kotlin.properties.Delegates
 
 class CartFragment : Fragment(R.layout.fragment_cart), View.OnClickListener {
@@ -19,7 +21,7 @@ class CartFragment : Fragment(R.layout.fragment_cart), View.OnClickListener {
         id = 248241,
         name = "Набор керамики",
         count = 1,
-        price = 148490,
+        price = BigDecimal(148490),
         itemImage = R.drawable.item_image
     )
 
@@ -65,7 +67,7 @@ class CartFragment : Fragment(R.layout.fragment_cart), View.OnClickListener {
         tvItemName.text = item.name
         tvItemCount.text = item.count.toString()
         ivItemImage.setImageDrawable(ContextCompat.getDrawable(requireContext(), item.itemImage))
-        tvTotal.text = String.format("%d ₸", item.price * item.count)
+        tvTotal.text = item.price.multiply(BigDecimal(item.count)).toAmountFormat()
     }
 
     override fun onClick(v: View?) {
@@ -83,7 +85,7 @@ class CartFragment : Fragment(R.layout.fragment_cart), View.OnClickListener {
                 val launcher = OrderLauncher(
                     itemName = item.name,
                     itemImage = item.itemImage,
-                    price = item.price * item.count
+                    price = item.price.multiply(BigDecimal(item.count))
                 )
                 intent.putExtra(OrderDetailsActivity.LAUNCHER, launcher)
                 startActivity(intent)

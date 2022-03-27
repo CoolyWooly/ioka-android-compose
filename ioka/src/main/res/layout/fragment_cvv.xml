@@ -12,7 +12,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/common_payment_confirmation"
+        android:text="@string/ioka_common_payment_confirmation"
         android:textAppearance="@style/PrimaryTextView.18"
         app:layout_constraintEnd_toStartOf="@id/btnClose"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:autofillHints="creditCardNumber"
             android:background="@color/ioka_color_static_transparent"
-            android:hint="@string/cvv_hint"
+            android:hint="@string/ioka_common_cvv_hint"
             android:inputType="numberPassword"
             android:maxLength="3"
             android:paddingHorizontal="4dp"
@@ -72,11 +72,11 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/ivCvvFaq"
+            style="@style/SecondaryImageView"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
-            android:src="@drawable/ic_faq"
-            android:tint="@color/ioka_color_text_secondary" />
+            android:src="@drawable/ic_faq" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <kz.ioka.android.ioka.uikit.StateButton
@@ -87,5 +87,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vContainer"
-        app:sbText="@string/common_continue" />
+        app:sbText="@string/ioka_common_continue" />
 </androidx.constraintlayout.widget.ConstraintLayout>

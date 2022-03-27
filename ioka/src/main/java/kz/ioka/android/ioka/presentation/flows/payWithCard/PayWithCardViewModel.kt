@@ -93,10 +93,10 @@ internal class PayWithCardViewModel constructor(
 
                 when (cardPayment) {
                     is ResultWrapper.GenericError -> {
-                        _payState.postValue(PayState.ERROR)
+                        _payState.postValue(PayState.ERROR())
                     }
                     is ResultWrapper.NetworkError -> {
-                        _payState.postValue(PayState.ERROR)
+                        _payState.postValue(PayState.ERROR())
                     }
                     is ResultWrapper.Success -> {
                         processSuccessfulResponse(cardPayment.value)
@@ -112,7 +112,7 @@ internal class PayWithCardViewModel constructor(
                 paymentId = cardPayment.paymentId
                 _payState.postValue(PayState.PENDING(cardPayment.actionUrl))
             }
-            is PaymentModel.Declined -> _payState.postValue(PayState.ERROR)
+            is PaymentModel.Declined -> _payState.postValue(PayState.ERROR(cardPayment.cause))
             else -> _payState.postValue(PayState.SUCCESS)
         }
     }
@@ -130,14 +130,14 @@ internal class PayWithCardViewModel constructor(
 
             when (cardPayment) {
                 is ResultWrapper.GenericError -> {
-                    _payState.postValue(PayState.ERROR)
+                    _payState.postValue(PayState.ERROR())
                 }
                 is ResultWrapper.NetworkError -> {
-                    _payState.postValue(PayState.ERROR)
+                    _payState.postValue(PayState.ERROR())
                 }
                 is ResultWrapper.Success -> {
                     if (cardPayment.value) _payState.postValue(PayState.SUCCESS)
-                    else _payState.postValue(PayState.ERROR)
+                    else _payState.postValue(PayState.ERROR())
                 }
             }
         }
@@ -151,7 +151,7 @@ sealed class PayState {
     object DISABLED : PayState()
     object LOADING : PayState()
     object SUCCESS : PayState()
-    object ERROR : PayState()
+    class ERROR(val cause: String? = null) : PayState()
 
     class PENDING(val actionUrl: String) : PayState()
 }

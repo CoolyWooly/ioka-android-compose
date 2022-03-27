@@ -28,7 +28,9 @@ import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.StateButton
 import kz.ioka.android.ioka.util.getOrderId
+import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
+import java.math.BigDecimal
 
 internal class PayWithCardActivity : BaseActivity() {
 
@@ -121,8 +123,8 @@ internal class PayWithCardActivity : BaseActivity() {
 
     private fun observeData() {
         viewModel.apply {
-            vToolbar.title = getString(R.string.pay_with_card_toolbar, price.toString().plus(" ₸"))
-            btnPay.setText(getString(R.string.pay_with_amount, price.toString().plus(" ₸")))
+            vToolbar.title = getString(R.string.ioka_payment_toolbar, price.toAmountFormat())
+            btnPay.setText(getString(R.string.ioka_payment_button, price.toAmountFormat()))
             groupGooglePay.isVisible = launcher.withGooglePay
 
             payState.observe(this@PayWithCardActivity) {
@@ -154,10 +156,12 @@ internal class PayWithCardActivity : BaseActivity() {
                 onSuccessfulPayment()
             }
 
-            PayState.ERROR -> {
+            is PayState.ERROR -> {
                 btnPay.setState(ButtonState.Default)
 
-                onFailedPayment()
+                onFailedPayment(
+                    state.cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
+                )
             }
 
             PayState.DEFAULT -> {
@@ -186,7 +190,8 @@ internal class PayWithCardActivity : BaseActivity() {
     private fun on3DSecureNeeded(actionUrl: String) {
         val intent = Intent(this, WebViewActivity::class.java)
         intent.putExtra(
-            LAUNCHER, WebViewLauncher(getString(R.string.toolbar_title_3ds), actionUrl)
+            LAUNCHER,
+            WebViewLauncher(getString(R.string.ioka_common_payment_confirmation), actionUrl)
         )
         startForResult.launch(intent)
     }
@@ -199,22 +204,23 @@ internal class PayWithCardActivity : BaseActivity() {
             LAUNCHER,
             SuccessResultLauncher(
                 subtitle = getString(
-                    R.string.success_result_subtitle, launcher?.orderToken?.getOrderId()
+                    R.string.ioka_result_success_payment_subtitle,
+                    launcher?.orderToken?.getOrderId()
                 ),
-                amount = launcher?.price ?: 0
+                amount = launcher?.price ?: BigDecimal.ZERO
             )
         )
 
         startActivity(intent)
     }
 
-    private fun onFailedPayment() {
+    private fun onFailedPayment(cause: String) {
         finish()
 
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra(
             LAUNCHER,
-            ErrorResultLauncher(subtitle = getString(R.string.error_common_cause), amount = 0)
+            ErrorResultLauncher(subtitle = cause, amount = BigDecimal.ZERO)
         )
 
         startActivity(intent)
