@@ -1,8 +1,7 @@
 package kz.ioka.android.ioka.presentation.flows.bindCard
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.domain.bindCard.CardBindingResultModel
 import kz.ioka.android.ioka.domain.bindCard.CardRepository
@@ -24,30 +23,32 @@ internal class BindCardViewModel constructor(
     private val repository: CardRepository
 ) : ViewModel() {
 
-    private val _isCardPanValid = MutableStateFlow(false)
-    private val _isExpireDateValid = MutableStateFlow(false)
-    private val _isCvvValid = MutableStateFlow(false)
+    private val _isCardPanValid = MutableLiveData(false)
+    private val _isExpireDateValid = MutableLiveData(false)
+    private val _isCvvValid = MutableLiveData(false)
 
-    private val allFieldsAreValid: Flow<Boolean> = combine(
-        _isCardPanValid,
-        _isExpireDateValid,
-        _isCvvValid
-    ) { isCardPanValid, isExpireDateValid, isCvvValid ->
-        isCardPanValid && isExpireDateValid && isCvvValid
-    }
+    private val allFieldsAreValid: MediatorLiveData<Boolean> = MediatorLiveData()
 
     private val _bindRequestState =
         MutableLiveData<BindCardRequestState>(BindCardRequestState.DEFAULT)
     val bindRequestState = _bindRequestState as LiveData<BindCardRequestState>
 
     init {
-        viewModelScope.launch(Dispatchers.Default) {
-            allFieldsAreValid.collect { areAllFieldsValid ->
-                if (areAllFieldsValid) {
-                    _bindRequestState.postValue(BindCardRequestState.DEFAULT)
-                } else {
-                    _bindRequestState.postValue(BindCardRequestState.DISABLED)
-                }
+        allFieldsAreValid.addSource(_isCardPanValid) {
+            allFieldsAreValid.postValue(allFieldsAreValid.value ?: true && it)
+        }
+        allFieldsAreValid.addSource(_isExpireDateValid) {
+            allFieldsAreValid.postValue(allFieldsAreValid.value ?: true && it)
+        }
+        allFieldsAreValid.addSource(_isCvvValid) {
+            allFieldsAreValid.postValue(allFieldsAreValid.value ?: true && it)
+        }
+
+        allFieldsAreValid.observeForever {
+            if (it) {
+                _bindRequestState.postValue(BindCardRequestState.DEFAULT)
+            } else {
+                _bindRequestState.postValue(BindCardRequestState.DISABLED)
             }
         }
     }
@@ -77,14 +78,14 @@ internal class BindCardViewModel constructor(
 
     fun onBindClicked(cardPan: String, expireDate: String, cvv: String) {
         viewModelScope.launch {
-            val areAllFieldsValid = allFieldsAreValid.first()
+            val areAllFieldsValid = allFieldsAreValid.value ?: false
 
             if (areAllFieldsValid) {
                 _bindRequestState.value = BindCardRequestState.LOADING
 
                 val bindCard = repository.bindCard(
-                    launcher?.customerToken ?: "",
-                    launcher?.apiKey ?: "",
+                    launcher.customerToken,
+                    launcher.apiKey,
                     cardPan, expireDate, cvv
                 )
 
@@ -109,6 +110,26 @@ internal class BindCardViewModel constructor(
                 }
             }
         }
+    }
+
+    @VisibleForTesting
+    fun isCardPanValid(): LiveData<Boolean> {
+        return _isCardPanValid
+    }
+
+    @VisibleForTesting
+    fun isExpireDateValid(): LiveData<Boolean> {
+        return _isExpireDateValid
+    }
+
+    @VisibleForTesting
+    fun isCvvValid(): LiveData<Boolean> {
+        return _isCvvValid
+    }
+
+    @VisibleForTesting
+    fun allFieldsAreValid(): LiveData<Boolean> {
+        return allFieldsAreValid
     }
 
 }
