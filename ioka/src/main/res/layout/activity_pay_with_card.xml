@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ioka_color_background_primary"
     tools:theme="@style/Theme.AppCompat">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -130,7 +131,7 @@
         app:thumbTint="@color/switch_thumb_tint"
         app:trackTint="@color/switch_track_tint" />
 
-    <kz.ioka.android.ioka.uikit.StateButton
+    <kz.ioka.android.ioka.uikit.IokaStateButton
         android:id="@+id/btnPay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

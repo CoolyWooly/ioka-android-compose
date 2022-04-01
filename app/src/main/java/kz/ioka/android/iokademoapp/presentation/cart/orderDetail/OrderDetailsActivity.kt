@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.iokademoapp.BaseActivity
@@ -31,7 +31,7 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
 
     private val viewModel: OrderDetailsViewModel by viewModels()
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var vToolbar: Toolbar
     private lateinit var tvItemName: TextView
     private lateinit var ivItemImage: ImageView
     private lateinit var tvPrice: TextView

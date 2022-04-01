@@ -1,11 +1,11 @@
 package kz.ioka.android.ioka.domain.common
 
-import android.util.Log
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+
 
 internal suspend fun <T> safeApiCall(
     dispatcher: CoroutineDispatcher,
@@ -15,16 +15,15 @@ internal suspend fun <T> safeApiCall(
         try {
             ResultWrapper.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
-            Log.d("safeApiCall", throwable.message ?: "")
             when (throwable) {
                 is IOException -> ResultWrapper.NetworkError
                 is HttpException -> {
-                    val code = throwable.code()
-                    val errorResponse = convertErrorBody(throwable)
-                    ResultWrapper.GenericError(code, errorResponse)
+                    convertErrorBody(throwable)?.let {
+                        ResultWrapper.IokaError(it.code, it.message)
+                    } ?: ResultWrapper.HttpError(null, null)
                 }
                 else -> {
-                    ResultWrapper.GenericError(null, null)
+                    ResultWrapper.HttpError(null, null)
                 }
             }
         }

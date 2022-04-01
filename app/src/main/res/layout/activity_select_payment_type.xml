@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:theme="@style/Theme.AppCompat">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,10 +17,11 @@
         app:titleCentered="true"
         app:titleTextColor="@color/ioka_color_text_primary" />
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/ui_color_background_secondary"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp">
 
@@ -60,13 +61,14 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
+        app:cardBackgroundColor="@color/ui_color_background_secondary"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp">
 
@@ -99,13 +101,14 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_selected_check" />
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/ui_color_background_secondary"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp">
 
@@ -138,7 +141,7 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_selected_check" />
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
     <View
         android:layout_width="wrap_content"

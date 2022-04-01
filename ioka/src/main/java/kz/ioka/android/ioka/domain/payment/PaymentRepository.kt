@@ -32,7 +32,7 @@ internal interface PaymentRepository {
         customerToken: String,
         orderToken: String,
         paymentId: String
-    ): ResultWrapper<Boolean>
+    ): ResultWrapper<PaymentModel>
 
 }
 
@@ -64,7 +64,7 @@ internal class PaymentRepositoryImpl constructor(
                     paymentResult.id,
                     paymentResult.action.url
                 )
-                else -> PaymentModel.Declined(paymentResult.error.message)
+                else -> PaymentModel.Declined(paymentResult.error.code, paymentResult.error.message)
             }
         }
     }
@@ -91,7 +91,7 @@ internal class PaymentRepositoryImpl constructor(
                     paymentResult.id,
                     paymentResult.action.url
                 )
-                else -> PaymentModel.Declined(paymentResult.error.message)
+                else -> PaymentModel.Declined(paymentResult.error.code, paymentResult.error.message)
             }
         }
     }
@@ -101,7 +101,7 @@ internal class PaymentRepositoryImpl constructor(
         customerToken: String,
         orderToken: String,
         paymentId: String
-    ): ResultWrapper<Boolean> {
+    ): ResultWrapper<PaymentModel> {
         return safeApiCall(Dispatchers.IO) {
             val payment = paymentApi.getPaymentById(
                 orderToken.getOrderId(),
@@ -111,7 +111,11 @@ internal class PaymentRepositoryImpl constructor(
                 apiKey
             )
 
-            payment.status == PaymentModel.STATUS_APPROVED || payment.status == PaymentModel.STATUS_CAPTURED
+            when (payment.status) {
+                PaymentModel.STATUS_APPROVED -> PaymentModel.Success
+                PaymentModel.STATUS_CAPTURED -> PaymentModel.Success
+                else -> PaymentModel.Declined(payment.error.code, payment.error.message)
+            }
         }
     }
 

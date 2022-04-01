@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.appcompat.widget.Toolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
@@ -22,7 +22,7 @@ class SelectLanguageActivity : BaseActivity(), View.OnClickListener {
 
     private val viewModel: SelectLanguageViewModel by viewModels()
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var vToolbar: Toolbar
 
     private lateinit var btnRussian: LinearLayoutCompat
     private lateinit var ivRussianCheck: AppCompatImageView

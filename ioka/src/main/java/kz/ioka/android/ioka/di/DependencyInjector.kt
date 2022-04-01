@@ -1,6 +1,5 @@
 package kz.ioka.android.ioka.di
 
-import android.util.Log
 import kz.ioka.android.ioka.BuildConfig
 import kz.ioka.android.ioka.data.card.CardApi
 import kz.ioka.android.ioka.data.cardInfo.CardInfoApi
@@ -35,7 +34,6 @@ internal object DependencyInjector {
                 val response: Response = try {
                     chain.proceed(chain.request())
                 } catch (e: ProtocolException) {
-                    Log.d("204", e.message ?: "CHECK")
                     Response.Builder()
                         .request(chain.request())
                         .code(204)

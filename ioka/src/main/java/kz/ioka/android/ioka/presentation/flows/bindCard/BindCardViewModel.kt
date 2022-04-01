@@ -1,11 +1,15 @@
 package kz.ioka.android.ioka.presentation.flows.bindCard
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.domain.bindCard.CardBindingResultModel
+import kz.ioka.android.ioka.domain.bindCard.CardBindingStatusModel
 import kz.ioka.android.ioka.domain.bindCard.CardRepository
 import kz.ioka.android.ioka.domain.common.ResultWrapper
+import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
@@ -23,35 +27,36 @@ internal class BindCardViewModel constructor(
     private val repository: CardRepository
 ) : ViewModel() {
 
-    private val _isCardPanValid = MutableLiveData(false)
-    private val _isExpireDateValid = MutableLiveData(false)
-    private val _isCvvValid = MutableLiveData(false)
+    private var cardId: String? = null
 
-    private val allFieldsAreValid: MediatorLiveData<Boolean> = MediatorLiveData()
+    private val _isCardPanValid = MutableStateFlow(false)
+    private val _isExpireDateValid = MutableStateFlow(false)
+    private val _isCvvValid = MutableStateFlow(false)
+
+    private val allFieldsAreValid: Flow<Boolean> = combine(
+        _isCardPanValid,
+        _isExpireDateValid,
+        _isCvvValid
+    ) { isCardPanValid, isExpireDateValid, isCvvValid ->
+        isCardPanValid && isExpireDateValid && isCvvValid
+    }
 
     private val _bindRequestState =
         MutableLiveData<BindCardRequestState>(BindCardRequestState.DEFAULT)
     val bindRequestState = _bindRequestState as LiveData<BindCardRequestState>
 
     init {
-        allFieldsAreValid.addSource(_isCardPanValid) {
-            allFieldsAreValid.postValue(allFieldsAreValid.value ?: true && it)
-        }
-        allFieldsAreValid.addSource(_isExpireDateValid) {
-            allFieldsAreValid.postValue(allFieldsAreValid.value ?: true && it)
-        }
-        allFieldsAreValid.addSource(_isCvvValid) {
-            allFieldsAreValid.postValue(allFieldsAreValid.value ?: true && it)
-        }
-
-        allFieldsAreValid.observeForever {
-            if (it) {
-                _bindRequestState.postValue(BindCardRequestState.DEFAULT)
-            } else {
-                _bindRequestState.postValue(BindCardRequestState.DISABLED)
+        viewModelScope.launch(Dispatchers.Default) {
+            allFieldsAreValid.collect { areAllFieldsValid ->
+                if (areAllFieldsValid) {
+                    _bindRequestState.postValue(BindCardRequestState.DEFAULT)
+                } else {
+                    _bindRequestState.postValue(BindCardRequestState.DISABLED)
+                }
             }
         }
     }
+
 
     fun onCardPanEntered(cardPan: String) {
         _isCardPanValid.value = cardPan.length in 15..19
@@ -78,58 +83,72 @@ internal class BindCardViewModel constructor(
 
     fun onBindClicked(cardPan: String, expireDate: String, cvv: String) {
         viewModelScope.launch {
-            val areAllFieldsValid = allFieldsAreValid.value ?: false
+            val areAllFieldsValid = allFieldsAreValid.first()
 
             if (areAllFieldsValid) {
                 _bindRequestState.value = BindCardRequestState.LOADING
 
                 val bindCard = repository.bindCard(
                     launcher.customerToken,
-                    launcher.apiKey,
+                    Config.apiKey,
                     cardPan, expireDate, cvv
                 )
 
                 when (bindCard) {
-                    is ResultWrapper.GenericError -> {
-                        _bindRequestState.postValue(BindCardRequestState.ERROR())
-                    }
-                    is ResultWrapper.NetworkError -> {
-                        _bindRequestState.postValue(BindCardRequestState.ERROR())
-                    }
                     is ResultWrapper.Success -> {
-                        when (bindCard.value) {
-                            is CardBindingResultModel.Declined -> _bindRequestState.postValue(
-                                BindCardRequestState.ERROR(bindCard.value.cause)
-                            )
-                            is CardBindingResultModel.Pending -> _bindRequestState.postValue(
-                                BindCardRequestState.PENDING(bindCard.value.actionUrl)
-                            )
-                            else -> _bindRequestState.postValue(BindCardRequestState.SUCCESS)
-                        }
+                        processSuccessfulResponse(bindCard.value)
+                    }
+                    is ResultWrapper.IokaError -> {
+                        _bindRequestState.postValue(BindCardRequestState.ERROR(bindCard.message))
+                    }
+                    else -> {
+                        _bindRequestState.postValue(BindCardRequestState.ERROR())
                     }
                 }
             }
         }
     }
 
-    @VisibleForTesting
-    fun isCardPanValid(): LiveData<Boolean> {
-        return _isCardPanValid
+    private fun processSuccessfulResponse(bindCard: CardBindingResultModel) {
+        when (bindCard) {
+            is CardBindingResultModel.Pending -> {
+                cardId = bindCard.cardId
+                _bindRequestState.postValue(BindCardRequestState.PENDING(bindCard.actionUrl))
+            }
+            is CardBindingResultModel.Declined ->
+                _bindRequestState.postValue(BindCardRequestState.ERROR(bindCard.cause))
+            else ->
+                _bindRequestState.postValue(BindCardRequestState.SUCCESS)
+        }
     }
 
-    @VisibleForTesting
-    fun isExpireDateValid(): LiveData<Boolean> {
-        return _isExpireDateValid
-    }
+    fun on3DSecurePassed() {
+        viewModelScope.launch {
+            _bindRequestState.postValue(BindCardRequestState.LOADING)
 
-    @VisibleForTesting
-    fun isCvvValid(): LiveData<Boolean> {
-        return _isCvvValid
-    }
+            val bindingStatus = repository.getCardBindingStatus(
+                Config.apiKey,
+                launcher.customerToken,
+                cardId ?: ""
+            )
 
-    @VisibleForTesting
-    fun allFieldsAreValid(): LiveData<Boolean> {
-        return allFieldsAreValid
+            when (bindingStatus) {
+                is ResultWrapper.Success -> {
+                    when (bindingStatus.value) {
+                        is CardBindingStatusModel.Failed ->
+                            _bindRequestState.postValue(BindCardRequestState.ERROR(bindingStatus.value.cause))
+                        else ->
+                            _bindRequestState.postValue(BindCardRequestState.SUCCESS)
+                    }
+                }
+                is ResultWrapper.IokaError -> {
+                    _bindRequestState.postValue(BindCardRequestState.ERROR(bindingStatus.message))
+                }
+                else -> {
+                    _bindRequestState.postValue(BindCardRequestState.ERROR())
+                }
+            }
+        }
     }
 
 }

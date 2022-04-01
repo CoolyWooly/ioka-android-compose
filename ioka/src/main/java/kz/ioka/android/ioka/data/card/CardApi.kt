@@ -13,6 +13,14 @@ internal interface CardApi {
         @Body requestDto: BindCardRequestDto
     ): BindCardResponseDto
 
+    @POST("/v2/customers/{customer_id}/cards/{card_id}")
+    suspend fun getCardById(
+        @Header("API-KEY") apiKey: String,
+        @Header("X-Customer-Access-Token") customerToken: String,
+        @Path("customer_id") customerId: String,
+        @Path("card_id") cardId: String,
+    ): CardResultDto
+
     @GET("/v2/customers/{customer_id}/cards")
     suspend fun getCards(
         @Header("API-KEY") apiKey: String,

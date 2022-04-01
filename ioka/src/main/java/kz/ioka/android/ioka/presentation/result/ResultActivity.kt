@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.google.android.material.appbar.MaterialToolbar
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.util.getDrawableFromRes
 import kz.ioka.android.ioka.util.toAmountFormat
@@ -16,7 +16,7 @@ internal class ResultActivity : BaseActivity() {
 
     private var launcher: ResultLauncher? = null
 
-    lateinit var vToolbar: MaterialToolbar
+    lateinit var vToolbar: Toolbar
     lateinit var ivStatus: AppCompatImageView
     lateinit var tvTitle: AppCompatTextView
     lateinit var tvSubtitle: AppCompatTextView

@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import com.google.android.material.card.MaterialCardView
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.common.toPx
@@ -15,7 +15,7 @@ import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
 
 class SelectedPaymentTypeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : MaterialCardView(context, attrs, defStyleAttr) {
+) : CardView(context, attrs, defStyleAttr) {
 
     private lateinit var ivPaymentIcon: AppCompatImageView
     private lateinit var tvPaymentType: AppCompatTextView

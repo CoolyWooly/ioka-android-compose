@@ -9,18 +9,17 @@ import kz.ioka.android.ioka.R
 
 @Parcelize
 internal data class BindCardLauncher(
-    val apiKey: String,
     val customerToken: String,
     val configuration: Configuration = Configuration()
 ) : Parcelable
 
 @Parcelize
 data class Configuration(
-    @StringRes val toolbarTitleRes: Int = R.string.ioka_bind_card_toolbar,
+    val toolbarTitle: String? = null,
     val fieldCornerRadius: Int = 12,
-    val saveButtonCornerRadius: Int = 12,
-    @StringRes val saveButtonTextRes: Int = R.string.ioka_bind_card_save,
-    @ColorRes val saveButtonBackgroundColorRes: Int = R.color.ioka_color_primary,
+    val bindButtonCornerRadius: Int = 12,
+    val bindButtonTextRes: String? = null,
+    @ColorRes val bindButtonBackgroundColorRes: Int = R.color.ioka_color_primary,
     @FontRes val fontRes: Int = DEFAULT_FONT
 ) : Parcelable {
 

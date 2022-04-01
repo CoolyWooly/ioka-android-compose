@@ -17,6 +17,12 @@ internal interface CardRepository {
         cvv: String
     ): ResultWrapper<CardBindingResultModel>
 
+    suspend fun getCardBindingStatus(
+        customerToken: String,
+        apiKey: String,
+        cardId: String
+    ): ResultWrapper<CardBindingStatusModel>
+
 }
 
 internal class CardRepositoryImpl constructor(
@@ -43,7 +49,23 @@ internal class CardRepositoryImpl constructor(
                 CardBindingResultModel.STATUS_DECLINED -> CardBindingResultModel.Declined(
                     bindCardResult.error.message
                 )
-                else -> CardBindingResultModel.Pending(bindCardResult.action.url)
+                else -> CardBindingResultModel.Pending(bindCardResult.id, bindCardResult.action.url)
+            }
+        }
+    }
+
+    override suspend fun getCardBindingStatus(
+        customerToken: String,
+        apiKey: String,
+        cardId: String
+    ): ResultWrapper<CardBindingStatusModel> {
+        return safeApiCall(Dispatchers.IO) {
+            val card =
+                cardApi.getCardById(apiKey, customerToken, customerToken.getCustomerId(), cardId)
+
+            when (card.status) {
+                CardBindingStatusModel.STATUS_APPROVED -> CardBindingStatusModel.Success
+                else -> CardBindingStatusModel.Failed(card.error?.message)
             }
         }
     }

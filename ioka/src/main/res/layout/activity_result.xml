@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:theme="@style/Theme.AppCompat">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +53,6 @@
             android:gravity="center"
             android:textAppearance="@style/PrimaryTextView.24"
             tools:text="148 490 ₸" />
-
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -64,5 +63,4 @@
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Понятно" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

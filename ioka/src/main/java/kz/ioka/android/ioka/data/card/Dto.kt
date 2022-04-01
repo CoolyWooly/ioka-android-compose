@@ -8,6 +8,7 @@ import kz.ioka.android.ioka.data.ErrorDto
 internal data class CardResultDto(
     @Expose @SerializedName("id") val id: String?,
     @Expose @SerializedName("customer_id") val customer_id: String?,
+    @Expose @SerializedName("status") val status: String?,
     @Expose @SerializedName("created_at") val created_at: String?,
     @Expose @SerializedName("pan_masked") val pan_masked: String?,
     @Expose @SerializedName("expiry_date") val expiry_date: String?,

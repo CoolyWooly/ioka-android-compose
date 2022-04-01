@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ProgressBar
 import androidx.annotation.ColorRes
-import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -19,7 +18,7 @@ import androidx.core.view.isInvisible
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.util.toPx
 
-internal class StateButton @JvmOverloads constructor(
+internal class IokaStateButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
 
@@ -48,12 +47,12 @@ internal class StateButton @JvmOverloads constructor(
     private fun loadAndSetText(attrs: AttributeSet?, defStyleAttr: Int) {
         val arr = context.obtainStyledAttributes(
             attrs,
-            R.styleable.StateButton,
+            R.styleable.IokaStateButton,
             defStyleAttr,
             0
         )
 
-        val buttonText = arr.getResourceId(R.styleable.StateButton_sbText, 0)
+        val buttonText = arr.getResourceId(R.styleable.IokaStateButton_sbText, 0)
         arr.recycle()
 
         if (buttonText != 0)
@@ -67,11 +66,11 @@ internal class StateButton @JvmOverloads constructor(
         tvTitle.text = text
     }
 
-    fun setConfiguration(radius: Int, @ColorRes backgroundColor: Int, @StringRes textRes: Int) {
+    fun setConfiguration(radius: Int, @ColorRes backgroundColor: Int, text: String) {
         this.backgroundColorRes = backgroundColor
         setCardBackgroundColor(ContextCompat.getColor(context, backgroundColor))
         this.radius = radius.toPx
-        tvTitle.text = context.getText(textRes)
+        tvTitle.text = text
     }
 
     fun setTypeface(typeface: Typeface) {

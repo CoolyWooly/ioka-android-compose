@@ -1,11 +1,17 @@
 package kz.ioka.android.ioka.presentation.result
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.DialogFragment
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.uikit.IokaStateButton
 
 class ResultFragment : DialogFragment(R.layout.fragment_result) {
 
@@ -26,7 +32,18 @@ class ResultFragment : DialogFragment(R.layout.fragment_result) {
     private val cause by lazy { requireArguments().getString(LAUNCHER) }
 
     private lateinit var tvStateSubTitle: AppCompatTextView
-    private lateinit var btnTryAgain: AppCompatButton
+    private lateinit var btnTryAgain: IokaStateButton
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

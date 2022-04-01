@@ -2,6 +2,8 @@ package kz.ioka.android.ioka
 
 internal object Config {
 
-    var apiKey: String? = null
+    lateinit var apiKey: String
+
+    fun isApiKeyInitialized() = this::apiKey.isInitialized
 
 }

@@ -21,7 +21,7 @@ class BindedCardView @JvmOverloads constructor(
 
     private lateinit var ivCardType: AppCompatImageView
     private lateinit var tvCardPan: AppCompatTextView
-    private lateinit var ivCheck: AppCompatImageView
+    lateinit var ivCheck: AppCompatImageView
 
     init {
         val root = LayoutInflater.from(context).inflate(R.layout.view_binded_card, this, true)

@@ -37,20 +37,20 @@ internal class CvvViewModel(
             val cardPayment = repository.createPaymentWithCardId(
                 launcher.orderToken.getOrderId(),
                 launcher.customerToken,
-                Config.apiKey!!,
+                Config.apiKey,
                 launcher.cardId,
                 cvv
             )
 
             when (cardPayment) {
-                is ResultWrapper.GenericError -> {
-                    _payState.postValue(PayState.ERROR())
-                }
-                is ResultWrapper.NetworkError -> {
-                    _payState.postValue(PayState.ERROR())
-                }
                 is ResultWrapper.Success -> {
                     processSuccessfulResponse(cardPayment.value)
+                }
+                is ResultWrapper.IokaError -> {
+                    _payState.postValue(PayState.FAILED(cardPayment.message))
+                }
+                else -> {
+                    _payState.postValue(PayState.ERROR())
                 }
             }
         }
@@ -62,7 +62,7 @@ internal class CvvViewModel(
                 paymentId = cardPayment.paymentId
                 _payState.postValue(PayState.PENDING(cardPayment.actionUrl))
             }
-            is PaymentModel.Declined -> _payState.postValue(PayState.ERROR(cardPayment.cause))
+            is PaymentModel.Declined -> _payState.postValue(PayState.FAILED(cardPayment.message))
             else -> _payState.postValue(PayState.SUCCESS)
         }
     }
@@ -72,22 +72,21 @@ internal class CvvViewModel(
             _payState.postValue(PayState.LOADING)
 
             val cardPayment = repository.isPaymentSuccessful(
-                Config.apiKey!!,
+                Config.apiKey,
                 launcher.customerToken,
                 launcher.orderToken,
                 paymentId
             )
 
             when (cardPayment) {
-                is ResultWrapper.GenericError -> {
-                    _payState.postValue(PayState.ERROR())
-                }
-                is ResultWrapper.NetworkError -> {
-                    _payState.postValue(PayState.ERROR())
-                }
                 is ResultWrapper.Success -> {
-                    if (cardPayment.value) _payState.postValue(PayState.SUCCESS)
-                    else _payState.postValue(PayState.ERROR())
+                    processSuccessfulResponse(cardPayment.value)
+                }
+                is ResultWrapper.IokaError -> {
+                    _payState.postValue(PayState.FAILED())
+                }
+                else -> {
+                    _payState.postValue(PayState.ERROR())
                 }
             }
         }

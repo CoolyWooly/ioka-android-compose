@@ -1,23 +1,28 @@
 package kz.ioka.android.iokademoapp.presentation.profile.savedCards
 
 import android.os.Bundle
-import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
 
 @AndroidEntryPoint
-class SavedCardsActivity : BaseActivity(), View.OnClickListener {
+class SavedCardsActivity : BaseActivity() {
 
     private val viewModel: SavedCardsViewModel by viewModels()
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var vToolbar: Toolbar
+    private lateinit var vCardsContainer: CardView
     private lateinit var rvSavedCards: RecyclerView
+    private lateinit var vProgress: ProgressBar
 
     private lateinit var adapter: SavedCardsAdapter
 
@@ -25,20 +30,9 @@ class SavedCardsActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_cards)
 
-        vToolbar = findViewById(R.id.vToolbar)
-        rvSavedCards = findViewById(R.id.rvSavedCards)
-
-        setupCardsList()
-
-        vToolbar.setNavigationOnClickListener(this)
-
-        viewModel.savedCards.observe(this) {
-            adapter.updateList(it)
-        }
-
-        viewModel.paymentFlow.observe(this) {
-            Ioka.showForm(it).invoke(this)
-        }
+        bindViews()
+        setupViews()
+        observeData()
     }
 
     override fun onStart() {
@@ -47,7 +41,14 @@ class SavedCardsActivity : BaseActivity(), View.OnClickListener {
         viewModel.fetchCards()
     }
 
-    private fun setupCardsList() {
+    private fun bindViews() {
+        vToolbar = findViewById(R.id.vToolbar)
+        vCardsContainer = findViewById(R.id.vCardsContainer)
+        rvSavedCards = findViewById(R.id.rvSavedCards)
+        vProgress = findViewById(R.id.vProgress)
+    }
+
+    private fun setupViews() {
         rvSavedCards.layoutManager = LinearLayoutManager(this)
 
         adapter = SavedCardsAdapter(
@@ -57,10 +58,23 @@ class SavedCardsActivity : BaseActivity(), View.OnClickListener {
         )
 
         rvSavedCards.adapter = adapter
+
+        vToolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    override fun onClick(v: View?) {
-        onBackPressed()
+    private fun observeData() {
+        viewModel.progress.observe(this) {
+            vProgress.isVisible = it
+            vCardsContainer.isInvisible = it
+        }
+
+        viewModel.savedCards.observe(this) {
+            adapter.updateList(it)
+        }
+
+        viewModel.paymentFlow.observe(this) {
+            Ioka.showForm(it).invoke(this)
+        }
     }
 
 }

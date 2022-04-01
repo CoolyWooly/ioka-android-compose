@@ -4,16 +4,15 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.appcompat.widget.Toolbar
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.viewBase.BaseActivity
-
 
 internal class WebViewActivity : BaseActivity() {
 
     private var launcher: WebViewLauncher? = null
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var vToolbar: Toolbar
     private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +45,7 @@ internal class WebViewActivity : BaseActivity() {
                 return true
             }
         }
-        webView.loadUrl(launcher?.actionUrl ?: "https://ioka.kz")
+        webView.loadUrl(String.format("%s?returnUrl=https://ioka.kz", launcher?.actionUrl))
     }
 
 }

@@ -1,7 +1,11 @@
 package kz.ioka.android.ioka.api.dataSource
 
+import kotlinx.coroutines.Dispatchers
+import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.Config.apiKey
 import kz.ioka.android.ioka.di.DependencyInjector
+import kz.ioka.android.ioka.domain.common.ResultWrapper
+import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getCustomerId
 
 interface IokaDataSource {
@@ -17,12 +21,12 @@ class IokaDataSourceImpl : IokaDataSource {
     private val cardApi = DependencyInjector.cardApi
 
     override suspend fun getCards(customerToken: String): List<CardModel> {
-        if (apiKey == null) {
+        if (Config.isApiKeyInitialized().not()) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
         return cardApi.getCards(
-            apiKey!!, customerToken, customerToken.getCustomerId()
+            apiKey, customerToken, customerToken.getCustomerId()
         ).map {
             CardModel(
                 id = it.id,
@@ -42,18 +46,20 @@ class IokaDataSourceImpl : IokaDataSource {
         customerToken: String,
         cardId: String
     ): Boolean {
-        if (apiKey == null) {
+        if (Config.isApiKeyInitialized()) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
-        val response = cardApi.removeCard(
-            apiKey!!,
-            customerToken,
-            customerToken.getCustomerId(),
-            cardId
-        )
+        val response = safeApiCall(Dispatchers.IO) {
+            cardApi.removeCard(
+                apiKey,
+                customerToken,
+                customerToken.getCustomerId(),
+                cardId
+            )
+        }
 
-        return response.isSuccessful
+        return response is ResultWrapper.Success
     }
 
 }

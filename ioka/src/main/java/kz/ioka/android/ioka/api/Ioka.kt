@@ -15,12 +15,12 @@ object Ioka {
     }
 
     fun showForm(paymentFlow: PaymentFlow): (AppCompatActivity) -> Unit {
-        if (Config.apiKey == null) {
+        if (Config.isApiKeyInitialized().not()) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
         return { context ->
-            formFactory.provideAction(Config.apiKey!!, paymentFlow, context).invoke(context)
+            formFactory.provideAction(paymentFlow, context).invoke(context)
         }
     }
 

@@ -7,9 +7,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
@@ -27,7 +27,7 @@ class SelectPaymentTypeActivity : BaseActivity() {
 
     private val viewModel: SelectPaymentTypeViewModel by viewModels()
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var vToolbar: Toolbar
     private lateinit var vCardContainer: LinearLayoutCompat
     private lateinit var btnGooglePay: LinearLayoutCompat
     private lateinit var ivCheckGooglePay: AppCompatImageView
@@ -87,6 +87,10 @@ class SelectPaymentTypeActivity : BaseActivity() {
                     vCardContainer.addView(cardView)
 
                     cardView.setOnClickListener {
+                        cardView.ivCheck.isVisible = true
+                        selectedPaymentTypeCheck?.isVisible = false
+                        selectedPaymentTypeCheck = cardView.ivCheck
+
                         viewModel.onPaymentTypeSelected(
                             PaymentTypeDvo.PayWithSavedCardDvo(
                                 card.id ?: "",
@@ -117,10 +121,6 @@ class SelectPaymentTypeActivity : BaseActivity() {
                 ivCheckCash.isVisible = true
                 selectedPaymentTypeCheck?.isVisible = false
                 selectedPaymentTypeCheck = ivCheckCash
-            }
-            is PaymentTypeDvo.PayWithSavedCardDvo -> {
-                selectedPaymentTypeCheck?.isVisible = false
-                selectedPaymentTypeCheck = null
             }
         }
     }

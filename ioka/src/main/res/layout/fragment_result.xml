@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_rounded_white"
+    android:background="@drawable/bg_rounded_primary"
     android:minWidth="320dp"
     android:padding="16dp">
 
@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvStateTitle"
         tools:text="Проверьте, открыт ли доступ к интернет-покупкам и попробуйте снова" />
 
-    <kz.ioka.android.ioka.uikit.StateButton
+    <kz.ioka.android.ioka.uikit.IokaStateButton
         android:id="@+id/btnTryAgain"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

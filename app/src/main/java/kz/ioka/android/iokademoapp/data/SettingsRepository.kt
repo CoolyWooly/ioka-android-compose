@@ -19,7 +19,7 @@ interface SettingsRepository {
     fun observeIsDarkModeEnabled(): Flow<Boolean>
     suspend fun setDarkModeEnabled(enabled: Boolean)
 
-    suspend fun getProfile()
+    suspend fun fetchCustomerToken()
 
 }
 
@@ -55,7 +55,7 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProfile() {
+    override suspend fun fetchCustomerToken() {
         val customerToken = demoApi.getCustomerToken().customerToken
 
         customerToken?.let {

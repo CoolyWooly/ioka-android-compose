@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/vRoot"
     android:background="@color/ioka_color_background_primary"
     android:orientation="vertical"
     tools:theme="@style/Theme.AppCompat">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_close"
-        app:titleCentered="true"
-        app:titleTextColor="@color/ioka_color_text_primary"
-        tools:title="@string/ioka_bind_card_toolbar" />
+        app:title="@string/ioka_bind_card_toolbar"
+        app:titleTextColor="@color/ioka_color_text_primary" />
 
     <kz.ioka.android.ioka.uikit.CardNumberEditText
         android:id="@+id/vCardNumberInput"
@@ -48,37 +48,21 @@
             app:groupSeparator="/"
             app:numberOfGroups="2" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCvv"
-            style="@style/PrimaryEditText.16"
+        <kz.ioka.android.ioka.uikit.CvvEditText
+            android:id="@+id/vCvvInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:autofillHints="creditCardNumber"
-            android:background="@drawable/bg_edittext"
-            android:hint="@string/ioka_common_cvv_hint"
-            android:inputType="numberPassword"
-            android:maxLength="3"
-            android:padding="16dp" />
-
+            android:layout_weight="1" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <FrameLayout
+    <View
+        android:id="@+id/vGap"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1" />
 
-        <kz.ioka.android.ioka.uikit.ErrorView
-            android:id="@+id/vError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginHorizontal="16dp" />
-
-    </FrameLayout>
-
-    <kz.ioka.android.ioka.uikit.StateButton
+    <kz.ioka.android.ioka.uikit.IokaStateButton
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,5 +70,4 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:sbText="@string/ioka_bind_card_save" />
-
 </androidx.appcompat.widget.LinearLayoutCompat>

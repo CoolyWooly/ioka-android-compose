@@ -20,6 +20,7 @@
         android:hint="@string/ioka_common_card_number_hint"
         android:inputType="number"
         android:maxLength="19"
+        android:textCursorDrawable="@color/ioka_color_primary"
         app:groupLength="4"
         app:groupSeparator=" "
         app:numberOfGroups="5" />
@@ -53,5 +54,4 @@
         android:layout_height="24dp"
         android:background="@color/ioka_color_static_transparent"
         app:srcCompat="@drawable/ic_camera" />
-
 </merge>

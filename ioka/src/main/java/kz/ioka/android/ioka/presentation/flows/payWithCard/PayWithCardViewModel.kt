@@ -3,6 +3,7 @@ package kz.ioka.android.ioka.presentation.flows.payWithCard
 import androidx.lifecycle.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepository
@@ -87,19 +88,19 @@ internal class PayWithCardViewModel constructor(
                 val cardPayment = paymentRepository.createCardPayment(
                     launcher.orderToken.getOrderId(),
                     launcher.customerToken,
-                    launcher.apiKey,
+                    Config.apiKey,
                     cardPan, expireDate, cvv, bindCard
                 )
 
                 when (cardPayment) {
-                    is ResultWrapper.GenericError -> {
-                        _payState.postValue(PayState.ERROR())
-                    }
-                    is ResultWrapper.NetworkError -> {
-                        _payState.postValue(PayState.ERROR())
-                    }
                     is ResultWrapper.Success -> {
                         processSuccessfulResponse(cardPayment.value)
+                    }
+                    is ResultWrapper.IokaError -> {
+                        _payState.postValue(PayState.FAILED(cardPayment.message))
+                    }
+                    else -> {
+                        _payState.postValue(PayState.ERROR())
                     }
                 }
             }
@@ -112,7 +113,7 @@ internal class PayWithCardViewModel constructor(
                 paymentId = cardPayment.paymentId
                 _payState.postValue(PayState.PENDING(cardPayment.actionUrl))
             }
-            is PaymentModel.Declined -> _payState.postValue(PayState.ERROR(cardPayment.cause))
+            is PaymentModel.Declined -> _payState.postValue(PayState.FAILED(cardPayment.message))
             else -> _payState.postValue(PayState.SUCCESS)
         }
     }
@@ -122,22 +123,21 @@ internal class PayWithCardViewModel constructor(
             _payState.postValue(PayState.LOADING)
 
             val cardPayment = paymentRepository.isPaymentSuccessful(
-                launcher.apiKey,
+                Config.apiKey,
                 launcher.customerToken,
                 launcher.orderToken,
                 paymentId
             )
 
             when (cardPayment) {
-                is ResultWrapper.GenericError -> {
-                    _payState.postValue(PayState.ERROR())
-                }
-                is ResultWrapper.NetworkError -> {
-                    _payState.postValue(PayState.ERROR())
-                }
                 is ResultWrapper.Success -> {
-                    if (cardPayment.value) _payState.postValue(PayState.SUCCESS)
-                    else _payState.postValue(PayState.ERROR())
+                    processSuccessfulResponse(cardPayment.value)
+                }
+                is ResultWrapper.IokaError -> {
+                    _payState.postValue(PayState.FAILED())
+                }
+                else -> {
+                    _payState.postValue(PayState.ERROR())
                 }
             }
         }
@@ -151,6 +151,7 @@ sealed class PayState {
     object DISABLED : PayState()
     object LOADING : PayState()
     object SUCCESS : PayState()
+    class FAILED(val cause: String? = null) : PayState()
     class ERROR(val cause: String? = null) : PayState()
 
     class PENDING(val actionUrl: String) : PayState()

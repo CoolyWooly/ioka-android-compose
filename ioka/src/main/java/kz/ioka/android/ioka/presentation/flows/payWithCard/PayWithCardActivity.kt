@@ -7,11 +7,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.flow.launchIn
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
@@ -26,8 +27,9 @@ import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
-import kz.ioka.android.ioka.uikit.StateButton
+import kz.ioka.android.ioka.uikit.IokaStateButton
 import kz.ioka.android.ioka.util.getOrderId
+import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import java.math.BigDecimal
@@ -48,14 +50,15 @@ internal class PayWithCardActivity : BaseActivity() {
         )
     }
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var vRoot: ConstraintLayout
+    private lateinit var vToolbar: Toolbar
     private lateinit var groupGooglePay: Group
     private lateinit var btnGooglePay: AppCompatImageButton
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
     private lateinit var etCvv: AppCompatEditText
     private lateinit var switchBindCard: SwitchCompat
-    private lateinit var btnPay: StateButton
+    private lateinit var btnPay: IokaStateButton
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -79,6 +82,7 @@ internal class PayWithCardActivity : BaseActivity() {
     }
 
     private fun bindViews() {
+        vRoot = findViewById(R.id.vRoot)
         vToolbar = findViewById(R.id.vToolbar)
         groupGooglePay = findViewById(R.id.groupGooglePay)
         btnGooglePay = findViewById(R.id.btnGooglePay)
@@ -157,6 +161,12 @@ internal class PayWithCardActivity : BaseActivity() {
             }
 
             is PayState.ERROR -> {
+                btnPay.setState(ButtonState.Default)
+
+                showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
+            }
+
+            is PayState.FAILED -> {
                 btnPay.setState(ButtonState.Default)
 
                 onFailedPayment(

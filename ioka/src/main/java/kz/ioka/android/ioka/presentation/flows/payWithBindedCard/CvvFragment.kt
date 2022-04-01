@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
@@ -28,7 +29,8 @@ import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
-import kz.ioka.android.ioka.uikit.StateButton
+import kz.ioka.android.ioka.uikit.IokaStateButton
+import kz.ioka.android.ioka.util.*
 import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.shortPanMask
 import kz.ioka.android.ioka.util.toCardType
@@ -59,12 +61,13 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
 
     private lateinit var tipWindow: TooltipWindow
 
+    private lateinit var vRoot: ConstraintLayout
     private lateinit var btnClose: AppCompatImageButton
     private lateinit var ivCardType: AppCompatImageView
     private lateinit var tvCardNumber: AppCompatTextView
     private lateinit var etCvv: AppCompatEditText
     private lateinit var ivCvvFaq: AppCompatImageButton
-    private lateinit var btnContinue: StateButton
+    private lateinit var btnContinue: IokaStateButton
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -80,6 +83,7 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     ): View? {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        isCancelable = false
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -96,6 +100,7 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     private fun bindViews(root: View) {
         tipWindow = TooltipWindow(requireContext())
 
+        vRoot = root.findViewById(R.id.vRoot)
         btnClose = root.findViewById(R.id.btnClose)
         ivCardType = root.findViewById(R.id.ivCardType)
         tvCardNumber = root.findViewById(R.id.tvCardNumber)
@@ -145,49 +150,64 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
                 ButtonState.Default
             }
         }
+
         btnContinue.setState(buttonState)
+        etCvv.isEnabled = state != PayState.LOADING
+        btnClose.isClickable = state != PayState.LOADING
+
+        when (state) {
+            PayState.SUCCESS -> {
+                onSuccessPayment()
+            }
+            is PayState.FAILED -> {
+                onFailedPayment(state.cause)
+            }
+            is PayState.ERROR -> {
+                context?.showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
+            }
+            is PayState.PENDING -> {
+                onActionRequired(state.actionUrl)
+            }
+        }
+    }
+
+    private fun onSuccessPayment() {
+        dismiss()
 
         val launcher = requireArguments().getParcelable<CvvLauncher>(LAUNCHER)!!
 
-        etCvv.isEnabled = state != PayState.LOADING
+        val intent = Intent(requireContext(), ResultActivity::class.java)
+        intent.putExtra(
+            BaseActivity.LAUNCHER,
+            SuccessResultLauncher(
+                subtitle = getString(
+                    R.string.ioka_result_success_payment_subtitle,
+                    launcher.orderToken.getOrderId()
+                ),
+                amount = launcher.price
+            )
+        )
 
-        when (state) {
-            PayState.LOADING -> {
-                etCvv.isEnabled = false
-            }
-            PayState.SUCCESS -> {
-                val intent = Intent(requireContext(), ResultActivity::class.java)
-                intent.putExtra(
-                    BaseActivity.LAUNCHER,
-                    SuccessResultLauncher(
-                        subtitle = getString(
-                            R.string.ioka_result_success_payment_subtitle,
-                            launcher.orderToken.getOrderId()
-                        ),
-                        amount = launcher.price
-                    )
-                )
+        startActivity(intent)
+    }
 
-                startActivity(intent)
-            }
-            is PayState.ERROR -> {
-                dismiss()
+    private fun onFailedPayment(cause: String?) {
+        dismiss()
 
-                val a = ResultFragment.newInstance(state.cause)
-                a.show(requireActivity().supportFragmentManager, ResultFragment::class.simpleName)
-            }
-            is PayState.PENDING -> {
-                val intent = Intent(requireContext(), WebViewActivity::class.java)
-                intent.putExtra(
-                    BaseActivity.LAUNCHER,
-                    WebViewLauncher(
-                        getString(R.string.ioka_common_payment_confirmation),
-                        state.actionUrl
-                    )
-                )
-                startForResult.launch(intent)
-            }
-        }
+        val a = ResultFragment.newInstance(cause)
+        a.show(requireActivity().supportFragmentManager, ResultFragment::class.simpleName)
+    }
+
+    private fun onActionRequired(actionUrl: String) {
+        val intent = Intent(requireContext(), WebViewActivity::class.java)
+        intent.putExtra(
+            BaseActivity.LAUNCHER,
+            WebViewLauncher(
+                getString(R.string.ioka_common_payment_confirmation),
+                actionUrl
+            )
+        )
+        startForResult.launch(intent)
     }
 
     override fun onClick(v: View?) {

@@ -46,14 +46,21 @@ internal class FormattedNumberEditText : AppCompatEditText {
 
     private fun init(attrs: AttributeSet?) {
         if (attrs != null) {
-            val a = context.theme.obtainStyledAttributes(attrs, R.styleable.FormattedNumberEditText, 0, 0)
-            prefix = a.getString(R.styleable.FormattedNumberEditText_prefix) ?: prefix
-            val separatorStr = a.getString(R.styleable.FormattedNumberEditText_groupSeparator)
+            val a = context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.IokaFormattedNumberEditText,
+                0,
+                0
+            )
+            prefix = a.getString(R.styleable.IokaFormattedNumberEditText_prefix) ?: prefix
+            val separatorStr = a.getString(R.styleable.IokaFormattedNumberEditText_groupSeparator)
             if (!separatorStr.isNullOrEmpty()) {
                 groupSeparator = separatorStr[0]
             }
-            numberOfGroups = a.getInteger(R.styleable.FormattedNumberEditText_numberOfGroups, numberOfGroups)
-            groupLength = a.getInteger(R.styleable.FormattedNumberEditText_groupLength, groupLength)
+            numberOfGroups =
+                a.getInteger(R.styleable.IokaFormattedNumberEditText_numberOfGroups, numberOfGroups)
+            groupLength =
+                a.getInteger(R.styleable.IokaFormattedNumberEditText_groupLength, groupLength)
         }
 
         inputLength = numberOfGroups * (groupLength + 1) - 1

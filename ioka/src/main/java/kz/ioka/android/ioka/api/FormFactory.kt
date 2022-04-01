@@ -14,7 +14,6 @@ import kz.ioka.android.ioka.viewBase.BaseActivity
 internal class FormFactory {
 
     fun provideAction(
-        apiKey: String,
         paymentFlow: PaymentFlow,
         context: Context
     ): ViewAction {
@@ -23,7 +22,7 @@ internal class FormFactory {
                 val intent = Intent(context, BindCardActivity::class.java)
                 intent.putExtra(
                     BaseActivity.LAUNCHER,
-                    BindCardLauncher(apiKey, paymentFlow.customerToken)
+                    BindCardLauncher(paymentFlow.customerToken)
                 )
                 it.startActivity(intent)
             }
@@ -32,7 +31,6 @@ internal class FormFactory {
                 intent.putExtra(
                     BaseActivity.LAUNCHER,
                     PayWithCardLauncher(
-                        apiKey,
                         paymentFlow.customerToken,
                         paymentFlow.orderToken,
                         paymentFlow.price,

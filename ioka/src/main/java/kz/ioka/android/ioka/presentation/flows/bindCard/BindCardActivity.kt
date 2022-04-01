@@ -7,10 +7,11 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
@@ -22,9 +23,12 @@ import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardRequestState.*
 import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.DEFAULT_FONT
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
+import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.TooltipWindow
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.*
+import kz.ioka.android.ioka.util.showErrorSnackbar
+import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
@@ -42,20 +46,18 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         )
     }
 
-    private lateinit var vToolbar: MaterialToolbar
+    private lateinit var tipWindow: TooltipWindow
+    private lateinit var vToolbar: Toolbar
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
-    private lateinit var etCvv: AppCompatEditText
-    private lateinit var vError: ErrorView
-    private lateinit var btnSave: StateButton
+    private lateinit var vCvvInput: CvvEditText
+    private lateinit var vGap: View
+    private lateinit var btnSave: IokaStateButton
 
-    private val startForResult =
+    private val resultFor3DSecure =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                btnSave.setState(ButtonState.Success)
-            } else {
-                btnSave.setState(ButtonState.Default)
-                vError.show()
+                bindCardViewModel.on3DSecurePassed()
             }
         }
 
@@ -68,45 +70,34 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_bind_card)
 
         bindViews()
+        setConfiguration()
         setupListeners()
         setupViews()
-        setConfiguration()
         observeData()
     }
 
     private fun bindViews() {
+        tipWindow = TooltipWindow(this)
         vToolbar = findViewById(R.id.vToolbar)
         etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
-        etCvv = findViewById(R.id.etCvv)
-        vError = findViewById(R.id.vError)
+        vCvvInput = findViewById(R.id.vCvvInput)
+        vGap = findViewById(R.id.vGap)
         btnSave = findViewById(R.id.btnSave)
-    }
-
-    private fun setupViews() {
-        vError.registerLifecycleOwner(lifecycle)
-        btnSave.setCallback(object : Callback {
-            override fun onSuccess(): () -> Unit = {
-                lifecycleScope.launch {
-                    delay(500)
-                    finish()
-                }
-            }
-        })
     }
 
     private fun setConfiguration() {
         launcher<BindCardLauncher>()?.configuration?.apply {
-            vToolbar.setTitle(toolbarTitleRes)
+            toolbarTitle?.let { vToolbar.title = it }
 
             etCardNumber.setRadius(fieldCornerRadius.toPx)
             (etExpireDate.background as GradientDrawable).cornerRadius = fieldCornerRadius.toPx
-            (etCvv.background as GradientDrawable).cornerRadius = fieldCornerRadius.toPx
+            vCvvInput.setRadius(fieldCornerRadius.toPx)
 
             btnSave.setConfiguration(
-                saveButtonCornerRadius,
-                saveButtonBackgroundColorRes,
-                saveButtonTextRes
+                bindButtonCornerRadius,
+                bindButtonBackgroundColorRes,
+                bindButtonTextRes ?: getString(R.string.ioka_bind_card_save)
             )
 
             if (fontRes != DEFAULT_FONT) {
@@ -115,10 +106,21 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
 
                 etCardNumber.setTypeface(typeface)
                 etExpireDate.typeface = typeface
-                etCvv.typeface = typeface
+                vCvvInput.setTypeface(typeface)
                 btnSave.setTypeface(typeface)
             }
         }
+    }
+
+    private fun setupViews() {
+        btnSave.setCallback(object : Callback {
+            override fun onSuccess(): () -> Unit = {
+                lifecycleScope.launch {
+                    delay(500)
+                    finish()
+                }
+            }
+        })
     }
 
     private fun setupListeners() {
@@ -136,8 +138,13 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
             bindCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
         }
 
-        etCvv.doOnTextChanged { text, _, _, _ ->
-            bindCardViewModel.onCvvEntered(text.toString())
+        vCvvInput.onTextChanged = {
+            bindCardViewModel.onCvvEntered(it)
+        }
+
+        vCvvInput.onFaqClicked = {
+            if (!tipWindow.isTooltipShown)
+                tipWindow.showToolTip(vCvvInput)
         }
 
         vToolbar.setNavigationOnClickListener(this)
@@ -176,7 +183,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
         btnSave.setState(buttonState)
 
         if (state is ERROR) {
-            vError.show(state.cause ?: getString(R.string.ioka_common_server_error))
+            showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
         }
 
         if (state is PENDING) {
@@ -189,7 +196,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
                 )
             )
 
-            startForResult.launch(intent)
+            resultFor3DSecure.launch(intent)
         }
     }
 
@@ -199,7 +206,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
                 bindCardViewModel.onBindClicked(
                     etCardNumber.getCardNumber(),
                     etExpireDate.text.toString(),
-                    etCvv.text.toString()
+                    vCvvInput.getCvv()
                 )
             }
             else -> {

@@ -74,7 +74,7 @@ internal class CardNumberEditText @JvmOverloads constructor(
             onTextChangedWithDebounce(it.toString().replace(" ", ""))
         }
 
-        etCardNumber.doOnTextChanged { text, start, before, count ->
+        etCardNumber.doOnTextChanged { text, _, _, _ ->
             onTextChanged(text.toString().replace(" ", ""))
         }
 
@@ -109,7 +109,6 @@ internal class CardNumberEditText @JvmOverloads constructor(
 
     fun setRadius(cornerRadius: Float) {
         (background as GradientDrawable).cornerRadius = cornerRadius.toPx
-
     }
 
     fun setTypeface(typeface: Typeface) {

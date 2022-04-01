@@ -69,10 +69,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun setupListeners() {
         btnSavedCards.setOnClickListener {
-            viewModel.onSavedCardsClicked {
-                val intent = Intent(requireActivity(), SavedCardsActivity::class.java)
-                startActivity(intent)
-            }
+            val intent = Intent(requireActivity(), SavedCardsActivity::class.java)
+            startActivity(intent)
         }
 
         btnLanguages.setOnClickListener {

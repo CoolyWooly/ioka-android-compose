@@ -14,13 +14,18 @@ import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.ListItem
 import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.data.CustomerRepository
+import kz.ioka.android.iokademoapp.data.SettingsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SavedCardsViewModel @Inject constructor(
     private val customerRepository: CustomerRepository,
+    private val settingsRepository: SettingsRepository,
     private val iokaDataSource: IokaDataSource = IokaDataSourceImpl()
 ) : ViewModel() {
+
+    private val _progress = MutableLiveData(false)
+    val progress = _progress as LiveData<Boolean>
 
     private val _savedCards = MutableLiveData<MutableList<ListItem>>(mutableListOf())
     val savedCards = _savedCards as LiveData<MutableList<ListItem>>
@@ -30,7 +35,10 @@ class SavedCardsViewModel @Inject constructor(
 
     fun fetchCards() {
         viewModelScope.launch(Dispatchers.IO) {
+            _progress.postValue(true)
             val cardsList = mutableListOf<ListItem>()
+
+            settingsRepository.fetchCustomerToken()
 
             cardsList.addAll(iokaDataSource.getCards(customerRepository.getCustomerToken()).map {
                 CardDvo(
@@ -42,6 +50,7 @@ class SavedCardsViewModel @Inject constructor(
             cardsList.add(AddCardDvo() as ListItem)
 
             _savedCards.postValue(cardsList)
+            _progress.postValue(false)
         }
     }
 

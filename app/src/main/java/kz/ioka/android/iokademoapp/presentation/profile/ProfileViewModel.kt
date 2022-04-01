@@ -54,16 +54,4 @@ class ProfileViewModel @Inject constructor(private val settingsRepository: Setti
 
         _isDarkModeEnabled.value = isEnabled
     }
-
-    fun onSavedCardsClicked(block: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _progress.postValue(true)
-
-            settingsRepository.getProfile()
-            _progress.postValue(false)
-
-            block.invoke()
-        }
-    }
-
 }

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     tools:cardCornerRadius="8dp"
     tools:cardElevation="0dp"
-    tools:parentTag="com.google.android.material.card.MaterialCardView">
+    tools:parentTag="androidx.cardview.widget.CardView">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
