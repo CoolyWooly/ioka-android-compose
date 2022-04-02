@@ -23,8 +23,8 @@ import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
+import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
-import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.IokaStateButton
@@ -63,7 +63,9 @@ internal class PayWithCardActivity : BaseActivity() {
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                viewModel.on3DSecurePassed()
+                onSuccessfulPayment()
+            } else if (it.resultCode == RESULT_CANCELED) {
+                onFailedPayment(getString(R.string.ioka_result_failed_payment_common_cause))
             }
         }
 
@@ -129,7 +131,7 @@ internal class PayWithCardActivity : BaseActivity() {
         viewModel.apply {
             vToolbar.title = getString(R.string.ioka_payment_toolbar, price.toAmountFormat())
             btnPay.setText(getString(R.string.ioka_payment_button, price.toAmountFormat()))
-            groupGooglePay.isVisible = launcher.withGooglePay
+            groupGooglePay.isVisible = withGooglePay
 
             payState.observe(this@PayWithCardActivity) {
                 handleState(it)
@@ -198,11 +200,15 @@ internal class PayWithCardActivity : BaseActivity() {
     }
 
     private fun on3DSecureNeeded(actionUrl: String) {
-        val intent = Intent(this, WebViewActivity::class.java)
-        intent.putExtra(
-            LAUNCHER,
-            WebViewLauncher(getString(R.string.ioka_common_payment_confirmation), actionUrl)
+        val intent = WebViewActivity.provideIntent(
+            this, PaymentConfirmationBehavior(
+                url = actionUrl,
+                customerToken = viewModel.customerToken,
+                orderToken = viewModel.orderToken,
+                paymentId = viewModel.paymentId
+            )
         )
+
         startForResult.launch(intent)
     }
 

@@ -21,11 +21,15 @@ internal class CvvViewModelFactory(
 
 
 internal class CvvViewModel(
-    private val launcher: CvvLauncher,
+    launcher: CvvLauncher,
     private val repository: PaymentRepository
 ) : ViewModel() {
 
-    private var paymentId: String = ""
+    val price = launcher.price
+    val customerToken = launcher.customerToken
+    val orderToken = launcher.orderToken
+    var paymentId: String = ""
+    var cardId: String = launcher.cardId
 
     private val _payState = MutableLiveData<PayState>(PayState.DISABLED)
     val payState = _payState as LiveData<PayState>
@@ -35,10 +39,10 @@ internal class CvvViewModel(
             _payState.value = PayState.LOADING
 
             val cardPayment = repository.createPaymentWithCardId(
-                launcher.orderToken.getOrderId(),
-                launcher.customerToken,
+                orderToken.getOrderId(),
+                customerToken,
                 Config.apiKey,
-                launcher.cardId,
+                cardId,
                 cvv
             )
 
@@ -64,31 +68,6 @@ internal class CvvViewModel(
             }
             is PaymentModel.Declined -> _payState.postValue(PayState.FAILED(cardPayment.message))
             else -> _payState.postValue(PayState.SUCCESS)
-        }
-    }
-
-    fun on3DSecurePassed() {
-        viewModelScope.launch {
-            _payState.postValue(PayState.LOADING)
-
-            val cardPayment = repository.isPaymentSuccessful(
-                Config.apiKey,
-                launcher.customerToken,
-                launcher.orderToken,
-                paymentId
-            )
-
-            when (cardPayment) {
-                is ResultWrapper.Success -> {
-                    processSuccessfulResponse(cardPayment.value)
-                }
-                is ResultWrapper.IokaError -> {
-                    _payState.postValue(PayState.FAILED())
-                }
-                else -> {
-                    _payState.postValue(PayState.ERROR())
-                }
-            }
         }
     }
 

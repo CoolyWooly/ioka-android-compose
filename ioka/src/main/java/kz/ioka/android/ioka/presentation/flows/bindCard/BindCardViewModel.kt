@@ -23,11 +23,12 @@ internal class BindCardViewModelFactory(
 }
 
 internal class BindCardViewModel constructor(
-    private val launcher: BindCardLauncher,
+    launcher: BindCardLauncher,
     private val repository: CardRepository
 ) : ViewModel() {
 
-    private var cardId: String? = null
+    var cardId: String? = null
+    var customerToken: String = launcher.customerToken
 
     private val _isCardPanValid = MutableStateFlow(false)
     private val _isExpireDateValid = MutableStateFlow(false)
@@ -89,7 +90,7 @@ internal class BindCardViewModel constructor(
                 _bindRequestState.value = BindCardRequestState.LOADING
 
                 val bindCard = repository.bindCard(
-                    launcher.customerToken,
+                    customerToken,
                     Config.apiKey,
                     cardPan, expireDate, cvv
                 )
@@ -119,35 +120,6 @@ internal class BindCardViewModel constructor(
                 _bindRequestState.postValue(BindCardRequestState.ERROR(bindCard.cause))
             else ->
                 _bindRequestState.postValue(BindCardRequestState.SUCCESS)
-        }
-    }
-
-    fun on3DSecurePassed() {
-        viewModelScope.launch {
-            _bindRequestState.postValue(BindCardRequestState.LOADING)
-
-            val bindingStatus = repository.getCardBindingStatus(
-                Config.apiKey,
-                launcher.customerToken,
-                cardId ?: ""
-            )
-
-            when (bindingStatus) {
-                is ResultWrapper.Success -> {
-                    when (bindingStatus.value) {
-                        is CardBindingStatusModel.Failed ->
-                            _bindRequestState.postValue(BindCardRequestState.ERROR(bindingStatus.value.cause))
-                        else ->
-                            _bindRequestState.postValue(BindCardRequestState.SUCCESS)
-                    }
-                }
-                is ResultWrapper.IokaError -> {
-                    _bindRequestState.postValue(BindCardRequestState.ERROR(bindingStatus.message))
-                }
-                else -> {
-                    _bindRequestState.postValue(BindCardRequestState.ERROR())
-                }
-            }
         }
     }
 

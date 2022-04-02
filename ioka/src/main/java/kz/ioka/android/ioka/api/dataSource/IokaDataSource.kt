@@ -7,6 +7,8 @@ import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.common.ResultWrapper
 import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getCustomerId
+import java.lang.Exception
+import java.net.ProtocolException
 
 interface IokaDataSource {
 
@@ -46,20 +48,21 @@ class IokaDataSourceImpl : IokaDataSource {
         customerToken: String,
         cardId: String
     ): Boolean {
-        if (Config.isApiKeyInitialized()) {
+        if (Config.isApiKeyInitialized().not()) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
-        val response = safeApiCall(Dispatchers.IO) {
+        return try {
             cardApi.removeCard(
                 apiKey,
                 customerToken,
                 customerToken.getCustomerId(),
                 cardId
             )
+            true
+        } catch (e: Exception) {
+            e is ProtocolException
         }
-
-        return response is ResultWrapper.Success
     }
 
 }

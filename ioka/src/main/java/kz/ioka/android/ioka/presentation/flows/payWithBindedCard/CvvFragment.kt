@@ -26,13 +26,13 @@ import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
+import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
-import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.IokaStateButton
-import kz.ioka.android.ioka.util.*
 import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.shortPanMask
+import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toCardType
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
@@ -72,7 +72,9 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == AppCompatActivity.RESULT_OK) {
-                viewModel.on3DSecurePassed()
+                onSuccessPayment()
+            } else if (it.resultCode == AppCompatActivity.RESULT_CANCELED) {
+                onFailedPayment(getString(R.string.ioka_result_failed_payment_common_cause))
             }
         }
 
@@ -199,14 +201,15 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     }
 
     private fun onActionRequired(actionUrl: String) {
-        val intent = Intent(requireContext(), WebViewActivity::class.java)
-        intent.putExtra(
-            BaseActivity.LAUNCHER,
-            WebViewLauncher(
-                getString(R.string.ioka_common_payment_confirmation),
-                actionUrl
+        val intent = WebViewActivity.provideIntent(
+            requireContext(), PaymentConfirmationBehavior(
+                url = actionUrl,
+                customerToken = viewModel.customerToken,
+                orderToken = viewModel.orderToken,
+                paymentId = viewModel.paymentId
             )
         )
+
         startForResult.launch(intent)
     }
 

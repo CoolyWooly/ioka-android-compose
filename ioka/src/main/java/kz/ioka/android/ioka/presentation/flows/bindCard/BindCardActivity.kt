@@ -1,6 +1,5 @@
 package kz.ioka.android.ioka.presentation.flows.bindCard
 
-import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
@@ -23,8 +22,8 @@ import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.TooltipWindow
+import kz.ioka.android.ioka.presentation.webView.CardBindingConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
-import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toPx
@@ -55,7 +54,9 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
     private val resultFor3DSecure =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                bindCardViewModel.on3DSecurePassed()
+                btnSave.setState(ButtonState.Success)
+            } else if (it.resultCode == RESULT_CANCELED) {
+                showErrorToast(getString(R.string.ioka_common_server_error))
             }
         }
 
@@ -184,13 +185,17 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
             showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
         }
 
+        etCardNumber.isEnabled = state !is LOADING
+        etExpireDate.isEnabled = state !is LOADING
+        vCvvInput.isEnabled = state !is LOADING
+
         if (state is PENDING) {
-            val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra(
-                LAUNCHER,
-                WebViewLauncher(
-                    getString(R.string.ioka_common_payment_confirmation),
-                    state.actionUrl
+            val intent = WebViewActivity.provideIntent(
+                this, CardBindingConfirmationBehavior(
+                    toolbarTitleRes = R.string.ioka_common_payment_confirmation,
+                    url = state.actionUrl,
+                    customerToken = bindCardViewModel.customerToken,
+                    cardId = bindCardViewModel.cardId ?: ""
                 )
             )
 

@@ -21,12 +21,15 @@ internal class PayWithCardViewModelFactory(
 }
 
 internal class PayWithCardViewModel constructor(
-    val launcher: PayWithCardLauncher,
+    launcher: PayWithCardLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
     val price = launcher.price
-    private var paymentId: String = ""
+    val customerToken = launcher.customerToken
+    val orderToken = launcher.orderToken
+    val withGooglePay = launcher.withGooglePay
+    var paymentId: String = ""
 
     private val _isCardPanValid = MutableStateFlow(false)
     private val _isExpireDateValid = MutableStateFlow(false)
@@ -86,8 +89,8 @@ internal class PayWithCardViewModel constructor(
                 _payState.postValue(PayState.LOADING)
 
                 val cardPayment = paymentRepository.createCardPayment(
-                    launcher.orderToken.getOrderId(),
-                    launcher.customerToken,
+                    orderToken.getOrderId(),
+                    customerToken,
                     Config.apiKey,
                     cardPan, expireDate, cvv, bindCard
                 )
@@ -115,31 +118,6 @@ internal class PayWithCardViewModel constructor(
             }
             is PaymentModel.Declined -> _payState.postValue(PayState.FAILED(cardPayment.message))
             else -> _payState.postValue(PayState.SUCCESS)
-        }
-    }
-
-    fun on3DSecurePassed() {
-        viewModelScope.launch {
-            _payState.postValue(PayState.LOADING)
-
-            val cardPayment = paymentRepository.isPaymentSuccessful(
-                Config.apiKey,
-                launcher.customerToken,
-                launcher.orderToken,
-                paymentId
-            )
-
-            when (cardPayment) {
-                is ResultWrapper.Success -> {
-                    processSuccessfulResponse(cardPayment.value)
-                }
-                is ResultWrapper.IokaError -> {
-                    _payState.postValue(PayState.FAILED())
-                }
-                else -> {
-                    _payState.postValue(PayState.ERROR())
-                }
-            }
         }
     }
 

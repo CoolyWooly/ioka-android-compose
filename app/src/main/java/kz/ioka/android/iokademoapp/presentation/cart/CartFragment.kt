@@ -21,7 +21,7 @@ class CartFragment : Fragment(R.layout.fragment_cart), View.OnClickListener {
         id = 248241,
         name = "Набор керамики",
         count = 1,
-        price = BigDecimal(148490),
+        price = BigDecimal(10_000),
         itemImage = R.drawable.item_image
     )
 

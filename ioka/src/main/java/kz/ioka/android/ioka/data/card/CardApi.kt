@@ -13,7 +13,7 @@ internal interface CardApi {
         @Body requestDto: BindCardRequestDto
     ): BindCardResponseDto
 
-    @POST("/v2/customers/{customer_id}/cards/{card_id}")
+    @GET("/v2/customers/{customer_id}/cards/{card_id}")
     suspend fun getCardById(
         @Header("API-KEY") apiKey: String,
         @Header("X-Customer-Access-Token") customerToken: String,
@@ -28,7 +28,7 @@ internal interface CardApi {
         @Path("customer_id") customerId: String,
     ): List<CardResultDto>
 
-    @HTTP(method = "DELETE", path = "/v2/customers/{customer_id}/cards/{card_id}", hasBody = true)
+    @DELETE("/v2/customers/{customer_id}/cards/{card_id}")
     suspend fun removeCard(
         @Header("API-KEY") apiKey: String,
         @Header("X-Customer-Access-Token") customerToken: String,

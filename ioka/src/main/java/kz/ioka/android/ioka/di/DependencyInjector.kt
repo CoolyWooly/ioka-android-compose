@@ -29,19 +29,19 @@ internal object DependencyInjector {
                 .build()
         }
 
-        okHttpClientBuilder
-            .addNetworkInterceptor { chain ->
-                val response: Response = try {
-                    chain.proceed(chain.request())
-                } catch (e: ProtocolException) {
-                    Response.Builder()
-                        .request(chain.request())
-                        .code(204)
-                        .protocol(Protocol.HTTP_1_1)
-                        .build()
-                }
-                response
-            }
+//        okHttpClientBuilder
+//            .addNetworkInterceptor { chain ->
+//                val response: Response = try {
+//                    chain.proceed(chain.request())
+//                } catch (e: ProtocolException) {
+//                    Response.Builder()
+//                        .request(chain.request())
+//                        .code(204)
+//                        .protocol(Protocol.HTTP_1_1)
+//                        .build()
+//                }
+//                response
+//            }
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)

@@ -2,6 +2,7 @@ package kz.ioka.android.ioka.api.dataSource
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.lang.Exception
 
 @Parcelize
 data class CardModel(
@@ -15,3 +16,4 @@ data class CardModel(
     val emitter: String?,
     val cvcRequired: Boolean?,
 ) : Parcelable
+

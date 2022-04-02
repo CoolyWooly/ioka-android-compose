@@ -89,4 +89,11 @@ class CvvEditText @JvmOverloads constructor(
         (background as GradientDrawable).cornerRadius = toPx
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        etCvv.isEnabled = enabled
+        ivCvvFaq.isEnabled = enabled
+
+        super.setEnabled(enabled)
+    }
+
 }

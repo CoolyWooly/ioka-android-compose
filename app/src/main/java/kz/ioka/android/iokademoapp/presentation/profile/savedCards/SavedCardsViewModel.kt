@@ -1,5 +1,6 @@
 package kz.ioka.android.iokademoapp.presentation.profile.savedCards
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import kz.ioka.android.iokademoapp.common.ListItem
 import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.data.CustomerRepository
 import kz.ioka.android.iokademoapp.data.SettingsRepository
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,8 +59,14 @@ class SavedCardsViewModel @Inject constructor(
     fun onRemoveCardClicked(cardId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val customerToken = customerRepository.getCustomerToken()
-            if (iokaDataSource.removeCard(customerToken, cardId))
-                fetchCards()
+
+            try {
+                val isCardRemoved = iokaDataSource.removeCard(customerToken, cardId)
+
+                if (isCardRemoved) fetchCards()
+            } catch (e: Exception) {
+                Log.d("Error", "" + e.localizedMessage)
+            }
         }
     }
 
