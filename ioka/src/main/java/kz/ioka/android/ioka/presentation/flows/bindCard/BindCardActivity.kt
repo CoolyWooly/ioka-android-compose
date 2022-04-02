@@ -7,7 +7,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
@@ -27,7 +26,6 @@ import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.TooltipWindow
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewLauncher
 import kz.ioka.android.ioka.uikit.*
-import kz.ioka.android.ioka.util.showErrorSnackbar
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
