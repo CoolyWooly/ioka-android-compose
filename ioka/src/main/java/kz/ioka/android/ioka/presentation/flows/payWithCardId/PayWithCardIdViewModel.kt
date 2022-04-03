@@ -26,9 +26,9 @@ internal class PayWithCardIdViewModelFactory(
 }
 
 internal class PayWithCardIdViewModel(
-    private val launcher: PayWithCardIdLauncher,
-    private val orderRepository: OrderRepository,
-    private val paymentRepository: PaymentRepository,
+    launcher: PayWithCardIdLauncher,
+    orderRepository: OrderRepository,
+    paymentRepository: PaymentRepository,
 ) : ViewModel() {
 
     var customerToken: String = launcher.customerToken
@@ -41,14 +41,14 @@ internal class PayWithCardIdViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val orderResponse = orderRepository.getOrderById(launcher.orderToken.getOrderId())
+            val orderResponse = orderRepository.getOrderById(orderToken.getOrderId())
 
             if (orderResponse is ResultWrapper.Success) {
                 order = OrderDvo(orderResponse.value.externalId, orderResponse.value.amount)
 
                 val paymentResponse = paymentRepository.createPaymentWithCardId(
-                    launcher.orderToken.getOrderId(),
-                    launcher.customerToken,
+                    orderToken.getOrderId(),
+                    customerToken,
                     Config.apiKey,
                     launcher.cardId
                 )
