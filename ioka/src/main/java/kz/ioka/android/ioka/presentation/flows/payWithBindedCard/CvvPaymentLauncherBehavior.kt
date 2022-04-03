@@ -17,7 +17,6 @@ import kz.ioka.android.ioka.util.showErrorToast
 
 @Parcelize
 internal class CvvPaymentLauncherBehavior(
-    private val customerToken: String,
     private val orderToken: String,
     private val cardId: String,
     private val cardNumber: String,
@@ -59,7 +58,6 @@ internal class CvvPaymentLauncherBehavior(
             ViewAction {
                 val newFragment: CvvFragment = CvvFragment.newInstance(
                     CvvLauncher(
-                        customerToken,
                         orderToken,
                         order!!,
                         cardId,

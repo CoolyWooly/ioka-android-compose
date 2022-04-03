@@ -31,7 +31,6 @@ internal class FormFactory {
                 val intent = PaymentLauncherActivity.provideIntent(
                     it,
                     PayWithCardLauncherBehavior(
-                        paymentFlow.customerToken,
                         paymentFlow.orderToken,
                         paymentFlow.withGooglePay
                     )
@@ -45,7 +44,6 @@ internal class FormFactory {
                         val intent = PaymentLauncherActivity.provideIntent(
                             activity,
                             CvvPaymentLauncherBehavior(
-                                paymentFlow.customerToken,
                                 paymentFlow.orderToken,
                                 paymentFlow.cardId,
                                 paymentFlow.cardNumber,
@@ -60,7 +58,6 @@ internal class FormFactory {
                         val intent = PayWithCardIdActivity.provideIntent(
                             it,
                             PayWithCardIdLauncher(
-                                paymentFlow.customerToken,
                                 paymentFlow.orderToken,
                                 paymentFlow.cardId
                             )

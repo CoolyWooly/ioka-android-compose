@@ -3,6 +3,9 @@ package kz.ioka.android.ioka.presentation.flows.payWithCardId
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import kz.ioka.android.ioka.R
@@ -13,15 +16,11 @@ import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
-import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
-import kz.ioka.android.ioka.presentation.webView.WebViewActivity
-import kz.ioka.android.ioka.uikit.ButtonState
-import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.viewBase.BaseActivity
-import java.math.BigDecimal
+import kz.ioka.android.ioka.viewBase.BasePaymentView
 
-internal class PayWithCardIdActivity : BaseActivity() {
+internal class PayWithCardIdActivity : BaseActivity(), BasePaymentView {
 
     companion object {
         fun provideIntent(context: Context, launcher: PayWithCardIdLauncher): Intent {
@@ -40,14 +39,16 @@ internal class PayWithCardIdActivity : BaseActivity() {
         )
     }
 
-    private val startForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                onSuccessfulPayment()
-            } else if (it.resultCode == RESULT_CANCELED) {
-                onFailedPayment(getString(R.string.ioka_result_failed_payment_common_cause))
-            }
-        }
+    override fun provideContext(): Context {
+        return this
+    }
+
+    override fun registerForActivityResult(
+        contract: ActivityResultContracts.StartActivityForResult,
+        callback: ActivityResultCallback<ActivityResult>
+    ): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(contract, callback)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +68,11 @@ internal class PayWithCardIdActivity : BaseActivity() {
     private fun handleState(state: PaymentState) {
         when (state) {
             is PaymentState.PENDING -> {
-                on3DSecureNeeded(state.actionUrl)
+                onActionRequired(
+                    state.actionUrl,
+                    viewModel.orderToken,
+                    viewModel.paymentId
+                )
             }
 
             PaymentState.SUCCESS -> {
@@ -87,20 +92,7 @@ internal class PayWithCardIdActivity : BaseActivity() {
         }
     }
 
-    private fun on3DSecureNeeded(actionUrl: String) {
-        val intent = WebViewActivity.provideIntent(
-            this, PaymentConfirmationBehavior(
-                url = actionUrl,
-                customerToken = viewModel.customerToken,
-                orderToken = viewModel.orderToken,
-                paymentId = viewModel.paymentId
-            )
-        )
-
-        startForResult.launch(intent)
-    }
-
-    private fun onSuccessfulPayment() {
+    override fun onSuccessfulPayment() {
         finish()
 
         val intent = Intent(this, ResultActivity::class.java)
@@ -118,13 +110,13 @@ internal class PayWithCardIdActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    private fun onFailedPayment(cause: String) {
+    override fun onFailedPayment(cause: String?) {
         finish()
 
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra(
             LAUNCHER,
-            ErrorResultLauncher(subtitle = cause)
+            ErrorResultLauncher(subtitle = cause ?: getString(R.string.ioka_common_server_error))
         )
 
         startActivity(intent)

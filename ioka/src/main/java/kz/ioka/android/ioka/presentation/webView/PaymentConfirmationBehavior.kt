@@ -14,7 +14,6 @@ import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 internal class PaymentConfirmationBehavior(
     override val toolbarTitleRes: Int = R.string.ioka_common_payment_confirmation,
     private val url: String,
-    private val customerToken: String,
     private val orderToken: String,
     private val paymentId: String
 ) : WebViewBehavior {
@@ -35,7 +34,6 @@ internal class PaymentConfirmationBehavior(
 
         val payment = paymentRepository.isPaymentSuccessful(
             Config.apiKey,
-            customerToken,
             orderToken,
             paymentId
         )

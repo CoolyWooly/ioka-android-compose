@@ -18,7 +18,6 @@ import kz.ioka.android.ioka.viewBase.BaseActivity
 
 @Parcelize
 internal class PayWithCardLauncherBehavior(
-    private val customerToken: String,
     private val orderToken: String,
     private val withGooglePay: Boolean,
 ) : PaymentLauncherBehavior {
@@ -60,7 +59,6 @@ internal class PayWithCardLauncherBehavior(
                 intent.putExtra(
                     BaseActivity.LAUNCHER,
                     PayWithCardLauncher(
-                        customerToken,
                         orderToken,
                         order!!,
                         withGooglePay,

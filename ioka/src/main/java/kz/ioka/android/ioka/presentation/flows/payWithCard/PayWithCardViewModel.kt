@@ -26,7 +26,6 @@ internal class PayWithCardViewModel constructor(
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
-    val customerToken = launcher.customerToken
     val orderToken = launcher.orderToken
     val order = launcher.order
     val withGooglePay = launcher.withGooglePay
@@ -93,7 +92,6 @@ internal class PayWithCardViewModel constructor(
 
                 val cardPayment = paymentRepository.createCardPayment(
                     orderToken.getOrderId(),
-                    customerToken,
                     Config.apiKey,
                     cardPan, expireDate, cvv, bindCard
                 )

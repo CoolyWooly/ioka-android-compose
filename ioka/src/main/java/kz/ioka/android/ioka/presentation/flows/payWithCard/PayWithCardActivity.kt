@@ -1,7 +1,11 @@
 package kz.ioka.android.ioka.presentation.flows.payWithCard
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
@@ -33,9 +37,10 @@ import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
+import kz.ioka.android.ioka.viewBase.BasePaymentView
 import java.math.BigDecimal
 
-internal class PayWithCardActivity : BaseActivity() {
+internal class PayWithCardActivity : BaseActivity(), BasePaymentView {
 
     private val cardInfoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -59,14 +64,16 @@ internal class PayWithCardActivity : BaseActivity() {
     private lateinit var switchBindCard: SwitchCompat
     private lateinit var btnPay: IokaStateButton
 
-    private val startForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                onSuccessfulPayment()
-            } else if (it.resultCode == RESULT_CANCELED) {
-                onFailedPayment(getString(R.string.ioka_result_failed_payment_common_cause))
-            }
-        }
+    override fun provideContext(): Context {
+        return this
+    }
+
+    override fun registerForActivityResult(
+        contract: ActivityResultContracts.StartActivityForResult,
+        callback: ActivityResultCallback<ActivityResult>
+    ): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(contract, callback)
+    }
 
     override fun onCardScanned(cardNumber: String) {
         etCardNumber.setCardNumber(cardNumber)
@@ -158,7 +165,11 @@ internal class PayWithCardActivity : BaseActivity() {
             is PaymentState.PENDING -> {
                 btnPay.setState(ButtonState.Default)
 
-                on3DSecureNeeded(state.actionUrl)
+                onActionRequired(
+                    state.actionUrl,
+                    viewModel.orderToken,
+                    viewModel.paymentId
+                )
             }
 
             PaymentState.SUCCESS -> {
@@ -204,20 +215,7 @@ internal class PayWithCardActivity : BaseActivity() {
         btnGooglePay.isEnabled = false
     }
 
-    private fun on3DSecureNeeded(actionUrl: String) {
-        val intent = WebViewActivity.provideIntent(
-            this, PaymentConfirmationBehavior(
-                url = actionUrl,
-                customerToken = viewModel.customerToken,
-                orderToken = viewModel.orderToken,
-                paymentId = viewModel.paymentId
-            )
-        )
-
-        startForResult.launch(intent)
-    }
-
-    private fun onSuccessfulPayment() {
+    override fun onSuccessfulPayment() {
         finish()
 
         val intent = Intent(this, ResultActivity::class.java)
@@ -235,13 +233,15 @@ internal class PayWithCardActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    private fun onFailedPayment(cause: String) {
+    override fun onFailedPayment(cause: String?) {
         finish()
 
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra(
             LAUNCHER,
-            ErrorResultLauncher(subtitle = cause)
+            ErrorResultLauncher(
+                subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
+            )
         )
 
         startActivity(intent)

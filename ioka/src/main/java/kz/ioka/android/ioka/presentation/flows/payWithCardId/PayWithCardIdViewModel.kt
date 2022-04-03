@@ -31,7 +31,6 @@ internal class PayWithCardIdViewModel(
     paymentRepository: PaymentRepository,
 ) : ViewModel() {
 
-    var customerToken: String = launcher.customerToken
     var orderToken: String = launcher.orderToken
     lateinit var order: OrderDvo
     lateinit var paymentId: String
@@ -48,7 +47,6 @@ internal class PayWithCardIdViewModel(
 
                 val paymentResponse = paymentRepository.createPaymentWithCardId(
                     orderToken.getOrderId(),
-                    customerToken,
                     Config.apiKey,
                     launcher.cardId
                 )

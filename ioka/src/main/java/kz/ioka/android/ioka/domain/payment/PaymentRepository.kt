@@ -11,7 +11,6 @@ internal interface PaymentRepository {
 
     suspend fun createCardPayment(
         orderId: String,
-        customerToken: String,
         apiKey: String,
         panNumber: String,
         expiryDate: String,
@@ -21,7 +20,6 @@ internal interface PaymentRepository {
 
     suspend fun createPaymentWithCardId(
         orderId: String,
-        customerToken: String,
         apiKey: String,
         cardId: String,
         cvv: String? = null
@@ -29,7 +27,6 @@ internal interface PaymentRepository {
 
     suspend fun isPaymentSuccessful(
         apiKey: String,
-        customerToken: String,
         orderToken: String,
         paymentId: String
     ): ResultWrapper<PaymentModel>
@@ -42,7 +39,6 @@ internal class PaymentRepositoryImpl constructor(
 
     override suspend fun createCardPayment(
         orderId: String,
-        customerToken: String,
         apiKey: String,
         panNumber: String,
         expiryDate: String,
@@ -52,7 +48,6 @@ internal class PaymentRepositoryImpl constructor(
         return safeApiCall(Dispatchers.IO) {
             val paymentResult = paymentApi.createPayment(
                 orderId,
-                customerToken,
                 apiKey,
                 PaymentRequestDto(pan = panNumber, exp = expiryDate, cvc = cvv, bindCard = bindCard)
             )
@@ -71,7 +66,6 @@ internal class PaymentRepositoryImpl constructor(
 
     override suspend fun createPaymentWithCardId(
         orderId: String,
-        customerToken: String,
         apiKey: String,
         cardId: String,
         cvv: String?
@@ -79,7 +73,6 @@ internal class PaymentRepositoryImpl constructor(
         return safeApiCall(Dispatchers.IO) {
             val paymentResult = paymentApi.createPayment(
                 orderId,
-                customerToken,
                 apiKey,
                 PaymentRequestDto(cardId = cardId, cvc = cvv)
             )
@@ -98,7 +91,6 @@ internal class PaymentRepositoryImpl constructor(
 
     override suspend fun isPaymentSuccessful(
         apiKey: String,
-        customerToken: String,
         orderToken: String,
         paymentId: String
     ): ResultWrapper<PaymentModel> {
@@ -106,7 +98,6 @@ internal class PaymentRepositoryImpl constructor(
             val payment = paymentApi.getPaymentById(
                 orderToken.getOrderId(),
                 paymentId,
-                customerToken,
                 orderToken,
                 apiKey
             )

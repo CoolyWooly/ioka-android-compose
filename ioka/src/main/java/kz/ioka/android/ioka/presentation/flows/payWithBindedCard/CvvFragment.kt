@@ -1,5 +1,6 @@
 package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -9,8 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -28,16 +31,16 @@ import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
-import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
-import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.IokaStateButton
 import kz.ioka.android.ioka.util.shortPanMask
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toCardType
 import kz.ioka.android.ioka.viewBase.BaseActivity
+import kz.ioka.android.ioka.viewBase.BasePaymentView
 
-internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener {
+internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener,
+    BasePaymentView {
 
     companion object {
         const val LAUNCHER = "CvvFragment_LAUNCHER"
@@ -70,14 +73,16 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     private lateinit var ivCvvFaq: AppCompatImageButton
     private lateinit var btnContinue: IokaStateButton
 
-    private val startForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == AppCompatActivity.RESULT_OK) {
-                onSuccessPayment()
-            } else if (it.resultCode == AppCompatActivity.RESULT_CANCELED) {
-                onFailedPayment(getString(R.string.ioka_result_failed_payment_common_cause))
-            }
-        }
+    override fun provideContext(): Context {
+        return requireContext()
+    }
+
+    override fun registerForActivityResult(
+        contract: ActivityResultContracts.StartActivityForResult,
+        callback: ActivityResultCallback<ActivityResult>
+    ): ActivityResultLauncher<Intent> {
+        return registerForActivityResult(contract, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -158,7 +163,7 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
 
         when (state) {
             PaymentState.SUCCESS -> {
-                onSuccessPayment()
+                onSuccessfulPayment()
             }
             is PaymentState.FAILED -> {
                 onFailedPayment(state.cause)
@@ -167,12 +172,17 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
                 context?.showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
             }
             is PaymentState.PENDING -> {
-                onActionRequired(state.actionUrl)
+                onActionRequired(
+                    state.actionUrl,
+                    viewModel.orderToken,
+                    viewModel.paymentId
+                )
             }
+            else -> return
         }
     }
 
-    private fun onSuccessPayment() {
+    override fun onSuccessfulPayment() {
         dismiss()
 
         val intent = Intent(requireContext(), ResultActivity::class.java)
@@ -191,24 +201,11 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
         startActivity(intent)
     }
 
-    private fun onFailedPayment(cause: String?) {
+    override fun onFailedPayment(cause: String?) {
         dismiss()
 
         val a = ResultFragment.newInstance(cause)
         a.show(requireActivity().supportFragmentManager, ResultFragment::class.simpleName)
-    }
-
-    private fun onActionRequired(actionUrl: String) {
-        val intent = WebViewActivity.provideIntent(
-            requireContext(), PaymentConfirmationBehavior(
-                url = actionUrl,
-                customerToken = viewModel.customerToken,
-                orderToken = viewModel.orderToken,
-                paymentId = viewModel.paymentId
-            )
-        )
-
-        startForResult.launch(intent)
     }
 
     override fun onClick(v: View?) {

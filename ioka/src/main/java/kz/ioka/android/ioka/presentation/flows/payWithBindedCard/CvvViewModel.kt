@@ -25,7 +25,6 @@ internal class CvvViewModel(
     private val repository: PaymentRepository
 ) : ViewModel() {
 
-    val customerToken = launcher.customerToken
     val orderToken = launcher.orderToken
     val order = launcher.order
     var cardId: String = launcher.cardId
@@ -43,7 +42,6 @@ internal class CvvViewModel(
 
             val cardPayment = repository.createPaymentWithCardId(
                 orderToken.getOrderId(),
-                customerToken,
                 Config.apiKey,
                 cardId,
                 cvv

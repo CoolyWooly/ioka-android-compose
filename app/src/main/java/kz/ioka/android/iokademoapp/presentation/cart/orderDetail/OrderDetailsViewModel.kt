@@ -50,25 +50,19 @@ class OrderDetailsViewModel @Inject constructor(
         val paymentFlow = when (selectedPaymentType.value) {
             PaymentTypeDvo.GooglePayDvo -> {
                 PaymentFlow.PayWithCardFlow(
-                    customerToken,
                     orderToken,
-                    itemPrice ?: BigDecimal.ZERO,
                     false
                 )
             }
             PaymentTypeDvo.PayWithCardDvo -> {
                 PaymentFlow.PayWithCardFlow(
-                    customerToken,
                     orderToken,
-                    itemPrice ?: BigDecimal.ZERO,
                     false
                 )
             }
             PaymentTypeDvo.PayWithCashDvo -> {
                 PaymentFlow.PayWithCardFlow(
-                    customerToken,
                     orderToken,
-                    itemPrice ?: BigDecimal.ZERO,
                     false
                 )
             }
@@ -76,9 +70,7 @@ class OrderDetailsViewModel @Inject constructor(
                 val cardDvo = selectedPaymentType.value as PaymentTypeDvo.PayWithSavedCardDvo
 
                 PaymentFlow.PayWithBindedCardFlow(
-                    customerToken,
                     orderToken,
-                    itemPrice ?: BigDecimal.ZERO,
                     cardDvo.cardId,
                     cardDvo.maskedCardNumber,
                     cardDvo.cardType.code,
@@ -87,9 +79,7 @@ class OrderDetailsViewModel @Inject constructor(
             }
             null -> {
                 PaymentFlow.PayWithCardFlow(
-                    customerToken,
                     orderToken,
-                    itemPrice ?: BigDecimal.ZERO,
                     true
                 )
             }
