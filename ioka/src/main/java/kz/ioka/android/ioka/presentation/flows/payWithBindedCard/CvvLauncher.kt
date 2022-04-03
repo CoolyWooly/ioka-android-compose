@@ -2,15 +2,14 @@ package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.math.BigDecimal
+import kz.ioka.android.ioka.presentation.flows.common.OrderDvo
 
 @Parcelize
 internal data class CvvLauncher(
     val customerToken: String,
     val orderToken: String,
-    val price: BigDecimal,
+    val order: OrderDvo,
     val cardId: String,
     val cardNumber: String,
-    val cardType: String,
-    val cvvRequired: Boolean
+    val cardType: String
 ) : Parcelable

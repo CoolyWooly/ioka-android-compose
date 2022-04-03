@@ -49,8 +49,8 @@ internal class ResultActivity : BaseActivity() {
             tvSubtitle.text = it.subtitle
             btnAction.setText(it.btnTitleRes)
 
-            if (it.amount != BigDecimal.ZERO)
-                tvAmount.text = it.amount.toAmountFormat()
+            if (it.amount.amount != BigDecimal.ZERO)
+                tvAmount.text = it.amount.amount.toAmountFormat()
         }
 
         vToolbar.setNavigationOnClickListener {

@@ -3,8 +3,8 @@ package kz.ioka.android.ioka.domain.bindCard
 import kotlinx.coroutines.Dispatchers
 import kz.ioka.android.ioka.data.card.BindCardRequestDto
 import kz.ioka.android.ioka.data.card.CardApi
-import kz.ioka.android.ioka.domain.common.ResultWrapper
-import kz.ioka.android.ioka.domain.common.safeApiCall
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.safeApiCall
 import kz.ioka.android.ioka.util.getCustomerId
 
 internal interface CardRepository {

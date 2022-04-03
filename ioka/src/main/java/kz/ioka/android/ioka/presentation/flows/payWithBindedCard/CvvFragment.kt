@@ -1,5 +1,6 @@
 package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -22,7 +23,8 @@ import androidx.fragment.app.viewModels
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
-import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
+import kz.ioka.android.ioka.presentation.flows.common.PaymentState
+import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
@@ -30,7 +32,6 @@ import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.IokaStateButton
-import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.shortPanMask
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toCardType
@@ -121,31 +122,29 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     }
 
     private fun setInitialData() {
-        val launcher = requireArguments().getParcelable<CvvLauncher>(LAUNCHER)!!
-
         ivCardType.setImageDrawable(
             ContextCompat.getDrawable(
-                requireContext(), launcher.cardType.toCardType().cardTypeRes
+                requireContext(), viewModel.cardType.toCardType().cardTypeRes
             )
         )
-        tvCardNumber.text = launcher.cardNumber.shortPanMask()
+        tvCardNumber.text = viewModel.cardNumber.shortPanMask()
         etCvv.requestFocus()
     }
 
     private fun observeViewModel() {
         viewModel.apply {
             payState.observe(viewLifecycleOwner) {
-                processPayState(it)
+                processPaymentState(it)
             }
         }
     }
 
-    private fun processPayState(state: PayState) {
+    private fun processPaymentState(state: PaymentState) {
         val buttonState: ButtonState = when (state) {
-            PayState.DISABLED -> {
+            PaymentState.DISABLED -> {
                 ButtonState.Disabled
             }
-            PayState.LOADING -> {
+            PaymentState.LOADING -> {
                 ButtonState.Loading
             }
             else -> {
@@ -154,20 +153,20 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
         }
 
         btnContinue.setState(buttonState)
-        etCvv.isEnabled = state != PayState.LOADING
-        btnClose.isClickable = state != PayState.LOADING
+        etCvv.isEnabled = state != PaymentState.LOADING
+        btnClose.isClickable = state != PaymentState.LOADING
 
         when (state) {
-            PayState.SUCCESS -> {
+            PaymentState.SUCCESS -> {
                 onSuccessPayment()
             }
-            is PayState.FAILED -> {
+            is PaymentState.FAILED -> {
                 onFailedPayment(state.cause)
             }
-            is PayState.ERROR -> {
+            is PaymentState.ERROR -> {
                 context?.showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
             }
-            is PayState.PENDING -> {
+            is PaymentState.PENDING -> {
                 onActionRequired(state.actionUrl)
             }
         }
@@ -176,17 +175,16 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     private fun onSuccessPayment() {
         dismiss()
 
-        val launcher = requireArguments().getParcelable<CvvLauncher>(LAUNCHER)!!
-
         val intent = Intent(requireContext(), ResultActivity::class.java)
         intent.putExtra(
             BaseActivity.LAUNCHER,
             SuccessResultLauncher(
-                subtitle = getString(
+                subtitle = if (viewModel.order.externalId.isBlank()) ""
+                else getString(
                     R.string.ioka_result_success_payment_subtitle,
-                    launcher.orderToken.getOrderId()
+                    viewModel.order.externalId
                 ),
-                amount = launcher.price
+                amount = viewModel.order.amount
             )
         )
 
@@ -227,6 +225,14 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
             btnContinue -> {
                 viewModel.onContinueClicked(etCvv.text.toString())
             }
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
+        if (activity is PaymentLauncherActivity) {
+            activity?.finish()
         }
     }
 

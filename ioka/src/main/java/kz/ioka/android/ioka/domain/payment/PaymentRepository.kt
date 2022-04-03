@@ -3,8 +3,8 @@ package kz.ioka.android.ioka.domain.payment
 import kotlinx.coroutines.Dispatchers
 import kz.ioka.android.ioka.data.payment.PaymentApi
 import kz.ioka.android.ioka.data.payment.PaymentRequestDto
-import kz.ioka.android.ioka.domain.common.ResultWrapper
-import kz.ioka.android.ioka.domain.common.safeApiCall
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.safeApiCall
 import kz.ioka.android.ioka.util.getOrderId
 
 internal interface PaymentRepository {
@@ -24,7 +24,7 @@ internal interface PaymentRepository {
         customerToken: String,
         apiKey: String,
         cardId: String,
-        cvv: String
+        cvv: String? = null
     ): ResultWrapper<PaymentModel>
 
     suspend fun isPaymentSuccessful(
@@ -74,7 +74,7 @@ internal class PaymentRepositoryImpl constructor(
         customerToken: String,
         apiKey: String,
         cardId: String,
-        cvv: String
+        cvv: String?
     ): ResultWrapper<PaymentModel> {
         return safeApiCall(Dispatchers.IO) {
             val paymentResult = paymentApi.createPayment(

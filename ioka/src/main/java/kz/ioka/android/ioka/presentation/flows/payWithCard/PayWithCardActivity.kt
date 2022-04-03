@@ -18,6 +18,7 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
+import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
@@ -35,8 +36,6 @@ import kz.ioka.android.ioka.viewBase.BaseActivity
 import java.math.BigDecimal
 
 internal class PayWithCardActivity : BaseActivity() {
-
-    private var launcher: PayWithCardLauncher? = null
 
     private val cardInfoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -77,7 +76,6 @@ internal class PayWithCardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pay_with_card)
 
-        launcher = launcher()
         bindViews()
         setupListeners()
         observeData()
@@ -129,9 +127,16 @@ internal class PayWithCardActivity : BaseActivity() {
 
     private fun observeData() {
         viewModel.apply {
-            vToolbar.title = getString(R.string.ioka_payment_toolbar, price.toAmountFormat())
-            btnPay.setText(getString(R.string.ioka_payment_button, price.toAmountFormat()))
+            vToolbar.title =
+                getString(R.string.ioka_payment_toolbar, order.amount.amount.toAmountFormat())
+            btnPay.setText(
+                getString(
+                    R.string.ioka_payment_button,
+                    order.amount.amount.toAmountFormat()
+                )
+            )
             groupGooglePay.isVisible = withGooglePay
+            switchBindCard.isVisible = canBindCard
 
             payState.observe(this@PayWithCardActivity) {
                 handleState(it)
@@ -139,36 +144,36 @@ internal class PayWithCardActivity : BaseActivity() {
         }
     }
 
-    private fun handleState(state: PayState) {
+    private fun handleState(state: PaymentState) {
         when (state) {
-            PayState.LOADING -> {
+            PaymentState.LOADING -> {
                 btnPay.setState(ButtonState.Loading)
                 disableInputs()
             }
 
-            PayState.DISABLED -> {
+            PaymentState.DISABLED -> {
                 btnPay.setState(ButtonState.Disabled)
             }
 
-            is PayState.PENDING -> {
+            is PaymentState.PENDING -> {
                 btnPay.setState(ButtonState.Default)
 
                 on3DSecureNeeded(state.actionUrl)
             }
 
-            PayState.SUCCESS -> {
+            PaymentState.SUCCESS -> {
                 btnPay.setState(ButtonState.Default)
 
                 onSuccessfulPayment()
             }
 
-            is PayState.ERROR -> {
+            is PaymentState.ERROR -> {
                 btnPay.setState(ButtonState.Default)
 
                 showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
             }
 
-            is PayState.FAILED -> {
+            is PaymentState.FAILED -> {
                 btnPay.setState(ButtonState.Default)
 
                 onFailedPayment(
@@ -176,7 +181,7 @@ internal class PayWithCardActivity : BaseActivity() {
                 )
             }
 
-            PayState.DEFAULT -> {
+            PaymentState.DEFAULT -> {
                 btnPay.setState(ButtonState.Default)
                 enableInputs()
             }
@@ -221,9 +226,9 @@ internal class PayWithCardActivity : BaseActivity() {
             SuccessResultLauncher(
                 subtitle = getString(
                     R.string.ioka_result_success_payment_subtitle,
-                    launcher?.orderToken?.getOrderId()
+                    viewModel.order.externalId
                 ),
-                amount = launcher?.price ?: BigDecimal.ZERO
+                amount = viewModel.order.amount
             )
         )
 
@@ -236,7 +241,7 @@ internal class PayWithCardActivity : BaseActivity() {
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra(
             LAUNCHER,
-            ErrorResultLauncher(subtitle = cause, amount = BigDecimal.ZERO)
+            ErrorResultLauncher(subtitle = cause)
         )
 
         startActivity(intent)

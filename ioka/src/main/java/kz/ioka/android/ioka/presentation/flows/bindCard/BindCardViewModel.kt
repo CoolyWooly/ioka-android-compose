@@ -6,10 +6,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.domain.bindCard.CardBindingResultModel
-import kz.ioka.android.ioka.domain.bindCard.CardBindingStatusModel
 import kz.ioka.android.ioka.domain.bindCard.CardRepository
-import kz.ioka.android.ioka.domain.common.ResultWrapper
-import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")

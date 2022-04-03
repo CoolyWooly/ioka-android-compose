@@ -3,6 +3,7 @@ package kz.ioka.android.ioka.di
 import kz.ioka.android.ioka.BuildConfig
 import kz.ioka.android.ioka.data.card.CardApi
 import kz.ioka.android.ioka.data.cardInfo.CardInfoApi
+import kz.ioka.android.ioka.data.order.OrderApi
 import kz.ioka.android.ioka.data.payment.PaymentApi
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -17,6 +18,7 @@ internal object DependencyInjector {
     lateinit var cardApi: CardApi
     lateinit var cardInfoApi: CardInfoApi
     lateinit var paymentApi: PaymentApi
+    lateinit var orderApi: OrderApi
 
     fun createDependencies() {
         val okHttpClientBuilder = OkHttpClient.Builder()
@@ -29,20 +31,6 @@ internal object DependencyInjector {
                 .build()
         }
 
-//        okHttpClientBuilder
-//            .addNetworkInterceptor { chain ->
-//                val response: Response = try {
-//                    chain.proceed(chain.request())
-//                } catch (e: ProtocolException) {
-//                    Response.Builder()
-//                        .request(chain.request())
-//                        .code(204)
-//                        .protocol(Protocol.HTTP_1_1)
-//                        .build()
-//                }
-//                response
-//            }
-
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -52,6 +40,7 @@ internal object DependencyInjector {
         cardApi = retrofit.create(CardApi::class.java)
         cardInfoApi = retrofit.create(CardInfoApi::class.java)
         paymentApi = retrofit.create(PaymentApi::class.java)
+        orderApi = retrofit.create(OrderApi::class.java)
     }
 
 }

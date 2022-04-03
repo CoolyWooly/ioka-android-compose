@@ -4,9 +4,10 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
-import kz.ioka.android.ioka.domain.common.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepository
+import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.util.getOrderId
 import java.util.*
 
@@ -25,10 +26,12 @@ internal class PayWithCardViewModel constructor(
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
-    val price = launcher.price
     val customerToken = launcher.customerToken
     val orderToken = launcher.orderToken
+    val order = launcher.order
     val withGooglePay = launcher.withGooglePay
+    val canBindCard = launcher.canBindCard
+
     var paymentId: String = ""
 
     private val _isCardPanValid = MutableStateFlow(false)
@@ -43,16 +46,16 @@ internal class PayWithCardViewModel constructor(
         isCardPanValid && isExpireDateValid && isCvvValid
     }
 
-    private val _payState = MutableLiveData<PayState>(PayState.DEFAULT)
-    val payState = _payState as LiveData<PayState>
+    private val _payState = MutableLiveData<PaymentState>(PaymentState.DEFAULT)
+    val payState = _payState as LiveData<PaymentState>
 
     init {
         viewModelScope.launch {
             allFieldsAreValid.collect { areAllFieldsValid ->
                 if (areAllFieldsValid) {
-                    _payState.postValue(PayState.DEFAULT)
+                    _payState.postValue(PaymentState.DEFAULT)
                 } else {
-                    _payState.postValue(PayState.DISABLED)
+                    _payState.postValue(PaymentState.DISABLED)
                 }
             }
         }
@@ -86,7 +89,7 @@ internal class PayWithCardViewModel constructor(
             val areAllFieldsValid = allFieldsAreValid.first()
 
             if (areAllFieldsValid) {
-                _payState.postValue(PayState.LOADING)
+                _payState.postValue(PaymentState.LOADING)
 
                 val cardPayment = paymentRepository.createCardPayment(
                     orderToken.getOrderId(),
@@ -100,10 +103,10 @@ internal class PayWithCardViewModel constructor(
                         processSuccessfulResponse(cardPayment.value)
                     }
                     is ResultWrapper.IokaError -> {
-                        _payState.postValue(PayState.FAILED(cardPayment.message))
+                        _payState.postValue(PaymentState.FAILED(cardPayment.message))
                     }
                     else -> {
-                        _payState.postValue(PayState.ERROR())
+                        _payState.postValue(PaymentState.ERROR())
                     }
                 }
             }
@@ -114,23 +117,11 @@ internal class PayWithCardViewModel constructor(
         when (cardPayment) {
             is PaymentModel.Pending -> {
                 paymentId = cardPayment.paymentId
-                _payState.postValue(PayState.PENDING(cardPayment.actionUrl))
+                _payState.postValue(PaymentState.PENDING(cardPayment.actionUrl))
             }
-            is PaymentModel.Declined -> _payState.postValue(PayState.FAILED(cardPayment.message))
-            else -> _payState.postValue(PayState.SUCCESS)
+            is PaymentModel.Declined -> _payState.postValue(PaymentState.FAILED(cardPayment.message))
+            else -> _payState.postValue(PaymentState.SUCCESS)
         }
     }
 
-}
-
-sealed class PayState {
-
-    object DEFAULT : PayState()
-    object DISABLED : PayState()
-    object LOADING : PayState()
-    object SUCCESS : PayState()
-    class FAILED(val cause: String? = null) : PayState()
-    class ERROR(val cause: String? = null) : PayState()
-
-    class PENDING(val actionUrl: String) : PayState()
 }

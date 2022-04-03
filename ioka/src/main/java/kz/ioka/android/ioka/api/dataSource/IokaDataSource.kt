@@ -1,11 +1,8 @@
 package kz.ioka.android.ioka.api.dataSource
 
-import kotlinx.coroutines.Dispatchers
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.Config.apiKey
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.common.ResultWrapper
-import kz.ioka.android.ioka.domain.common.safeApiCall
 import kz.ioka.android.ioka.util.getCustomerId
 import java.lang.Exception
 import java.net.ProtocolException

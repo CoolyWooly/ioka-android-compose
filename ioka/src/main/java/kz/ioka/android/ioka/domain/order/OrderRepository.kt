@@ -1,0 +1,38 @@
+package kz.ioka.android.ioka.domain.order
+
+import kotlinx.coroutines.Dispatchers
+import kz.ioka.android.ioka.data.order.OrderApi
+import kz.ioka.android.ioka.domain.common.Amount
+import kz.ioka.android.ioka.domain.common.Currency
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.safeApiCall
+import java.math.BigDecimal
+
+internal interface OrderRepository {
+
+    suspend fun getOrderById(orderId: String): ResultWrapper<OrderModel>
+
+}
+
+internal class OrderRepositoryImpl(
+    private val orderApi: OrderApi
+) : OrderRepository {
+
+    override suspend fun getOrderById(orderId: String): ResultWrapper<OrderModel> {
+        return safeApiCall(Dispatchers.IO) {
+            val orderResponse = orderApi.getOrderById(orderId)
+
+            val amount = (orderResponse.amount ?: 0).toDouble() / 100
+
+            OrderModel(
+                orderResponse.external_id ?: "",
+                orderResponse.customer_id,
+                Amount(
+                    BigDecimal(amount),
+                    Currency.fromShortName(orderResponse.currency ?: Currency.KZT.shortName),
+                )
+            )
+        }
+    }
+
+}

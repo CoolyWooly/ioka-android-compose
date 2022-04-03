@@ -1,18 +1,12 @@
 package kz.ioka.android.ioka.presentation.flows.bindCard
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import kz.ioka.android.ioka.domain.bindCard.CardRepository
-import kz.ioka.android.ioka.domain.common.ResultWrapper
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 

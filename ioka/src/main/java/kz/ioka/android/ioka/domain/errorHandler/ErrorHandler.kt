@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.domain.common
+package kz.ioka.android.ioka.domain.errorHandler
 
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineDispatcher

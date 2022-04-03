@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.domain.common.Amount
 import java.math.BigDecimal
 
 internal abstract class ResultLauncher(
@@ -14,7 +15,7 @@ internal abstract class ResultLauncher(
     @StringRes open val titleRes: Int,
     @ColorRes open val titleColorRes: Int,
     open val subtitle: String,
-    open val amount: BigDecimal,
+    open val amount: Amount,
     @StringRes open val btnTitleRes: Int,
 ) : Parcelable
 
@@ -24,7 +25,7 @@ internal class SuccessResultLauncher(
     override val titleRes: Int = R.string.ioka_result_success_payment_title,
     override val titleColorRes: Int = R.color.ioka_color_static_green,
     override val subtitle: String,
-    override val amount: BigDecimal,
+    override val amount: Amount,
     override val btnTitleRes: Int = R.string.ioka_common_understand,
 ) : ResultLauncher(
     statusIconRes,
@@ -41,7 +42,7 @@ internal class ErrorResultLauncher(
     override val titleRes: Int = R.string.ioka_result_failed_payment_title,
     override val titleColorRes: Int = R.color.ioka_color_text_primary,
     override val subtitle: String,
-    override val amount: BigDecimal,
+    override val amount: Amount = Amount(BigDecimal.ZERO),
     override val btnTitleRes: Int = R.string.ioka_common_try_again,
 ) : ResultLauncher(
     statusIconRes,

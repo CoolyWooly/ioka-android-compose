@@ -2,12 +2,13 @@ package kz.ioka.android.ioka.api
 
 import android.content.Context
 import android.content.Intent
+import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.CvvPaymentLauncherBehavior
+import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
+import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardActivity
 import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardLauncher
-import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.CvvFragment
-import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.CvvLauncher
-import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardActivity
-import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardLauncher
+import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdActivity
+import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdLauncher
 import kz.ioka.android.ioka.util.ViewAction
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
@@ -27,35 +28,49 @@ internal class FormFactory {
                 it.startActivity(intent)
             }
             is PaymentFlow.PayWithCardFlow -> ViewAction {
-                val intent = Intent(context, PayWithCardActivity::class.java)
-                intent.putExtra(
-                    BaseActivity.LAUNCHER,
-                    PayWithCardLauncher(
+                val intent = PaymentLauncherActivity.provideIntent(
+                    it,
+                    PayWithCardLauncherBehavior(
                         paymentFlow.customerToken,
                         paymentFlow.orderToken,
-                        paymentFlow.price,
                         paymentFlow.withGooglePay
                     )
                 )
+
                 it.startActivity(intent)
             }
-            is PaymentFlow.PayWithBindedCardFlow -> ViewAction {
+            is PaymentFlow.PayWithBindedCardFlow ->
                 if (paymentFlow.cvvRequired) {
-                    val newFragment: CvvFragment = CvvFragment.newInstance(
-                        CvvLauncher(
-                            paymentFlow.customerToken,
-                            paymentFlow.orderToken,
-                            paymentFlow.price,
-                            paymentFlow.cardId,
-                            paymentFlow.cardNumber,
-                            paymentFlow.cardType,
-                            paymentFlow.cvvRequired
+                    ViewAction { activity ->
+                        val intent = PaymentLauncherActivity.provideIntent(
+                            activity,
+                            CvvPaymentLauncherBehavior(
+                                paymentFlow.customerToken,
+                                paymentFlow.orderToken,
+                                paymentFlow.cardId,
+                                paymentFlow.cardNumber,
+                                paymentFlow.cardType,
+                            )
                         )
-                    )
-                    newFragment.show(it.supportFragmentManager, newFragment::class.simpleName)
+
+                        activity.startActivity(intent)
+                    }
+                } else {
+                    ViewAction {
+                        val intent = PayWithCardIdActivity.provideIntent(
+                            it,
+                            PayWithCardIdLauncher(
+                                paymentFlow.customerToken,
+                                paymentFlow.orderToken,
+                                paymentFlow.cardId
+                            )
+                        )
+
+                        it.startActivity(intent)
+                    }
                 }
-            }
         }
+
     }
 
 }

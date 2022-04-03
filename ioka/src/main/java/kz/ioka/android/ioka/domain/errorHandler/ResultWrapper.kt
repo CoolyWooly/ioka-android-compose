@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.domain.common
+package kz.ioka.android.ioka.domain.errorHandler
 
 internal sealed class ResultWrapper<out T> {
     data class Success<out T>(val value: T) : ResultWrapper<T>()

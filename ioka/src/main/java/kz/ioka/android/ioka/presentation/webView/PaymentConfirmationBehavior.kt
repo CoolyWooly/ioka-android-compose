@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.common.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 

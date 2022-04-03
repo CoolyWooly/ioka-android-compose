@@ -3,10 +3,10 @@ package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
-import kz.ioka.android.ioka.domain.common.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepository
-import kz.ioka.android.ioka.presentation.flows.payWithCard.PayState
+import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.util.getOrderId
 
 @Suppress("UNCHECKED_CAST")
@@ -25,18 +25,21 @@ internal class CvvViewModel(
     private val repository: PaymentRepository
 ) : ViewModel() {
 
-    val price = launcher.price
     val customerToken = launcher.customerToken
     val orderToken = launcher.orderToken
-    var paymentId: String = ""
+    val order = launcher.order
     var cardId: String = launcher.cardId
+    var cardNumber: String = launcher.cardNumber
+    var cardType: String = launcher.cardType
 
-    private val _payState = MutableLiveData<PayState>(PayState.DISABLED)
-    val payState = _payState as LiveData<PayState>
+    var paymentId: String = ""
+
+    private val _payState = MutableLiveData<PaymentState>(PaymentState.DISABLED)
+    val payState = _payState as LiveData<PaymentState>
 
     fun onContinueClicked(cvv: String) {
         viewModelScope.launch {
-            _payState.value = PayState.LOADING
+            _payState.value = PaymentState.LOADING
 
             val cardPayment = repository.createPaymentWithCardId(
                 orderToken.getOrderId(),
@@ -51,10 +54,10 @@ internal class CvvViewModel(
                     processSuccessfulResponse(cardPayment.value)
                 }
                 is ResultWrapper.IokaError -> {
-                    _payState.postValue(PayState.FAILED(cardPayment.message))
+                    _payState.postValue(PaymentState.FAILED(cardPayment.message))
                 }
                 else -> {
-                    _payState.postValue(PayState.ERROR())
+                    _payState.postValue(PaymentState.ERROR())
                 }
             }
         }
@@ -64,15 +67,15 @@ internal class CvvViewModel(
         when (cardPayment) {
             is PaymentModel.Pending -> {
                 paymentId = cardPayment.paymentId
-                _payState.postValue(PayState.PENDING(cardPayment.actionUrl))
+                _payState.postValue(PaymentState.PENDING(cardPayment.actionUrl))
             }
-            is PaymentModel.Declined -> _payState.postValue(PayState.FAILED(cardPayment.message))
-            else -> _payState.postValue(PayState.SUCCESS)
+            is PaymentModel.Declined -> _payState.postValue(PaymentState.FAILED(cardPayment.message))
+            else -> _payState.postValue(PaymentState.SUCCESS)
         }
     }
 
     fun onCvvChanged(newValue: String) {
-        _payState.value = if (newValue.length == 3) PayState.DEFAULT else PayState.DISABLED
+        _payState.value = if (newValue.length == 3) PaymentState.DEFAULT else PaymentState.DISABLED
     }
 
 }

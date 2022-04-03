@@ -2,12 +2,13 @@ package kz.ioka.android.ioka.presentation.flows.payWithCard
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.math.BigDecimal
+import kz.ioka.android.ioka.presentation.flows.common.OrderDvo
 
 @Parcelize
 internal data class PayWithCardLauncher(
     val customerToken: String,
     val orderToken: String,
-    val price: BigDecimal,
-    val withGooglePay: Boolean
+    val order: OrderDvo,
+    val withGooglePay: Boolean,
+    val canBindCard: Boolean
 ) : Parcelable

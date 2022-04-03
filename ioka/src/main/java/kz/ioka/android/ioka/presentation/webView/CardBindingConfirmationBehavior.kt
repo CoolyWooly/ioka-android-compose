@@ -8,7 +8,7 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.bindCard.CardBindingStatusModel
 import kz.ioka.android.ioka.domain.bindCard.CardRepositoryImpl
-import kz.ioka.android.ioka.domain.common.ResultWrapper
+import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 
 @Parcelize
 class CardBindingConfirmationBehavior(
