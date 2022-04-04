@@ -4,17 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity
-import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardLauncher
-import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.CvvPaymentLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.payment.PaymentLauncherBehavior
+import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.CvvPaymentLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdActivity
 import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdLauncher
-import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardLauncher
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.util.getCustomerId
 import kz.ioka.android.ioka.viewBase.BaseActivity
-import java.lang.Exception
 import java.net.ProtocolException
 
 object Ioka {
@@ -28,7 +26,10 @@ object Ioka {
     }
 
     // TODO Implement Google Pay
-    fun startPaymentFlow(orderToken: String): (Activity) -> Unit {
+    fun startPaymentFlow(
+        orderToken: String,
+        configuration: Configuration? = null
+    ): (Activity) -> Unit {
         if (Config.isApiKeyInitialized().not()) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
@@ -38,7 +39,8 @@ object Ioka {
                 it,
                 PaymentLauncherBehavior(
                     orderToken,
-                    false
+                    false,
+                    configuration
                 )
             )
 

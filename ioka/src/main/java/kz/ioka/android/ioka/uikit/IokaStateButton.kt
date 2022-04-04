@@ -3,23 +3,19 @@ package kz.ioka.android.ioka.uikit
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ProgressBar
-import androidx.annotation.ColorRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.util.toPx
 
 internal class IokaStateButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -32,10 +28,13 @@ internal class IokaStateButton @JvmOverloads constructor(
     private var callback: Callback? = null
 
     init {
-        val root = LayoutInflater.from(context).inflate(R.layout.view_progress_button, this, true)
+        val root = LayoutInflater.from(context).inflate(R.layout.view_ioka_state_button, this, true)
 
         bindViews(root)
         loadAndSetText(attrs, defStyleAttr)
+
+        cardElevation = 0.toFloat()
+        background = ContextCompat.getDrawable(context, R.drawable.bg_primary_button)
     }
 
     private fun bindViews(root: View) {
@@ -57,7 +56,6 @@ internal class IokaStateButton @JvmOverloads constructor(
 
         if (buttonText != 0)
             tvTitle.text = context.getString(buttonText)
-        background = ContextCompat.getDrawable(context, R.drawable.bg_primary_button)
     }
 
     fun setText(text: String) {

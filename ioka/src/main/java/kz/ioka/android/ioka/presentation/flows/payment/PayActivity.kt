@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
+import kz.ioka.android.ioka.uikit.CvvEditText
 import kz.ioka.android.ioka.uikit.IokaStateButton
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
@@ -51,7 +53,7 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
     private lateinit var btnGooglePay: AppCompatImageButton
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
-    private lateinit var etCvv: AppCompatEditText
+    private lateinit var vCvvInput: CvvEditText
     private lateinit var switchSaveCard: SwitchCompat
     private lateinit var btnPay: IokaStateButton
 
@@ -61,9 +63,10 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pay_with_card)
+        setContentView(R.layout.activity_pay)
 
         bindViews()
+        setConfiguration()
         setupListeners()
         observeData()
     }
@@ -75,9 +78,31 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
         btnGooglePay = findViewById(R.id.btnGooglePay)
         etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
-        etCvv = findViewById(R.id.etCvv)
+        vCvvInput = findViewById(R.id.vCvvInput)
         switchSaveCard = findViewById(R.id.vSaveCardSwitch)
         btnPay = findViewById(R.id.btnPay)
+    }
+
+    private fun setConfiguration() {
+        launcher<PayLauncher>()?.configuration?.apply {
+            vRoot.setBackgroundColor(
+                ContextCompat.getColor(this@PayActivity, backgroundColor)
+            )
+
+            etCardNumber.setIconColor(iconColor)
+            vCvvInput.setIconColor(iconColor)
+
+            buttonText?.let { btnPay.setText(buttonText) }
+
+            fieldBackground?.let {
+                etCardNumber.background = ContextCompat.getDrawable(this@PayActivity, it)
+                etExpireDate.background = ContextCompat.getDrawable(this@PayActivity, it)
+                vCvvInput.background = ContextCompat.getDrawable(this@PayActivity, it)
+            }
+            buttonBackground?.let {
+                btnPay.background = ContextCompat.getDrawable(this@PayActivity, it)
+            }
+        }
     }
 
     private fun setupListeners() {
@@ -98,15 +123,15 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
             viewModel.onExpireDateEntered(text.toString().replace("/", ""))
         }
 
-        etCvv.doOnTextChanged { text, _, _, _ ->
-            viewModel.onCvvEntered(text.toString())
+        vCvvInput.onTextChanged = {
+            viewModel.onCvvEntered(it)
         }
 
         btnPay.setOnClickListener {
             viewModel.onPayClicked(
                 etCardNumber.getCardNumber(),
                 etExpireDate.text.toString(),
-                etCvv.text.toString(),
+                vCvvInput.getCvv(),
                 switchSaveCard.isChecked
             )
         }
@@ -181,7 +206,7 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
 
     private fun enableInputs() {
         etCardNumber.isEnabled = true
-        etCvv.isEnabled = true
+        vCvvInput.isEnabled = true
         etExpireDate.isEnabled = true
         switchSaveCard.isEnabled = true
         btnGooglePay.isEnabled = true
@@ -189,7 +214,7 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
 
     private fun disableInputs() {
         etCardNumber.isEnabled = false
-        etCvv.isEnabled = false
+        vCvvInput.isEnabled = false
         etExpireDate.isEnabled = false
         switchSaveCard.isEnabled = false
         btnGooglePay.isEnabled = false

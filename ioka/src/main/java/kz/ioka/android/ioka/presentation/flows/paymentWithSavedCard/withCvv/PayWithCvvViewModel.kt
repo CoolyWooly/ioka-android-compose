@@ -73,7 +73,8 @@ internal class CvvViewModel(
     }
 
     fun onCvvChanged(newValue: String) {
-        _payState.value = if (newValue.length == 3) PaymentState.DEFAULT else PaymentState.DISABLED
+        _payState.value =
+            if (newValue.length in 3..4) PaymentState.DEFAULT else PaymentState.DISABLED
     }
 
 }

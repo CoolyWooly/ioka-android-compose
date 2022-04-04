@@ -94,25 +94,18 @@
         android:padding="16dp"
         app:groupLength="2"
         app:groupSeparator="/"
-        app:layout_constraintEnd_toStartOf="@id/etCvv"
+        app:layout_constraintEnd_toStartOf="@id/vCvvInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vCardNumberInput"
         app:numberOfGroups="2" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/etCvv"
-        style="@style/PrimaryEditText.16"
+    <kz.ioka.android.ioka.uikit.CvvEditText
+        android:id="@+id/vCvvInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
-        android:autofillHints="creditCardNumber"
-        android:background="@drawable/bg_ioka_edittext"
-        android:hint="@string/ioka_common_cvv_hint"
-        android:inputType="numberPassword"
-        android:maxLength="3"
-        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/etExpireDate"
         app:layout_constraintTop_toTopOf="@id/etExpireDate" />

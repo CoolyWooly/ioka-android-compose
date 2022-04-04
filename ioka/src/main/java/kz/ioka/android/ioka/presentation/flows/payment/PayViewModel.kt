@@ -80,7 +80,7 @@ internal class PayWithCardViewModel constructor(
     }
 
     fun onCvvEntered(cvv: String) {
-        _isCvvValid.value = cvv.length == 3
+        _isCvvValid.value = cvv.length in 3..4
     }
 
     fun onPayClicked(cardPan: String, expireDate: String, cvv: String, saveCard: Boolean) {
