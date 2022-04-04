@@ -4,7 +4,7 @@
         <item name="colorPrimary">@color/ui_color_primary</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/ui_color_background</item>
         <item name="android:fontFamily">@font/font_inter</item>
-        <item name="fontFamily">@font/font_inter</item>
+        <item name="fontFamily">@font/ui_font</item>
     </style>
 
     <!--  TextView  -->
