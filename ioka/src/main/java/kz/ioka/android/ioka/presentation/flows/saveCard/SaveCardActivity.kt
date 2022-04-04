@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
@@ -22,7 +21,6 @@ import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.TooltipWindow
-import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration.Companion.DEFAULT_FONT
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardRequestState.*
 import kz.ioka.android.ioka.presentation.webView.SaveCardConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
@@ -107,16 +105,6 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
             }
             buttonBackground?.let {
                 btnSave.background = ContextCompat.getDrawable(this@SaveCardActivity, it)
-            }
-
-            if (fontRes != DEFAULT_FONT) {
-                val typeface = ResourcesCompat.getFont(this@SaveCardActivity, fontRes)
-                checkNotNull(typeface)
-
-                etCardNumber.setTypeface(typeface)
-                etExpireDate.typeface = typeface
-                vCvvInput.setTypeface(typeface)
-                btnSave.setTypeface(typeface)
             }
         }
     }

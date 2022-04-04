@@ -111,10 +111,6 @@ internal class CardNumberEditText @JvmOverloads constructor(
         }
     }
 
-    fun setTypeface(typeface: Typeface) {
-        etCardNumber.typeface = typeface
-    }
-
     fun setBrand(brandOptional: Optional<Int>) {
         if (brandOptional.isPresent()) {
             ivBrand.setImageDrawable(context.getDrawableFromRes(brandOptional.get()))

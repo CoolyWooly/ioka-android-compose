@@ -64,10 +64,6 @@ internal class IokaStateButton @JvmOverloads constructor(
         tvTitle.text = text
     }
 
-    fun setTypeface(typeface: Typeface) {
-        tvTitle.typeface = typeface
-    }
-
     fun setCallback(callback: Callback) {
         this.callback = callback
     }

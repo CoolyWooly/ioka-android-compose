@@ -85,10 +85,6 @@ class CvvEditText @JvmOverloads constructor(
         )
     }
 
-    fun setTypeface(typeface: Typeface) {
-        etCvv.typeface = typeface
-    }
-
     fun getCvv(): String {
         return etCvv.text.toString()
     }
