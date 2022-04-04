@@ -15,7 +15,7 @@ internal interface PaymentRepository {
         panNumber: String,
         expiryDate: String,
         cvv: String,
-        bindCard: Boolean
+        saveCard: Boolean
     ): ResultWrapper<PaymentModel>
 
     suspend fun createPaymentWithCardId(
@@ -43,13 +43,13 @@ internal class PaymentRepositoryImpl constructor(
         panNumber: String,
         expiryDate: String,
         cvv: String,
-        bindCard: Boolean
+        saveCard: Boolean
     ): ResultWrapper<PaymentModel> {
         return safeApiCall(Dispatchers.IO) {
             val paymentResult = paymentApi.createPayment(
                 orderId,
                 apiKey,
-                PaymentRequestDto(pan = panNumber, exp = expiryDate, cvc = cvv, bindCard = bindCard)
+                PaymentRequestDto(pan = panNumber, exp = expiryDate, cvc = cvv, saveCard = saveCard)
             )
 
             when (paymentResult.status) {

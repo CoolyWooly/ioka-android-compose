@@ -55,7 +55,7 @@ class SavedCardsActivity : BaseActivity() {
             itemList = emptyList(),
             onRemoveCardClicked = { viewModel.onRemoveCardClicked(it) },
             onAddCardClicked = {
-                Ioka.startSaveCardFlow(viewModel.customerToken)
+                Ioka.startSaveCardFlow(viewModel.customerToken).invoke(this)
             }
         )
 

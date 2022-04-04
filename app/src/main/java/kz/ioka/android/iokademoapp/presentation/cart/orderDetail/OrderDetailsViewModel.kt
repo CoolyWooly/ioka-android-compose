@@ -1,12 +1,11 @@
 package kz.ioka.android.iokademoapp.presentation.cart.orderDetail
 
 import android.app.Activity
-import android.view.animation.AccelerateInterpolator
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.api.Ioka
-import kz.ioka.android.ioka.api.PaymentFlow
+import kz.ioka.android.ioka.api.CardDvo
 import kz.ioka.android.iokademoapp.data.OrderRepository
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
 import java.math.BigDecimal
@@ -67,7 +66,7 @@ class OrderDetailsViewModel @Inject constructor(
                 { activity: Activity ->
                     Ioka.startPaymentWithSavedCardFlow(
                         orderToken,
-                        PaymentFlow.PayWithBindedCardFlow.CardDvo(
+                        CardDvo(
                             cardDvo.cardId,
                             cardDvo.maskedCardNumber,
                             cardDvo.cardType.code,

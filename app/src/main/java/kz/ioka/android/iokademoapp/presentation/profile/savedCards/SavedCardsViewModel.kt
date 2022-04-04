@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.api.Ioka
-import kz.ioka.android.ioka.api.PaymentFlow
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.ListItem
 import kz.ioka.android.iokademoapp.common.shortPanMask

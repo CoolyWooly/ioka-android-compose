@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.saveCard
 
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
@@ -16,14 +16,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.bindCard.CardRepositoryImpl
+import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
-import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardRequestState.*
-import kz.ioka.android.ioka.presentation.flows.bindCard.Configuration.Companion.DEFAULT_FONT
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardRequestState.*
+import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration.Companion.DEFAULT_FONT
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
-import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.TooltipWindow
-import kz.ioka.android.ioka.presentation.webView.CardBindingConfirmationBehavior
+import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.TooltipWindow
+import kz.ioka.android.ioka.presentation.webView.SaveCardConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.showErrorToast
@@ -31,15 +31,15 @@ import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import kz.ioka.android.ioka.viewBase.Scanable
 
-internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable {
+internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable {
 
     private val infoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
             CardInfoRepositoryImpl(DependencyInjector.cardInfoApi)
         )
     }
-    private val bindCardViewModel: BindCardViewModel by viewModels {
-        BindCardViewModelFactory(
+    private val saveCardViewModel: SaveCardViewModel by viewModels {
+        SaveCardViewModelFactory(
             launcher()!!,
             CardRepositoryImpl(DependencyInjector.cardApi)
         )
@@ -68,7 +68,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bind_card)
+        setContentView(R.layout.activity_save_card)
 
         bindViews()
         setConfiguration()
@@ -88,7 +88,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
     }
 
     private fun setConfiguration() {
-        launcher<BindCardLauncher>()?.configuration?.apply {
+        launcher<SaveCardLauncher>()?.configuration?.apply {
             toolbarTitle?.let { vToolbar.title = it }
 
             etCardNumber.setRadius(fieldCornerRadius.toPx)
@@ -96,13 +96,13 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
             vCvvInput.setRadius(fieldCornerRadius.toPx)
 
             btnSave.setConfiguration(
-                bindButtonCornerRadius,
-                bindButtonBackgroundColorRes,
-                bindButtonTextRes ?: getString(R.string.ioka_bind_card_save)
+                saveButtonCornerRadius,
+                saveButtonBackgroundColorRes,
+                saveButtonTextRes ?: getString(R.string.ioka_save_card_save)
             )
 
             if (fontRes != DEFAULT_FONT) {
-                val typeface = ResourcesCompat.getFont(this@BindCardActivity, fontRes)
+                val typeface = ResourcesCompat.getFont(this@SaveCardActivity, fontRes)
                 checkNotNull(typeface)
 
                 etCardNumber.setTypeface(typeface)
@@ -126,7 +126,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
     private fun setupListeners() {
         etCardNumber.onTextChanged = {
-            bindCardViewModel.onCardPanEntered(it)
+            saveCardViewModel.onCardPanEntered(it)
         }
 
         etCardNumber.onTextChangedWithDebounce = {
@@ -136,11 +136,11 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
         etCardNumber.flowTextChangedWithDebounce.launchIn(lifecycleScope)
 
         etExpireDate.doOnTextChanged { text, _, _, _ ->
-            bindCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
+            saveCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
         }
 
         vCvvInput.onTextChanged = {
-            bindCardViewModel.onCvvEntered(it)
+            saveCardViewModel.onCvvEntered(it)
         }
 
         vCvvInput.onFaqClicked = {
@@ -154,23 +154,23 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
     private fun observeData() {
         with(infoViewModel) {
-            cardBrand.observe(this@BindCardActivity) {
+            cardBrand.observe(this@SaveCardActivity) {
                 etCardNumber.setBrand(it)
             }
 
-            cardEmitter.observe(this@BindCardActivity) {
+            cardEmitter.observe(this@SaveCardActivity) {
                 etCardNumber.setEmitter(it)
             }
         }
 
-        with(bindCardViewModel) {
-            bindRequestState.observe(this@BindCardActivity) {
+        with(saveCardViewModel) {
+            saveRequestState.observe(this@SaveCardActivity) {
                 handleState(it)
             }
         }
     }
 
-    private fun handleState(state: BindCardRequestState) {
+    private fun handleState(state: SaveCardRequestState) {
         val buttonState = when (state) {
             SUCCESS -> ButtonState.Success
 
@@ -193,11 +193,11 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
         if (state is PENDING) {
             val intent = WebViewActivity.provideIntent(
-                this, CardBindingConfirmationBehavior(
+                this, SaveCardConfirmationBehavior(
                     toolbarTitleRes = R.string.ioka_common_payment_confirmation,
                     url = state.actionUrl,
-                    customerToken = bindCardViewModel.customerToken,
-                    cardId = bindCardViewModel.cardId ?: ""
+                    customerToken = saveCardViewModel.customerToken,
+                    cardId = saveCardViewModel.cardId ?: ""
                 )
             )
 
@@ -208,7 +208,7 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable
     override fun onClick(v: View?) {
         when (v) {
             btnSave -> {
-                bindCardViewModel.onBindClicked(
+                saveCardViewModel.onSaveClicked(
                     etCardNumber.getCardNumber(),
                     etExpireDate.text.toString(),
                     vCvvInput.getCvv()

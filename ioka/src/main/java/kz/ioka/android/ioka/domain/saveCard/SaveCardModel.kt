@@ -1,23 +1,23 @@
-package kz.ioka.android.ioka.domain.bindCard
+package kz.ioka.android.ioka.domain.saveCard
 
-internal sealed class CardBindingResultModel {
+internal sealed class SaveCardResultModel {
 
     companion object {
         const val STATUS_APPROVED = "APPROVED"
         const val STATUS_DECLINED = "DECLINED"
     }
 
-    object Success : CardBindingResultModel()
+    object Success : SaveCardResultModel()
     class Pending(
         val cardId: String,
         val actionUrl: String
-    ) : CardBindingResultModel()
+    ) : SaveCardResultModel()
 
-    class Declined(val cause: String) : CardBindingResultModel()
+    class Declined(val cause: String) : SaveCardResultModel()
 
 }
 
-internal sealed class CardBindingStatusModel {
+internal sealed class SaveCardStatusModel {
 
     companion object {
         const val STATUS_APPROVED = "APPROVED"
@@ -25,9 +25,9 @@ internal sealed class CardBindingStatusModel {
         const val STATUS_PENDING = "PENDING"
     }
 
-    object Success : CardBindingStatusModel()
+    object Success : SaveCardStatusModel()
     class Failed(
         val cause: String?
-    ) : CardBindingStatusModel()
+    ) : SaveCardStatusModel()
 
 }

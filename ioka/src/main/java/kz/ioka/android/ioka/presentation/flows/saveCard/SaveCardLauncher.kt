@@ -1,14 +1,13 @@
-package kz.ioka.android.ioka.presentation.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.saveCard
 
 import android.os.Parcelable
 import androidx.annotation.ColorRes
 import androidx.annotation.FontRes
-import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.R
 
 @Parcelize
-internal data class BindCardLauncher(
+internal data class SaveCardLauncher(
     val customerToken: String,
     val configuration: Configuration = Configuration()
 ) : Parcelable
@@ -17,9 +16,9 @@ internal data class BindCardLauncher(
 data class Configuration(
     val toolbarTitle: String? = null,
     val fieldCornerRadius: Int = 12,
-    val bindButtonCornerRadius: Int = 12,
-    val bindButtonTextRes: String? = null,
-    @ColorRes val bindButtonBackgroundColorRes: Int = R.color.ioka_color_primary,
+    val saveButtonCornerRadius: Int = 12,
+    val saveButtonTextRes: String? = null,
+    @ColorRes val saveButtonBackgroundColorRes: Int = R.color.ioka_color_primary,
     @FontRes val fontRes: Int = DEFAULT_FONT
 ) : Parcelable {
 

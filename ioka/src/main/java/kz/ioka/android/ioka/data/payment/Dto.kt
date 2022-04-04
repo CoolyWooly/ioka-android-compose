@@ -9,7 +9,7 @@ internal data class PaymentRequestDto(
     @Expose @SerializedName("pan") val pan: String? = null,
     @Expose @SerializedName("exp") val exp: String? = null,
     @Expose @SerializedName("cvc") val cvc: String? = null,
-    @Expose @SerializedName("save") val bindCard: Boolean? = null,
+    @Expose @SerializedName("save") val saveCard: Boolean? = null,
     @Expose @SerializedName("card_id") val cardId: String? = null,
 )
 

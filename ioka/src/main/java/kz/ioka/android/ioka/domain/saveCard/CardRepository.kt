@@ -1,7 +1,7 @@
-package kz.ioka.android.ioka.domain.bindCard
+package kz.ioka.android.ioka.domain.saveCard
 
 import kotlinx.coroutines.Dispatchers
-import kz.ioka.android.ioka.data.card.BindCardRequestDto
+import kz.ioka.android.ioka.data.card.SaveCardRequestDto
 import kz.ioka.android.ioka.data.card.CardApi
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.errorHandler.safeApiCall
@@ -9,19 +9,19 @@ import kz.ioka.android.ioka.util.getCustomerId
 
 internal interface CardRepository {
 
-    suspend fun bindCard(
+    suspend fun saveCard(
         customerToken: String,
         apiKey: String,
         cardPan: String,
         expireDate: String,
         cvv: String
-    ): ResultWrapper<CardBindingResultModel>
+    ): ResultWrapper<SaveCardResultModel>
 
-    suspend fun getCardBindingStatus(
+    suspend fun getSaveCardStatus(
         customerToken: String,
         apiKey: String,
         cardId: String
-    ): ResultWrapper<CardBindingStatusModel>
+    ): ResultWrapper<SaveCardStatusModel>
 
 }
 
@@ -29,43 +29,43 @@ internal class CardRepositoryImpl constructor(
     private val cardApi: CardApi
 ) : CardRepository {
 
-    override suspend fun bindCard(
+    override suspend fun saveCard(
         customerToken: String,
         apiKey: String,
         cardPan: String,
         expireDate: String,
         cvv: String
-    ): ResultWrapper<CardBindingResultModel> {
+    ): ResultWrapper<SaveCardResultModel> {
         return safeApiCall(Dispatchers.IO) {
-            val bindCardResult = cardApi.bindCard(
+            val saveCardResult = cardApi.saveCard(
                 customerToken.getCustomerId(),
                 customerToken,
                 apiKey,
-                BindCardRequestDto(cardPan, expireDate, cvv)
+                SaveCardRequestDto(cardPan, expireDate, cvv)
             )
 
-            when (bindCardResult.status) {
-                CardBindingResultModel.STATUS_APPROVED -> CardBindingResultModel.Success
-                CardBindingResultModel.STATUS_DECLINED -> CardBindingResultModel.Declined(
-                    bindCardResult.error.message
+            when (saveCardResult.status) {
+                SaveCardResultModel.STATUS_APPROVED -> SaveCardResultModel.Success
+                SaveCardResultModel.STATUS_DECLINED -> SaveCardResultModel.Declined(
+                    saveCardResult.error.message
                 )
-                else -> CardBindingResultModel.Pending(bindCardResult.id, bindCardResult.action.url)
+                else -> SaveCardResultModel.Pending(saveCardResult.id, saveCardResult.action.url)
             }
         }
     }
 
-    override suspend fun getCardBindingStatus(
+    override suspend fun getSaveCardStatus(
         customerToken: String,
         apiKey: String,
         cardId: String
-    ): ResultWrapper<CardBindingStatusModel> {
+    ): ResultWrapper<SaveCardStatusModel> {
         return safeApiCall(Dispatchers.IO) {
             val card =
                 cardApi.getCardById(apiKey, customerToken, customerToken.getCustomerId(), cardId)
 
             when (card.status) {
-                CardBindingStatusModel.STATUS_APPROVED -> CardBindingStatusModel.Success
-                else -> CardBindingStatusModel.Failed(card.error?.message)
+                SaveCardStatusModel.STATUS_APPROVED -> SaveCardStatusModel.Success
+                else -> SaveCardStatusModel.Failed(card.error?.message)
             }
         }
     }

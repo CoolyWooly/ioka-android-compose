@@ -118,7 +118,7 @@
         app:layout_constraintTop_toTopOf="@id/etExpireDate" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/vBindCardSwitch"
+        android:id="@+id/vSaveCardSwitch"
         style="@style/SCBSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

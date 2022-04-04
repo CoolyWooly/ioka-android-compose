@@ -20,14 +20,14 @@ internal data class CardResultDto(
     @Expose @SerializedName("action") val action: ActionDto?
 )
 
-internal data class BindCardRequestDto(
+internal data class SaveCardRequestDto(
     @Expose @SerializedName("pan") val pan: String,
     @Expose @SerializedName("exp") val exp: String,
     @Expose @SerializedName("cvc") val cvc: String,
     @Expose @SerializedName("holder") val holder: String? = null,
 )
 
-internal data class BindCardResponseDto(
+internal data class SaveCardResponseDto(
     @Expose @SerializedName("id") val id: String,
     @Expose @SerializedName("customer_id") val customerId: String,
     @Expose @SerializedName("status") val status: String,

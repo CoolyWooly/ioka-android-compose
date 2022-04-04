@@ -1,10 +1,10 @@
-package kz.ioka.android.ioka.presentation.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.saveCard
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.setMain
-import kz.ioka.android.ioka.domain.bindCard.CardRepository
+import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import org.junit.Before
 import org.junit.Rule
 import org.mockito.Mockito.*
@@ -25,7 +25,7 @@ class BindCardViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: BindCardViewModel
+    private lateinit var viewModel: SaveCardViewModel
     private lateinit var repository: CardRepository
 
     @Before

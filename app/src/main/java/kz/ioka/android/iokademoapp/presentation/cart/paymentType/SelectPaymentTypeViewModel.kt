@@ -5,7 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.api.Ioka
-import kz.ioka.android.ioka.api.dataSource.CardModel
+import kz.ioka.android.ioka.api.CardModel
 import kz.ioka.android.iokademoapp.common.Optional
 import kz.ioka.android.iokademoapp.data.CustomerRepository
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo

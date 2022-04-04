@@ -1,27 +1,27 @@
-package kz.ioka.android.ioka.presentation.flows.bindCard
+package kz.ioka.android.ioka.presentation.flows.saveCard
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
-import kz.ioka.android.ioka.domain.bindCard.CardBindingResultModel
-import kz.ioka.android.ioka.domain.bindCard.CardRepository
+import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
+import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
-internal class BindCardViewModelFactory(
-    val launcher: BindCardLauncher,
+internal class SaveCardViewModelFactory(
+    val launcher: SaveCardLauncher,
     private val repository: CardRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return BindCardViewModel(launcher, repository) as T
+        return SaveCardViewModel(launcher, repository) as T
     }
 }
 
-internal class BindCardViewModel constructor(
-    launcher: BindCardLauncher,
+internal class SaveCardViewModel constructor(
+    launcher: SaveCardLauncher,
     private val repository: CardRepository
 ) : ViewModel() {
 
@@ -40,17 +40,17 @@ internal class BindCardViewModel constructor(
         isCardPanValid && isExpireDateValid && isCvvValid
     }
 
-    private val _bindRequestState =
-        MutableLiveData<BindCardRequestState>(BindCardRequestState.DEFAULT)
-    val bindRequestState = _bindRequestState as LiveData<BindCardRequestState>
+    private val _saveRequestState =
+        MutableLiveData<SaveCardRequestState>(SaveCardRequestState.DEFAULT)
+    val saveRequestState = _saveRequestState as LiveData<SaveCardRequestState>
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
             allFieldsAreValid.collect { areAllFieldsValid ->
                 if (areAllFieldsValid) {
-                    _bindRequestState.postValue(BindCardRequestState.DEFAULT)
+                    _saveRequestState.postValue(SaveCardRequestState.DEFAULT)
                 } else {
-                    _bindRequestState.postValue(BindCardRequestState.DISABLED)
+                    _saveRequestState.postValue(SaveCardRequestState.DISABLED)
                 }
             }
         }
@@ -80,56 +80,56 @@ internal class BindCardViewModel constructor(
         _isCvvValid.value = cvv.length == 3
     }
 
-    fun onBindClicked(cardPan: String, expireDate: String, cvv: String) {
+    fun onSaveClicked(cardPan: String, expireDate: String, cvv: String) {
         viewModelScope.launch {
             val areAllFieldsValid = allFieldsAreValid.first()
 
             if (areAllFieldsValid) {
-                _bindRequestState.value = BindCardRequestState.LOADING
+                _saveRequestState.value = SaveCardRequestState.LOADING
 
-                val bindCard = repository.bindCard(
+                val saveCard = repository.saveCard(
                     customerToken,
                     Config.apiKey,
                     cardPan, expireDate, cvv
                 )
 
-                when (bindCard) {
+                when (saveCard) {
                     is ResultWrapper.Success -> {
-                        processSuccessfulResponse(bindCard.value)
+                        processSuccessfulResponse(saveCard.value)
                     }
                     is ResultWrapper.IokaError -> {
-                        _bindRequestState.postValue(BindCardRequestState.ERROR(bindCard.message))
+                        _saveRequestState.postValue(SaveCardRequestState.ERROR(saveCard.message))
                     }
                     else -> {
-                        _bindRequestState.postValue(BindCardRequestState.ERROR())
+                        _saveRequestState.postValue(SaveCardRequestState.ERROR())
                     }
                 }
             }
         }
     }
 
-    private fun processSuccessfulResponse(bindCard: CardBindingResultModel) {
-        when (bindCard) {
-            is CardBindingResultModel.Pending -> {
-                cardId = bindCard.cardId
-                _bindRequestState.postValue(BindCardRequestState.PENDING(bindCard.actionUrl))
+    private fun processSuccessfulResponse(saveCard: SaveCardResultModel) {
+        when (saveCard) {
+            is SaveCardResultModel.Pending -> {
+                cardId = saveCard.cardId
+                _saveRequestState.postValue(SaveCardRequestState.PENDING(saveCard.actionUrl))
             }
-            is CardBindingResultModel.Declined ->
-                _bindRequestState.postValue(BindCardRequestState.ERROR(bindCard.cause))
+            is SaveCardResultModel.Declined ->
+                _saveRequestState.postValue(SaveCardRequestState.ERROR(saveCard.cause))
             else ->
-                _bindRequestState.postValue(BindCardRequestState.SUCCESS)
+                _saveRequestState.postValue(SaveCardRequestState.SUCCESS)
         }
     }
 
 }
 
-sealed class BindCardRequestState {
+sealed class SaveCardRequestState {
 
-    object DEFAULT : BindCardRequestState()
-    object DISABLED : BindCardRequestState()
-    object LOADING : BindCardRequestState()
-    object SUCCESS : BindCardRequestState()
+    object DEFAULT : SaveCardRequestState()
+    object DISABLED : SaveCardRequestState()
+    object LOADING : SaveCardRequestState()
+    object SUCCESS : SaveCardRequestState()
 
-    class PENDING(val actionUrl: String) : BindCardRequestState()
-    class ERROR(val cause: String? = null) : BindCardRequestState()
+    class PENDING(val actionUrl: String) : SaveCardRequestState()
+    class ERROR(val cause: String? = null) : SaveCardRequestState()
 }

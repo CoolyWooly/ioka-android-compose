@@ -2,18 +2,15 @@ package kz.ioka.android.ioka.api
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import kz.ioka.android.ioka.Config
-import kz.ioka.android.ioka.api.dataSource.CardModel
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardActivity
-import kz.ioka.android.ioka.presentation.flows.bindCard.BindCardLauncher
-import kz.ioka.android.ioka.presentation.flows.payWithBindedCard.CvvPaymentLauncherBehavior
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardLauncher
+import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.CvvPaymentLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdActivity
 import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdLauncher
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
-import kz.ioka.android.ioka.util.ViewAction
 import kz.ioka.android.ioka.util.getCustomerId
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import java.lang.Exception
@@ -50,7 +47,7 @@ object Ioka {
 
     fun startPaymentWithSavedCardFlow(
         orderToken: String,
-        card: PaymentFlow.PayWithBindedCardFlow.CardDvo
+        card: CardDvo
     ): (Activity) -> Unit {
         if (card.cvvRequired) {
             return { activity ->
@@ -87,10 +84,10 @@ object Ioka {
         }
 
         return { activity ->
-            val intent = Intent(activity, BindCardActivity::class.java)
+            val intent = Intent(activity, SaveCardActivity::class.java)
             intent.putExtra(
                 BaseActivity.LAUNCHER,
-                BindCardLauncher(customerToken)
+                SaveCardLauncher(customerToken)
             )
 
             activity.startActivity(intent)

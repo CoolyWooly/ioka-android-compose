@@ -52,7 +52,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
     private lateinit var etCvv: AppCompatEditText
-    private lateinit var switchBindCard: SwitchCompat
+    private lateinit var switchSaveCard: SwitchCompat
     private lateinit var btnPay: IokaStateButton
 
     override fun onCardScanned(cardNumber: String) {
@@ -76,7 +76,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
         etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
         etCvv = findViewById(R.id.etCvv)
-        switchBindCard = findViewById(R.id.vBindCardSwitch)
+        switchSaveCard = findViewById(R.id.vSaveCardSwitch)
         btnPay = findViewById(R.id.btnPay)
     }
 
@@ -107,7 +107,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
                 etCardNumber.getCardNumber(),
                 etExpireDate.text.toString(),
                 etCvv.text.toString(),
-                switchBindCard.isChecked
+                switchSaveCard.isChecked
             )
         }
     }
@@ -123,7 +123,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
                 )
             )
             groupGooglePay.isVisible = withGooglePay
-            switchBindCard.isVisible = canBindCard
+            switchSaveCard.isVisible = canSaveCard
 
             payState.observe(this@PayWithCardActivity) {
                 handleState(it)
@@ -183,7 +183,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
         etCardNumber.isEnabled = true
         etCvv.isEnabled = true
         etExpireDate.isEnabled = true
-        switchBindCard.isEnabled = true
+        switchSaveCard.isEnabled = true
         btnGooglePay.isEnabled = true
     }
 
@@ -191,7 +191,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
         etCardNumber.isEnabled = false
         etCvv.isEnabled = false
         etExpireDate.isEnabled = false
-        switchBindCard.isEnabled = false
+        switchSaveCard.isEnabled = false
         btnGooglePay.isEnabled = false
     }
 

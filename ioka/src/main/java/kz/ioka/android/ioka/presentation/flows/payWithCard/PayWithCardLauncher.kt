@@ -9,5 +9,5 @@ internal data class PayWithCardLauncher(
     val orderToken: String,
     val order: OrderDvo,
     val withGooglePay: Boolean,
-    val canBindCard: Boolean
+    val canSaveCard: Boolean
 ) : Parcelable

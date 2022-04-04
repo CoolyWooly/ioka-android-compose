@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  BIND CARD  -->
-    <string name="ioka_bind_card_toolbar">Новая карта</string>
-    <string name="ioka_bind_card_save">Сохранить</string>
+    <string name="ioka_save_card_toolbar">Новая карта</string>
+    <string name="ioka_save_card_save">Сохранить</string>
 
     <!--  PAYMENT  -->
     <string name="ioka_payment_toolbar">К оплате %s</string>

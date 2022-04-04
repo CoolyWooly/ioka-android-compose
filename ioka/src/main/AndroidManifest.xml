@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name="kz.ioka.android.ioka.presentation.flows.bindCard.BindCardActivity"
+            android:name="kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity

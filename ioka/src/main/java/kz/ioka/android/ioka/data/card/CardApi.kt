@@ -6,12 +6,12 @@ import retrofit2.http.*
 internal interface CardApi {
 
     @POST("/v2/customers/{customer_id}/bindings")
-    suspend fun bindCard(
+    suspend fun saveCard(
         @Path("customer_id") customerId: String,
         @Header("X-Customer-Access-Token") customerToken: String,
         @Header("API-KEY") apiKey: String,
-        @Body requestDto: BindCardRequestDto
-    ): BindCardResponseDto
+        @Body requestDto: SaveCardRequestDto
+    ): SaveCardResponseDto
 
     @GET("/v2/customers/{customer_id}/cards/{card_id}")
     suspend fun getCardById(

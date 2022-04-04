@@ -6,12 +6,12 @@ import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.bindCard.CardBindingStatusModel
-import kz.ioka.android.ioka.domain.bindCard.CardRepositoryImpl
+import kz.ioka.android.ioka.domain.saveCard.SaveCardStatusModel
+import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 
 @Parcelize
-class CardBindingConfirmationBehavior(
+class SaveCardConfirmationBehavior(
     override val toolbarTitleRes: Int = R.string.ioka_common_payment_confirmation,
     private val url: String,
     private val customerToken: String,
@@ -32,14 +32,14 @@ class CardBindingConfirmationBehavior(
     override suspend fun onActionFinished(): Boolean {
         progressFlow.value = true
 
-        val payment = cardRepository.getCardBindingStatus(
+        val payment = cardRepository.getSaveCardStatus(
             customerToken,
             Config.apiKey,
             cardId,
         )
 
         progressFlow.value = false
-        return payment is ResultWrapper.Success && payment.value is CardBindingStatusModel.Success
+        return payment is ResultWrapper.Success && payment.value is SaveCardStatusModel.Success
     }
 
 

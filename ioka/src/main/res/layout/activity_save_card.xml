@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_close"
-        app:title="@string/ioka_bind_card_toolbar"
+        app:title="@string/ioka_save_card_toolbar"
         app:titleTextColor="@color/ioka_color_text_primary" />
 
     <kz.ioka.android.ioka.uikit.CardNumberEditText
@@ -69,5 +69,5 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
-        app:sbText="@string/ioka_bind_card_save" />
+        app:sbText="@string/ioka_save_card_save" />
 </androidx.appcompat.widget.LinearLayoutCompat>

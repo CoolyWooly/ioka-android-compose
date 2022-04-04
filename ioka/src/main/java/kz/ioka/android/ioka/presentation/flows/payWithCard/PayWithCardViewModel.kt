@@ -29,7 +29,7 @@ internal class PayWithCardViewModel constructor(
     val orderToken = launcher.orderToken
     val order = launcher.order
     val withGooglePay = launcher.withGooglePay
-    val canBindCard = launcher.canBindCard
+    val canSaveCard = launcher.canSaveCard
 
     var paymentId: String = ""
 
@@ -83,7 +83,7 @@ internal class PayWithCardViewModel constructor(
         _isCvvValid.value = cvv.length == 3
     }
 
-    fun onPayClicked(cardPan: String, expireDate: String, cvv: String, bindCard: Boolean) {
+    fun onPayClicked(cardPan: String, expireDate: String, cvv: String, saveCard: Boolean) {
         viewModelScope.launch {
             val areAllFieldsValid = allFieldsAreValid.first()
 
@@ -93,7 +93,7 @@ internal class PayWithCardViewModel constructor(
                 val cardPayment = paymentRepository.createCardPayment(
                     orderToken.getOrderId(),
                     Config.apiKey,
-                    cardPan, expireDate, cvv, bindCard
+                    cardPan, expireDate, cvv, saveCard
                 )
 
                 when (cardPayment) {
