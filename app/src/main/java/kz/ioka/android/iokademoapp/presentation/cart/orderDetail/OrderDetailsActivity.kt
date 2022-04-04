@@ -87,8 +87,8 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
                 vPaymentType.setPaymentType(it)
             }
 
-            paymentFlow.observe(this@OrderDetailsActivity) {
-                Ioka.showForm(it).invoke(this@OrderDetailsActivity)
+            paymentAction.observe(this@OrderDetailsActivity) {
+                it.invoke(this@OrderDetailsActivity)
             }
         }
     }

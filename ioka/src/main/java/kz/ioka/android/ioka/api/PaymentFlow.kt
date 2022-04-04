@@ -13,10 +13,16 @@ sealed interface PaymentFlow {
 
     class PayWithBindedCardFlow(
         val orderToken: String,
-        val cardId: String,
-        val cardNumber: String,
-        val cardType: String,
-        val cvvRequired: Boolean,
-    ) : PaymentFlow
+        val card: CardDvo
+    ) : PaymentFlow {
+
+        data class CardDvo(
+            val cardId: String,
+            val cardNumber: String,
+            val cardType: String,
+            val cvvRequired: Boolean,
+        )
+
+    }
 
 }

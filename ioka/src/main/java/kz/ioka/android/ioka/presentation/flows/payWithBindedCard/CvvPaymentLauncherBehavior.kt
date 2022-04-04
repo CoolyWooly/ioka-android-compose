@@ -1,6 +1,5 @@
 package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.parcelize.IgnoredOnParcel

@@ -4,9 +4,8 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.ioka.api.dataSource.CardModel
-import kz.ioka.android.ioka.api.dataSource.IokaDataSource
-import kz.ioka.android.ioka.api.dataSource.IokaDataSourceImpl
 import kz.ioka.android.iokademoapp.common.Optional
 import kz.ioka.android.iokademoapp.data.CustomerRepository
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
@@ -15,8 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectPaymentTypeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    customerRepository: CustomerRepository,
-    iokaDataSource: IokaDataSource = IokaDataSourceImpl()
+    customerRepository: CustomerRepository
 ) : ViewModel() {
 
     private val _selectedPaymentType = MutableLiveData<Optional<PaymentTypeDvo>>()
@@ -32,7 +30,7 @@ class SelectPaymentTypeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val customerToken = customerRepository.getCustomerToken()
 
-            _bindedCards.postValue(iokaDataSource.getCards(customerToken))
+            _bindedCards.postValue(Ioka.getCards(customerToken))
         }
     }
 

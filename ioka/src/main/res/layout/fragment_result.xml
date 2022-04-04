@@ -31,9 +31,11 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvStateSubTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:textAppearance="@style/SecondaryTextView.12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,10 +3,6 @@ package kz.ioka.android.ioka.presentation.flows.payWithCardId
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
@@ -17,10 +13,9 @@ import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.util.showErrorToast
-import kz.ioka.android.ioka.viewBase.BaseActivity
-import kz.ioka.android.ioka.viewBase.BasePaymentView
+import kz.ioka.android.ioka.viewBase.BasePaymentActivity
 
-internal class PayWithCardIdActivity : BaseActivity(), BasePaymentView {
+internal class PayWithCardIdActivity : BasePaymentActivity() {
 
     companion object {
         fun provideIntent(context: Context, launcher: PayWithCardIdLauncher): Intent {
@@ -37,17 +32,6 @@ internal class PayWithCardIdActivity : BaseActivity(), BasePaymentView {
             OrderRepositoryImpl(DependencyInjector.orderApi),
             PaymentRepositoryImpl(DependencyInjector.paymentApi)
         )
-    }
-
-    override fun provideContext(): Context {
-        return this
-    }
-
-    override fun registerForActivityResult(
-        contract: ActivityResultContracts.StartActivityForResult,
-        callback: ActivityResultCallback<ActivityResult>
-    ): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(contract, callback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

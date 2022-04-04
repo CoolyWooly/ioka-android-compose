@@ -1,7 +1,5 @@
 package kz.ioka.android.ioka.presentation.flows.payWithBindedCard
 
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,10 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -21,7 +15,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
@@ -37,10 +30,9 @@ import kz.ioka.android.ioka.util.shortPanMask
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toCardType
 import kz.ioka.android.ioka.viewBase.BaseActivity
-import kz.ioka.android.ioka.viewBase.BasePaymentView
+import kz.ioka.android.ioka.viewBase.BasePaymentFragment
 
-internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClickListener,
-    BasePaymentView {
+internal class CvvFragment : BasePaymentFragment(R.layout.fragment_cvv), View.OnClickListener {
 
     companion object {
         const val LAUNCHER = "CvvFragment_LAUNCHER"
@@ -72,17 +64,6 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
     private lateinit var etCvv: AppCompatEditText
     private lateinit var ivCvvFaq: AppCompatImageButton
     private lateinit var btnContinue: IokaStateButton
-
-    override fun provideContext(): Context {
-        return requireContext()
-    }
-
-    override fun registerForActivityResult(
-        contract: ActivityResultContracts.StartActivityForResult,
-        callback: ActivityResultCallback<ActivityResult>
-    ): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(contract, callback)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -199,10 +180,12 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
         )
 
         startActivity(intent)
+        if (activity is PaymentLauncherActivity)
+            activity?.finish()
     }
 
     override fun onFailedPayment(cause: String?) {
-        dismiss()
+        activity?.supportFragmentManager?.popBackStack()
 
         val a = ResultFragment.newInstance(cause)
         a.show(requireActivity().supportFragmentManager, ResultFragment::class.simpleName)
@@ -212,6 +195,8 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
         when (v) {
             btnClose -> {
                 dismiss()
+                if (activity is PaymentLauncherActivity)
+                    activity?.finish()
             }
 
             ivCvvFaq -> {
@@ -222,14 +207,6 @@ internal class CvvFragment : DialogFragment(R.layout.fragment_cvv), View.OnClick
             btnContinue -> {
                 viewModel.onContinueClicked(etCvv.text.toString())
             }
-        }
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-
-        if (activity is PaymentLauncherActivity) {
-            activity?.finish()
         }
     }
 

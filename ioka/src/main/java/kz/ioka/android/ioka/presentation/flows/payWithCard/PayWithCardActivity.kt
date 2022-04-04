@@ -1,12 +1,7 @@
 package kz.ioka.android.ioka.presentation.flows.payWithCard
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -22,25 +17,21 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
-import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
+import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
-import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
-import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.IokaStateButton
-import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
-import kz.ioka.android.ioka.viewBase.BaseActivity
-import kz.ioka.android.ioka.viewBase.BasePaymentView
-import java.math.BigDecimal
+import kz.ioka.android.ioka.viewBase.BasePaymentActivity
+import kz.ioka.android.ioka.viewBase.Scanable
 
-internal class PayWithCardActivity : BaseActivity(), BasePaymentView {
+internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
 
     private val cardInfoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -63,17 +54,6 @@ internal class PayWithCardActivity : BaseActivity(), BasePaymentView {
     private lateinit var etCvv: AppCompatEditText
     private lateinit var switchBindCard: SwitchCompat
     private lateinit var btnPay: IokaStateButton
-
-    override fun provideContext(): Context {
-        return this
-    }
-
-    override fun registerForActivityResult(
-        contract: ActivityResultContracts.StartActivityForResult,
-        callback: ActivityResultCallback<ActivityResult>
-    ): ActivityResultLauncher<Intent> {
-        return registerForActivityResult(contract, callback)
-    }
 
     override fun onCardScanned(cardNumber: String) {
         etCardNumber.setCardNumber(cardNumber)
@@ -245,6 +225,11 @@ internal class PayWithCardActivity : BaseActivity(), BasePaymentView {
         )
 
         startActivity(intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super<BasePaymentActivity>.onActivityResult(requestCode, resultCode, data)
+        super<Scanable>.onActivityResult(requestCode, resultCode, data)
     }
 
 }

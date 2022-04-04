@@ -1,5 +1,6 @@
 package kz.ioka.android.ioka.presentation.flows.bindCard
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
@@ -28,8 +29,9 @@ import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
+import kz.ioka.android.ioka.viewBase.Scanable
 
-internal class BindCardActivity : BaseActivity(), View.OnClickListener {
+internal class BindCardActivity : BaseActivity(), View.OnClickListener, Scanable {
 
     private val infoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -216,6 +218,11 @@ internal class BindCardActivity : BaseActivity(), View.OnClickListener {
                 onBackPressed()
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super<BaseActivity>.onActivityResult(requestCode, resultCode, data)
+        super<Scanable>.onActivityResult(requestCode, resultCode, data)
     }
 
 }

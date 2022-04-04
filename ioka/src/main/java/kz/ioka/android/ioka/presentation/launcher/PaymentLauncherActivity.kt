@@ -3,13 +3,13 @@ package kz.ioka.android.ioka.presentation.launcher
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.viewBase.BaseActivity
-
 
 internal class PaymentLauncherActivity : BaseActivity() {
 

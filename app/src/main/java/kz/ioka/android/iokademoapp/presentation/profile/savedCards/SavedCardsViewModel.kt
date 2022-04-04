@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.ioka.api.PaymentFlow
-import kz.ioka.android.ioka.api.dataSource.IokaDataSource
-import kz.ioka.android.ioka.api.dataSource.IokaDataSourceImpl
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.ListItem
 import kz.ioka.android.iokademoapp.common.shortPanMask
@@ -22,8 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SavedCardsViewModel @Inject constructor(
     private val customerRepository: CustomerRepository,
-    private val settingsRepository: SettingsRepository,
-    private val iokaDataSource: IokaDataSource = IokaDataSourceImpl()
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _progress = MutableLiveData(false)
@@ -32,8 +30,7 @@ class SavedCardsViewModel @Inject constructor(
     private val _savedCards = MutableLiveData<MutableList<ListItem>>(mutableListOf())
     val savedCards = _savedCards as LiveData<MutableList<ListItem>>
 
-    private val _paymentFlow = MutableLiveData<PaymentFlow>()
-    val paymentFlow = _paymentFlow as LiveData<PaymentFlow>
+    lateinit var customerToken: String
 
     fun fetchCards() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -41,8 +38,9 @@ class SavedCardsViewModel @Inject constructor(
             val cardsList = mutableListOf<ListItem>()
 
             settingsRepository.fetchCustomerToken()
+            customerToken = customerRepository.getCustomerToken()
 
-            cardsList.addAll(iokaDataSource.getCards(customerRepository.getCustomerToken()).map {
+            cardsList.addAll(Ioka.getCards(customerToken).map {
                 CardDvo(
                     id = it.id ?: "",
                     cardType = R.drawable.ic_ps_visa,
@@ -61,21 +59,12 @@ class SavedCardsViewModel @Inject constructor(
             val customerToken = customerRepository.getCustomerToken()
 
             try {
-                val isCardRemoved = iokaDataSource.removeCard(customerToken, cardId)
+                val isCardRemoved = Ioka.removeCard(customerToken, cardId)
 
                 if (isCardRemoved) fetchCards()
             } catch (e: Exception) {
                 Log.d("Error", "" + e.localizedMessage)
             }
-        }
-    }
-
-    fun onAddCardClicked() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val customerToken = customerRepository.getCustomerToken()
-            val flow = PaymentFlow.BindCardFlow(customerToken)
-
-            _paymentFlow.postValue(flow)
         }
     }
 

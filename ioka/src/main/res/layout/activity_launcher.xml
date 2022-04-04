@@ -25,7 +25,5 @@
             android:textAppearance="@style/MediumPrimaryTextView.18"
             android:textColor="@color/ioka_color_static_white"
             tools:text="@string/ioka_common_processing_payment" />
-
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 </FrameLayout>

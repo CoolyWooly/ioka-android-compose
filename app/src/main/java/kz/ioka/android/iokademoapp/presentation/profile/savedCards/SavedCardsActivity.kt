@@ -54,7 +54,9 @@ class SavedCardsActivity : BaseActivity() {
         adapter = SavedCardsAdapter(
             itemList = emptyList(),
             onRemoveCardClicked = { viewModel.onRemoveCardClicked(it) },
-            onAddCardClicked = { viewModel.onAddCardClicked() }
+            onAddCardClicked = {
+                Ioka.startSaveCardFlow(viewModel.customerToken)
+            }
         )
 
         rvSavedCards.adapter = adapter
@@ -70,10 +72,6 @@ class SavedCardsActivity : BaseActivity() {
 
         viewModel.savedCards.observe(this) {
             adapter.updateList(it)
-        }
-
-        viewModel.paymentFlow.observe(this) {
-            Ioka.showForm(it).invoke(this)
         }
     }
 

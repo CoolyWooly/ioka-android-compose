@@ -1,8 +1,11 @@
 package kz.ioka.android.iokademoapp.presentation.cart.orderDetail
 
+import android.app.Activity
+import android.view.animation.AccelerateInterpolator
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.ioka.api.PaymentFlow
 import kz.ioka.android.iokademoapp.data.OrderRepository
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
@@ -27,8 +30,8 @@ class OrderDetailsViewModel @Inject constructor(
     private val _progress = MutableLiveData(false)
     val progress = _progress as LiveData<Boolean>
 
-    private val _paymentFlow = MutableLiveData<PaymentFlow>()
-    val paymentFlow = _paymentFlow as LiveData<PaymentFlow>
+    private val _paymentAction = MutableLiveData<(Activity) -> Unit>()
+    val paymentAction = _paymentAction as LiveData<(Activity) -> Unit>
 
     private val _selectedPaymentType = MutableLiveData<PaymentTypeDvo>()
     var selectedPaymentType = _selectedPaymentType as LiveData<PaymentTypeDvo>
@@ -47,45 +50,36 @@ class OrderDetailsViewModel @Inject constructor(
     }
 
     fun onContinueClicked() {
-        val paymentFlow = when (selectedPaymentType.value) {
-            PaymentTypeDvo.GooglePayDvo -> {
-                PaymentFlow.PayWithCardFlow(
-                    orderToken,
-                    false
-                )
+        _paymentAction.value = when (selectedPaymentType.value) {
+            PaymentTypeDvo.GooglePayDvo ->
+                { activity: Activity ->
+                    Ioka.startPaymentFlow(orderToken).invoke(activity)
+                }
+            PaymentTypeDvo.PayWithCardDvo -> { activity: Activity ->
+                Ioka.startPaymentFlow(orderToken).invoke(activity)
             }
-            PaymentTypeDvo.PayWithCardDvo -> {
-                PaymentFlow.PayWithCardFlow(
-                    orderToken,
-                    false
-                )
-            }
-            PaymentTypeDvo.PayWithCashDvo -> {
-                PaymentFlow.PayWithCardFlow(
-                    orderToken,
-                    false
-                )
+            PaymentTypeDvo.PayWithCashDvo -> { activity: Activity ->
+                Ioka.startPaymentFlow(orderToken).invoke(activity)
             }
             is PaymentTypeDvo.PayWithSavedCardDvo -> {
                 val cardDvo = selectedPaymentType.value as PaymentTypeDvo.PayWithSavedCardDvo
 
-                PaymentFlow.PayWithBindedCardFlow(
-                    orderToken,
-                    cardDvo.cardId,
-                    cardDvo.maskedCardNumber,
-                    cardDvo.cardType.code,
-                    cardDvo.cvvRequired,
-                )
+                { activity: Activity ->
+                    Ioka.startPaymentWithSavedCardFlow(
+                        orderToken,
+                        PaymentFlow.PayWithBindedCardFlow.CardDvo(
+                            cardDvo.cardId,
+                            cardDvo.maskedCardNumber,
+                            cardDvo.cardType.code,
+                            cardDvo.cvvRequired,
+                        )
+                    ).invoke(activity)
+                }
             }
-            null -> {
-                PaymentFlow.PayWithCardFlow(
-                    orderToken,
-                    true
-                )
+            null -> { activity: Activity ->
+                Ioka.startPaymentFlow(orderToken).invoke(activity)
             }
         }
-
-        _paymentFlow.postValue(paymentFlow)
     }
 
     fun onPaymentTypeSelected(paymentType: PaymentTypeDvo) {

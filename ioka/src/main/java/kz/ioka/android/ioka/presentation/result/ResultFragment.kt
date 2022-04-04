@@ -1,5 +1,6 @@
 package kz.ioka.android.ioka.presentation.result
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.DialogFragment
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.uikit.IokaStateButton
 
 class ResultFragment : DialogFragment(R.layout.fragment_result) {
@@ -63,6 +65,13 @@ class ResultFragment : DialogFragment(R.layout.fragment_result) {
         btnTryAgain.setOnClickListener {
             dismiss()
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
+        if (activity is PaymentLauncherActivity)
+            activity?.finish()
     }
 
 }
