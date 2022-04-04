@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithCard
+package kz.ioka.android.ioka.presentation.flows.payment
 
 import android.content.Intent
 import android.os.Bundle
@@ -31,7 +31,7 @@ import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BasePaymentActivity
 import kz.ioka.android.ioka.viewBase.Scanable
 
-internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
+internal class PayActivity : BasePaymentActivity(), Scanable {
 
     private val cardInfoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -125,7 +125,7 @@ internal class PayWithCardActivity : BasePaymentActivity(), Scanable {
             groupGooglePay.isVisible = withGooglePay
             switchSaveCard.isVisible = canSaveCard
 
-            payState.observe(this@PayWithCardActivity) {
+            payState.observe(this@PayActivity) {
                 handleState(it)
             }
         }

@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithCardId
+package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv
 
 import android.content.Context
 import android.content.Intent

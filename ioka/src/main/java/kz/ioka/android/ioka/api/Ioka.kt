@@ -6,10 +6,10 @@ import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardLauncher
-import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.CvvPaymentLauncherBehavior
-import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardLauncherBehavior
-import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdActivity
-import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdLauncher
+import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.CvvPaymentLauncherBehavior
+import kz.ioka.android.ioka.presentation.flows.payment.PaymentLauncherBehavior
+import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdActivity
+import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdLauncher
 import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.util.getCustomerId
@@ -36,7 +36,7 @@ object Ioka {
         return {
             val intent = PaymentLauncherActivity.provideIntent(
                 it,
-                PayWithCardLauncherBehavior(
+                PaymentLauncherBehavior(
                     orderToken,
                     false
                 )

@@ -1,25 +1,25 @@
-package kz.ioka.android.ioka.presentation.flows.payWithCard
+package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv
 
-import android.content.Intent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.order.OrderRepositoryImpl
-import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.common.OrderDvo
+import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherBehavior
 import kz.ioka.android.ioka.util.ViewAction
 import kz.ioka.android.ioka.util.getOrderId
 import kz.ioka.android.ioka.util.showErrorToast
-import kz.ioka.android.ioka.viewBase.BaseActivity
 
 @Parcelize
-internal class PayWithCardLauncherBehavior(
+internal class CvvPaymentLauncherBehavior(
     private val orderToken: String,
-    private val withGooglePay: Boolean,
+    private val cardId: String,
+    private val cardNumber: String,
+    private val cardType: String,
 ) : PaymentLauncherBehavior {
 
     @IgnoredOnParcel
@@ -29,22 +29,20 @@ internal class PayWithCardLauncherBehavior(
     private var order: OrderDvo? = null
 
     @IgnoredOnParcel
-    private var customerId: String? = null
+    private val progressFlow = MutableStateFlow(true)
 
     override val titleRes: Int get() = R.string.ioka_common_processing_payment
 
-    override fun observeProgress(): Flow<Boolean> = flowOf(true)
+    override fun observeProgress(): Flow<Boolean> = progressFlow
 
     override suspend fun doOnLoading() {
         val orderResponse = orderRepository.getOrderById(orderToken.getOrderId())
 
-        if (orderResponse is ResultWrapper.Success) {
+        if (orderResponse is ResultWrapper.Success)
             order = OrderDvo(
                 orderResponse.value.externalId,
-                orderResponse.value.amount,
+                orderResponse.value.amount
             )
-            customerId = orderResponse.value.customerId
-        }
     }
 
     override fun doAfterLoading(): ViewAction {
@@ -54,19 +52,22 @@ internal class PayWithCardLauncherBehavior(
                 it.finish()
             }
         } else {
+            progressFlow.value = false
+
             ViewAction {
-                val intent = Intent(it, PayWithCardActivity::class.java)
-                intent.putExtra(
-                    BaseActivity.LAUNCHER,
-                    PayWithCardLauncher(
+                val newFragment: PayWithCvvFragment = PayWithCvvFragment.newInstance(
+                    PayWithCvvLauncher(
                         orderToken,
                         order!!,
-                        withGooglePay,
-                        customerId != null
+                        cardId,
+                        cardNumber,
+                        cardType,
                     )
                 )
-                it.startActivity(intent)
-                it.finish()
+                newFragment.show(
+                    it.supportFragmentManager,
+                    newFragment::class.simpleName
+                )
             }
         }
     }

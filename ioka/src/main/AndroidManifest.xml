@@ -8,11 +8,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardActivity"
+            android:name="kz.ioka.android.ioka.presentation.flows.payment.PayActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdActivity"
+            android:name="kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.webView.WebViewActivity"

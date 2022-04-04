@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithCardId
+package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers

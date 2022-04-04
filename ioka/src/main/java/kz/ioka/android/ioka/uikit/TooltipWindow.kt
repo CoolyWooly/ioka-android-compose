@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithSavedCard
+package kz.ioka.android.ioka.uikit
 
 import android.content.Context
 import android.graphics.Rect

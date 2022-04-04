@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithCard
+package kz.ioka.android.ioka.presentation.flows.payment
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.flow.*
@@ -13,7 +13,7 @@ import java.util.*
 
 @Suppress("UNCHECKED_CAST")
 internal class PayWithCardViewModelFactory(
-    val launcher: PayWithCardLauncher,
+    val launcher: PayLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -22,7 +22,7 @@ internal class PayWithCardViewModelFactory(
 }
 
 internal class PayWithCardViewModel constructor(
-    launcher: PayWithCardLauncher,
+    launcher: PayLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 

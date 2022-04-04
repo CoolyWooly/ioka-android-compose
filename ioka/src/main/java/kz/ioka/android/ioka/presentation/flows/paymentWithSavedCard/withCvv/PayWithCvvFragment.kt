@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithSavedCard
+package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv
 
 import android.content.Intent
 import android.graphics.Color
@@ -26,19 +26,21 @@ import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.IokaStateButton
+import kz.ioka.android.ioka.uikit.TooltipWindow
 import kz.ioka.android.ioka.util.shortPanMask
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toCardType
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import kz.ioka.android.ioka.viewBase.BasePaymentFragment
 
-internal class CvvFragment : BasePaymentFragment(R.layout.fragment_cvv), View.OnClickListener {
+internal class PayWithCvvFragment : BasePaymentFragment(R.layout.fragment_cvv),
+    View.OnClickListener {
 
     companion object {
         const val LAUNCHER = "CvvFragment_LAUNCHER"
 
-        fun newInstance(launcher: CvvLauncher): CvvFragment {
-            val fragment = CvvFragment()
+        fun newInstance(launcher: PayWithCvvLauncher): PayWithCvvFragment {
+            val fragment = PayWithCvvFragment()
 
             val arguments = Bundle()
             arguments.putParcelable(LAUNCHER, launcher)

@@ -20,7 +20,7 @@ import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
-import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.TooltipWindow
+import kz.ioka.android.ioka.uikit.TooltipWindow
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardRequestState.*
 import kz.ioka.android.ioka.presentation.webView.SaveCardConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity

@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.payWithSavedCard
+package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
@@ -11,7 +11,7 @@ import kz.ioka.android.ioka.util.getOrderId
 
 @Suppress("UNCHECKED_CAST")
 internal class CvvViewModelFactory(
-    val launcher: CvvLauncher,
+    val launcher: PayWithCvvLauncher,
     private val repository: PaymentRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -21,7 +21,7 @@ internal class CvvViewModelFactory(
 
 
 internal class CvvViewModel(
-    launcher: CvvLauncher,
+    launcher: PayWithCvvLauncher,
     private val repository: PaymentRepository
 ) : ViewModel() {
 
