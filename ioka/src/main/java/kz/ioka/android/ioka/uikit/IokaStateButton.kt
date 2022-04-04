@@ -4,6 +4,8 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.util.toPx
 
@@ -26,10 +29,7 @@ internal class IokaStateButton @JvmOverloads constructor(
     private lateinit var ivState: AppCompatImageView
     private lateinit var vProgress: ProgressBar
 
-    @ColorRes
-    private var backgroundColorRes = R.color.ioka_color_primary
     private var callback: Callback? = null
-    private lateinit var state: ButtonState
 
     init {
         val root = LayoutInflater.from(context).inflate(R.layout.view_progress_button, this, true)
@@ -57,19 +57,10 @@ internal class IokaStateButton @JvmOverloads constructor(
 
         if (buttonText != 0)
             tvTitle.text = context.getString(buttonText)
-        cardElevation = 0f
-        setCardBackgroundColor(ContextCompat.getColor(context, backgroundColorRes))
-        radius = 12.toPx
+        background = ContextCompat.getDrawable(context, R.drawable.bg_primary_button)
     }
 
     fun setText(text: String) {
-        tvTitle.text = text
-    }
-
-    fun setConfiguration(radius: Int, @ColorRes backgroundColor: Int, text: String) {
-        this.backgroundColorRes = backgroundColor
-        setCardBackgroundColor(ContextCompat.getColor(context, backgroundColor))
-        this.radius = radius.toPx
         tvTitle.text = text
     }
 
@@ -82,69 +73,52 @@ internal class IokaStateButton @JvmOverloads constructor(
     }
 
     fun setState(state: ButtonState) {
-        this.state = state
+        isEnabled = state != ButtonState.Disabled
 
-        val backgroundColor =
-            if (state == ButtonState.Disabled) R.color.ioka_color_text_secondary
-            else backgroundColorRes
-        this.setCardBackgroundColor(ContextCompat.getColor(context, backgroundColor))
+        isClickable = state == ButtonState.Default
+        isFocusable = state == ButtonState.Default
 
-        when (state) {
-            ButtonState.Default -> {
-                isClickable = true
-                isFocusable = true
+        tvTitle.isInvisible = state != ButtonState.Default && state != ButtonState.Disabled
+        vProgress.isInvisible = state != ButtonState.Loading
+        ivState.isInvisible = state != ButtonState.Success
 
-                tvTitle.isInvisible = false
-                vProgress.isInvisible = true
-                ivState.isInvisible = true
-            }
-            ButtonState.Disabled -> {
-                isClickable = false
-                isFocusable = false
-
-                tvTitle.isInvisible = false
-                vProgress.isInvisible = true
-                ivState.isInvisible = true
-            }
-            ButtonState.Loading -> {
-                isClickable = false
-                isFocusable = false
-
-                tvTitle.isInvisible = true
-                vProgress.isInvisible = false
-                ivState.isInvisible = true
-            }
-            ButtonState.Success -> {
-                isClickable = false
-                isFocusable = false
-
-                ivState.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        context,
-                        R.drawable.ic_check
-                    )
+        if (state == ButtonState.Success) {
+            ivState.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.ic_check
                 )
+            )
 
-                tvTitle.isInvisible = true
-                vProgress.isInvisible = true
-                ivState.isInvisible = false
+            tvTitle.isInvisible = true
+            vProgress.isInvisible = true
+            ivState.isInvisible = false
 
-                val colorFrom = backgroundColorRes
-                val colorTo = ContextCompat.getColor(context, R.color.ioka_color_static_green)
-                val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-                colorAnimation.duration = 250
+            val colorFrom = (background as? ColorDrawable)?.color
+            val colorTo = ContextCompat.getColor(context, R.color.ioka_color_static_green)
 
-                colorAnimation.addUpdateListener { animator ->
-                    setCardBackgroundColor(animator.animatedValue as Int)
-
-                    if ((animator.animatedValue as Int) == colorTo) {
-                        callback?.onSuccess()?.invoke()
-                    }
-                }
-
-                colorAnimation.start()
+            if (colorFrom != null) {
+                animateColorTransition(colorFrom, colorTo)
+            } else {
+                (background as? GradientDrawable)?.setTint(colorTo)
+                postDelayed({ callback?.onSuccess()?.invoke() }, 250)
             }
         }
+    }
+
+    private fun animateColorTransition(colorFrom: Int, colorTo: Int) {
+        val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+        colorAnimation.duration = 250
+
+        colorAnimation.addUpdateListener { animator ->
+            setCardBackgroundColor(animator.animatedValue as Int)
+
+            if ((animator.animatedValue as Int) == colorTo) {
+                callback?.onSuccess()?.invoke()
+            }
+        }
+
+        colorAnimation.start()
     }
 
 }

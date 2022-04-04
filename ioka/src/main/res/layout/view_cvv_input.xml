@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@drawable/bg_edittext"
+    tools:background="@drawable/bg_ioka_edittext"
     tools:gravity="center_vertical"
     tools:orientation="horizontal"
     tools:parentTag="androidx.appcompat.widget.LinearLayoutCompat">
@@ -19,9 +19,9 @@
         android:background="@color/ioka_color_static_transparent"
         android:hint="@string/ioka_common_cvv_hint"
         android:inputType="numberPassword"
-        android:maxLength="3"
+        android:maxLength="4"
         android:paddingVertical="16dp"
-        android:paddingEnd="16dp" />
+        android:layout_marginEnd="16dp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivCvvFaq"

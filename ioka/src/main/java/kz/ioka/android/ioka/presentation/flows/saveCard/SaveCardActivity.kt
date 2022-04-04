@@ -1,13 +1,14 @@
 package kz.ioka.android.ioka.presentation.flows.saveCard
 
 import android.content.Intent
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -16,18 +17,17 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
-import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardRequestState.*
-import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration.Companion.DEFAULT_FONT
+import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.TooltipWindow
+import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration.Companion.DEFAULT_FONT
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardRequestState.*
 import kz.ioka.android.ioka.presentation.webView.SaveCardConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.showErrorToast
-import kz.ioka.android.ioka.util.toPx
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import kz.ioka.android.ioka.viewBase.Scanable
 
@@ -46,6 +46,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
     }
 
     private lateinit var tipWindow: TooltipWindow
+    private lateinit var vRoot: LinearLayoutCompat
     private lateinit var vToolbar: Toolbar
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
@@ -79,6 +80,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
     private fun bindViews() {
         tipWindow = TooltipWindow(this)
+        vRoot = findViewById(R.id.vRoot)
         vToolbar = findViewById(R.id.vToolbar)
         etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
@@ -89,17 +91,23 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
     private fun setConfiguration() {
         launcher<SaveCardLauncher>()?.configuration?.apply {
-            toolbarTitle?.let { vToolbar.title = it }
-
-            etCardNumber.setRadius(fieldCornerRadius.toPx)
-            (etExpireDate.background as GradientDrawable).cornerRadius = fieldCornerRadius.toPx
-            vCvvInput.setRadius(fieldCornerRadius.toPx)
-
-            btnSave.setConfiguration(
-                saveButtonCornerRadius,
-                saveButtonBackgroundColorRes,
-                saveButtonTextRes ?: getString(R.string.ioka_save_card_save)
+            vRoot.setBackgroundColor(
+                ContextCompat.getColor(this@SaveCardActivity, backgroundColor)
             )
+
+            etCardNumber.setIconColor(iconColor)
+            vCvvInput.setIconColor(iconColor)
+
+            btnSave.setText(buttonText ?: getString(R.string.ioka_save_card_save))
+
+            fieldBackground?.let {
+                etCardNumber.background = ContextCompat.getDrawable(this@SaveCardActivity, it)
+                etExpireDate.background = ContextCompat.getDrawable(this@SaveCardActivity, it)
+                vCvvInput.background = ContextCompat.getDrawable(this@SaveCardActivity, it)
+            }
+            buttonBackground?.let {
+                btnSave.background = ContextCompat.getDrawable(this@SaveCardActivity, it)
+            }
 
             if (fontRes != DEFAULT_FONT) {
                 val typeface = ResourcesCompat.getFont(this@SaveCardActivity, fontRes)

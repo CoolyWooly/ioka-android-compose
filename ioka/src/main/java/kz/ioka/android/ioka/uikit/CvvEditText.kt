@@ -1,28 +1,29 @@
 package kz.ioka.android.ioka.uikit
 
 import android.content.Context
-import android.content.Intent
+import android.content.res.ColorStateList
+import android.content.res.TypedArray
+import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
+import androidx.annotation.ColorRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
+import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.doOnTextChanged
-import io.card.payment.CardIOActivity
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.onEach
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.util.textChanges
+import kz.ioka.android.ioka.util.getPrimaryColor
 import kz.ioka.android.ioka.util.toPx
-import kz.ioka.android.ioka.viewBase.BaseActivity
+
 
 class CvvEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -49,7 +50,7 @@ class CvvEditText @JvmOverloads constructor(
 
     private fun setupViews() {
         orientation = HORIZONTAL
-        background = AppCompatResources.getDrawable(context, R.drawable.bg_edittext)
+        background = AppCompatResources.getDrawable(context, R.drawable.bg_ioka_edittext)
         gravity = Gravity.CENTER_VERTICAL
     }
 
@@ -66,7 +67,7 @@ class CvvEditText @JvmOverloads constructor(
             back.mutate()
             back.setStroke(
                 strokeWidth,
-                ContextCompat.getColor(context, R.color.ioka_color_primary)
+                context.getPrimaryColor()
             )
 
             background = back
@@ -77,16 +78,19 @@ class CvvEditText @JvmOverloads constructor(
         }
     }
 
-    fun getCvv(): String {
-        return etCvv.text.toString()
+    fun setIconColor(@ColorRes iconColor: Int) {
+        ImageViewCompat.setImageTintList(
+            ivCvvFaq,
+            ColorStateList.valueOf(ContextCompat.getColor(context, iconColor))
+        )
     }
 
     fun setTypeface(typeface: Typeface) {
         etCvv.typeface = typeface
     }
 
-    fun setRadius(toPx: Float) {
-        (background as GradientDrawable).cornerRadius = toPx
+    fun getCvv(): String {
+        return etCvv.text.toString()
     }
 
     override fun setEnabled(enabled: Boolean) {

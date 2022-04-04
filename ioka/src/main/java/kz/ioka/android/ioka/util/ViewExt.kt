@@ -1,10 +1,17 @@
 package kz.ioka.android.ioka.util
 
+import android.R
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -30,16 +37,22 @@ internal fun EditText.textChanges(): Flow<CharSequence?> {
 
 internal fun Context.showErrorToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
 
-//    val layout = LayoutInflater.from(this).inflate(R.layout.view_error, null)
-//    val tvErrorText = layout.findViewById<TextView>(R.id.tvErrorText)
-//    val btnClose = layout.findViewById<AppCompatImageButton>(R.id.btnClose)
-//    tvErrorText.text = message
-//
-//    val toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
-//    toast.setGravity(Gravity.BOTTOM, 0, 0)
-//    toast.view = layout
-//    toast.show()
-//
-//    btnClose.setOnClickListener { toast.cancel() }
+internal fun View.setStrokeColor(
+    @ColorRes defaultColor: Int,
+    @ColorRes focusedColor: Int,
+) {
+    val states = arrayOf(
+        intArrayOf(-R.attr.state_focused),
+        intArrayOf(R.attr.state_focused),
+    )
+
+    val colors = intArrayOf(
+        ContextCompat.getColor(context, defaultColor), ContextCompat.getColor(context, focusedColor)
+    )
+
+    val stateList = ColorStateList(states, colors)
+
+    (background as? GradientDrawable)?.setStroke(1.toPx.toInt(), stateList)
 }

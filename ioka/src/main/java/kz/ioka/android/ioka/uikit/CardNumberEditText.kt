@@ -2,6 +2,7 @@ package kz.ioka.android.ioka.uikit
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -19,6 +21,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.setPadding
+import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.doOnTextChanged
 import io.card.payment.CardIOActivity
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +29,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.util.*
 import kz.ioka.android.ioka.util.Optional
 import kz.ioka.android.ioka.util.getDrawableFromRes
 import kz.ioka.android.ioka.util.textChanges
@@ -64,9 +68,9 @@ internal class CardNumberEditText @JvmOverloads constructor(
 
     private fun setupViews() {
         orientation = HORIZONTAL
-        background = AppCompatResources.getDrawable(context, R.drawable.bg_edittext)
+        background = AppCompatResources.getDrawable(context, R.drawable.bg_ioka_edittext)
         gravity = Gravity.CENTER_VERTICAL
-        setPadding(16.toPx.toInt())
+        setPadding(8.toPx.toInt())
     }
 
     private fun setupListeners() {
@@ -86,7 +90,7 @@ internal class CardNumberEditText @JvmOverloads constructor(
             back.mutate()
             back.setStroke(
                 strokeWidth,
-                ContextCompat.getColor(context, R.color.ioka_color_primary)
+                context.getPrimaryColor()
             )
 
             background = back
@@ -105,10 +109,6 @@ internal class CardNumberEditText @JvmOverloads constructor(
 
             startActivityForResult(context as BaseActivity, scanIntent, SCAN_REQUEST_CODE, null)
         }
-    }
-
-    fun setRadius(cornerRadius: Float) {
-        (background as GradientDrawable).cornerRadius = cornerRadius.toPx
     }
 
     fun setTypeface(typeface: Typeface) {
@@ -144,6 +144,13 @@ internal class CardNumberEditText @JvmOverloads constructor(
         btnScan.isEnabled = enabled
 
         super.setEnabled(enabled)
+    }
+
+    fun setIconColor(@ColorRes iconColor: Int) {
+        ImageViewCompat.setImageTintList(
+            btnScan,
+            ColorStateList.valueOf(ContextCompat.getColor(context, iconColor))
+        )
     }
 
 }

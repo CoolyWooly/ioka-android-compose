@@ -10,6 +10,7 @@ import kz.ioka.android.ioka.presentation.flows.payWithSavedCard.CvvPaymentLaunch
 import kz.ioka.android.ioka.presentation.flows.payWithCard.PayWithCardLauncherBehavior
 import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdActivity
 import kz.ioka.android.ioka.presentation.flows.payWithCardId.PayWithCardIdLauncher
+import kz.ioka.android.ioka.presentation.flows.saveCard.Configuration
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.util.getCustomerId
 import kz.ioka.android.ioka.viewBase.BaseActivity
@@ -78,7 +79,10 @@ object Ioka {
         }
     }
 
-    fun startSaveCardFlow(customerToken: String): (Activity) -> Unit {
+    fun startSaveCardFlow(
+        customerToken: String,
+        configuration: Configuration? = null
+    ): (Activity) -> Unit {
         if (Config.isApiKeyInitialized().not()) {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
@@ -87,7 +91,7 @@ object Ioka {
             val intent = Intent(activity, SaveCardActivity::class.java)
             intent.putExtra(
                 BaseActivity.LAUNCHER,
-                SaveCardLauncher(customerToken)
+                SaveCardLauncher(customerToken, configuration)
             )
 
             activity.startActivity(intent)
