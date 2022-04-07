@@ -1,23 +1,22 @@
 package kz.ioka.android.ioka.util
 
-import android.R
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View.OnTouchListener
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
+import androidx.activity.result.ActivityResult
+import androidx.appcompat.widget.AppCompatImageButton
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
-
+import kz.ioka.android.ioka.R
 
 internal fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {
@@ -36,23 +35,33 @@ internal fun EditText.textChanges(): Flow<CharSequence?> {
 }
 
 internal fun Context.showErrorToast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    val layout = LayoutInflater.from(this).inflate(R.layout.view_error, null)
+    val tvErrorText = layout.findViewById<TextView>(R.id.tvErrorText)
+    val btnClose = layout.findViewById<AppCompatImageButton>(R.id.btnClose)
+
+    tvErrorText.text = message
+
+    val toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
+    toast.setGravity(Gravity.BOTTOM, 0, 0)
+    toast.view = layout
+    toast.view!!.setOnTouchListener { _, event -> //Make sure the view is accessible
+        toast.view!!.performClick()
+
+        if (btnClose != null) {
+            //Set the touch location to the absolute screen location
+            event.setLocation(event.rawX, event.rawY)
+            //Send the touch event to the view
+            btnClose.onTouchEvent(event)
+        }
+        false
+    }
+    toast.show()
+
+    btnClose.setOnClickListener {
+        toast.cancel()
+    }
 }
 
-internal fun View.setStrokeColor(
-    @ColorRes defaultColor: Int,
-    @ColorRes focusedColor: Int,
-) {
-    val states = arrayOf(
-        intArrayOf(-R.attr.state_focused),
-        intArrayOf(R.attr.state_focused),
-    )
-
-    val colors = intArrayOf(
-        ContextCompat.getColor(context, defaultColor), ContextCompat.getColor(context, focusedColor)
-    )
-
-    val stateList = ColorStateList(states, colors)
-
-    (background as? GradientDrawable)?.setStroke(1.toPx.toInt(), stateList)
+internal fun ActivityResult.getStringExtra(name: String, default: String): String {
+    return data?.getStringExtra(name) ?: default
 }

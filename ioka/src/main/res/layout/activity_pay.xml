@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_close"
+        app:navigationIcon="@drawable/ioka_ic_close"
         app:titleCentered="true"
         app:titleTextColor="@color/ioka_color_text_primary"
         tools:title="К оплате 12 560 ₸" />
@@ -25,7 +25,7 @@
         android:layout_margin="16dp"
         android:background="@color/ioka_color_static_transparent"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_google_pay"
+        android:src="@drawable/ioka_ic_google_pay"
         app:layout_constraintTop_toBottomOf="@id/vToolbar" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -87,7 +87,7 @@
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
         android:autofillHints="creditCardNumber"
-        android:background="@drawable/bg_ioka_edittext"
+        android:background="@drawable/ioka_bg_edittext"
         android:hint="@string/ioka_common_expiry_date_hint"
         android:inputType="date"
         android:maxLength="5"
@@ -137,7 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:drawableStart="@drawable/ic_protection"
+        android:drawableStart="@drawable/ioka_ic_protection"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:text="@string/ioka_payment_transactions_protection"

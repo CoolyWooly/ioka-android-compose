@@ -31,9 +31,9 @@ import kz.ioka.android.ioka.uikit.IokaStateButton
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BasePaymentActivity
-import kz.ioka.android.ioka.viewBase.Scanable
+import kz.ioka.android.ioka.viewBase.Scannable
 
-internal class PayActivity : BasePaymentActivity(), Scanable {
+internal class PayActivity : BasePaymentActivity(), Scannable {
 
     private val cardInfoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -254,7 +254,7 @@ internal class PayActivity : BasePaymentActivity(), Scanable {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super<BasePaymentActivity>.onActivityResult(requestCode, resultCode, data)
-        super<Scanable>.onActivityResult(requestCode, resultCode, data)
+        super<Scannable>.onActivityResult(requestCode, resultCode, data)
     }
 
 }

@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_tooltip"
+        android:background="@drawable/ioka_bg_tooltip"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="12dp">
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_cvv" />
+            app:srcCompat="@drawable/ioka_ic_cvv" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tooltip_text"
@@ -44,6 +44,6 @@
             android:layout_height="12dp"
             android:layout_gravity="center"
             android:rotation="45"
-            android:src="@drawable/bg_tooltip_arrow" />
+            android:src="@drawable/ioka_bg_tooltip_arrow" />
     </FrameLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

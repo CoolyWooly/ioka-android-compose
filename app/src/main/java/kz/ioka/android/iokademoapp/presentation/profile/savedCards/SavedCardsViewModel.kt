@@ -42,7 +42,7 @@ class SavedCardsViewModel @Inject constructor(
             cardsList.addAll(Ioka.getCards(customerToken).map {
                 CardDvo(
                     id = it.id ?: "",
-                    cardType = R.drawable.ic_ps_visa,
+                    cardType = R.drawable.ioka_ic_ps_visa,
                     cardPan = it.panMasked?.shortPanMask() ?: "",
                 )
             })

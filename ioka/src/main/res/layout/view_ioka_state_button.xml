@@ -38,6 +38,6 @@
             android:layout_height="28dp"
             android:layout_gravity="center"
             android:visibility="invisible"
-            tools:srcCompat="@drawable/ic_check" />
+            tools:srcCompat="@drawable/ioka_ic_check" />
     </FrameLayout>
 </merge>

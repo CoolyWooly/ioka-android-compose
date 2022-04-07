@@ -1,6 +1,6 @@
 package kz.ioka.android.ioka.domain.cardInfo
 
-import android.util.Log
+import kz.ioka.android.ioka.data.cardInfo.BrandResponseDto
 import kz.ioka.android.ioka.data.cardInfo.CardInfoApi
 import kz.ioka.android.ioka.data.cardInfo.EmitterResponseDto
 import retrofit2.Response
@@ -17,10 +17,20 @@ internal class CardInfoRepositoryImpl constructor(
 ) : CardInfoRepository {
 
     override suspend fun getBrand(partialCardBin: String): CardBrandModel {
-        return when (cardInfoApi.getBrand(partialCardBin).brand) {
-            "MASTERCARD" -> CardBrandModel.MasterCard
-            "VISA" -> CardBrandModel.Visa
-            else -> CardBrandModel.Unknown
+        val response: Response<BrandResponseDto>
+
+        try {
+            response = cardInfoApi.getBrand(partialCardBin)
+        } catch (t: Throwable) {
+            return CardBrandModel.Unknown
+        }
+
+        return if (!response.isSuccessful) {
+            CardBrandModel.Unknown
+        } else {
+            CardBrandModel.values().find {
+                it.code == response.body()?.brand
+            } ?: CardBrandModel.Unknown
         }
     }
 
@@ -30,7 +40,6 @@ internal class CardInfoRepositoryImpl constructor(
         try {
             response = cardInfoApi.getEmitter(cardBin)
         } catch (t: Throwable) {
-            Log.d("Error catched: ", t.localizedMessage ?: "NULL")
             return CardEmitterModel.Unknown
         }
 
@@ -39,16 +48,9 @@ internal class CardInfoRepositoryImpl constructor(
         } else {
             val emitter = response.body()
 
-            return if (emitter == null) {
-                CardEmitterModel.Unknown
-            } else {
-                when (emitter.emitterCode) {
-                    "alfabank" -> CardEmitterModel.Alfa
-                    "kaspibank" -> CardEmitterModel.Kaspi
-                    else -> CardEmitterModel.Unknown
-                }
-            }
+            return CardEmitterModel.values().find {
+                it.name == emitter?.emitterCode
+            } ?: CardEmitterModel.Unknown
         }
     }
-
 }

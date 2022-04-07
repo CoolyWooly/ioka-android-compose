@@ -20,16 +20,18 @@ import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
-import kz.ioka.android.ioka.uikit.TooltipWindow
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardRequestState.*
 import kz.ioka.android.ioka.presentation.webView.SaveCardConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.WebViewActivity
+import kz.ioka.android.ioka.presentation.webView.WebViewActivity.Companion.EXTRA_FAIL_CAUSE
+import kz.ioka.android.ioka.presentation.webView.WebViewActivity.Companion.RESULT_FAIL
+import kz.ioka.android.ioka.presentation.webView.WebViewActivity.Companion.RESULT_SUCCESS
 import kz.ioka.android.ioka.uikit.*
-import kz.ioka.android.ioka.util.showErrorToast
+import kz.ioka.android.ioka.util.getStringExtra
 import kz.ioka.android.ioka.viewBase.BaseActivity
-import kz.ioka.android.ioka.viewBase.Scanable
+import kz.ioka.android.ioka.viewBase.Scannable
 
-internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable {
+internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scannable {
 
     private val infoViewModel: CardInfoViewModel by viewModels {
         CardInfoViewModelFactory(
@@ -49,15 +51,19 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
     private lateinit var etCardNumber: CardNumberEditText
     private lateinit var etExpireDate: AppCompatEditText
     private lateinit var vCvvInput: CvvEditText
-    private lateinit var vGap: View
+    private lateinit var vError: ErrorView
     private lateinit var btnSave: IokaStateButton
 
-    private val resultFor3DSecure =
+    private val resultForThreeDSecure =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                btnSave.setState(ButtonState.Success)
-            } else if (it.resultCode == RESULT_CANCELED) {
-                showErrorToast(getString(R.string.ioka_common_server_error))
+            if (it.resultCode == RESULT_SUCCESS) {
+                onSuccessAttempt()
+            } else if (it.resultCode == RESULT_FAIL) {
+                onFailedAttempt(
+                    it.getStringExtra(
+                        EXTRA_FAIL_CAUSE, getString(R.string.ioka_common_server_error)
+                    )
+                )
             }
         }
 
@@ -83,7 +89,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
         etCardNumber = findViewById(R.id.vCardNumberInput)
         etExpireDate = findViewById(R.id.etExpireDate)
         vCvvInput = findViewById(R.id.vCvvInput)
-        vGap = findViewById(R.id.vGap)
+        vError = findViewById(R.id.vError)
         btnSave = findViewById(R.id.btnSave)
     }
 
@@ -140,8 +146,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
         }
 
         vCvvInput.onFaqClicked = {
-            if (!tipWindow.isTooltipShown)
-                tipWindow.showToolTip(vCvvInput.ivCvvFaq)
+            tipWindow.showToolTip(vCvvInput.ivCvvFaq)
         }
 
         vToolbar.setNavigationOnClickListener(this)
@@ -179,26 +184,36 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
         btnSave.setState(buttonState)
 
-        if (state is ERROR) {
-            showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
-        }
-
         etCardNumber.isEnabled = state !is LOADING
         etExpireDate.isEnabled = state !is LOADING
         vCvvInput.isEnabled = state !is LOADING
 
         if (state is PENDING) {
-            val intent = WebViewActivity.provideIntent(
-                this, SaveCardConfirmationBehavior(
-                    toolbarTitleRes = R.string.ioka_common_payment_confirmation,
-                    url = state.actionUrl,
-                    customerToken = saveCardViewModel.customerToken,
-                    cardId = saveCardViewModel.cardId ?: ""
-                )
-            )
-
-            resultFor3DSecure.launch(intent)
+            onActionRequired(state.actionUrl)
+        } else if (state is ERROR) {
+            onFailedAttempt(state.cause ?: getString(R.string.ioka_common_server_error))
         }
+    }
+
+    private fun onSuccessAttempt() {
+        btnSave.setState(ButtonState.Success)
+    }
+
+    private fun onFailedAttempt(cause: String) {
+        vError.show(cause)
+    }
+
+    private fun onActionRequired(actionUrl: String) {
+        val intent = WebViewActivity.provideIntent(
+            this, SaveCardConfirmationBehavior(
+                toolbarTitleRes = R.string.ioka_common_payment_confirmation,
+                url = actionUrl,
+                customerToken = saveCardViewModel.customerToken,
+                cardId = saveCardViewModel.cardId ?: ""
+            )
+        )
+
+        resultForThreeDSecure.launch(intent)
     }
 
     override fun onClick(v: View?) {
@@ -210,6 +225,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
                     vCvvInput.getCvv()
                 )
             }
+
             else -> {
                 onBackPressed()
             }
@@ -218,7 +234,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super<BaseActivity>.onActivityResult(requestCode, resultCode, data)
-        super<Scanable>.onActivityResult(requestCode, resultCode, data)
+        super<Scannable>.onActivityResult(requestCode, resultCode, data)
     }
 
 }

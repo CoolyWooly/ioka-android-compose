@@ -3,7 +3,6 @@ package kz.ioka.android.ioka.uikit
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.Gravity
@@ -29,6 +28,8 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.presentation.flows.common.CardBrandDvo
+import kz.ioka.android.ioka.presentation.flows.common.CardEmitterDvo
 import kz.ioka.android.ioka.util.*
 import kz.ioka.android.ioka.util.Optional
 import kz.ioka.android.ioka.util.getDrawableFromRes
@@ -68,13 +69,13 @@ internal class CardNumberEditText @JvmOverloads constructor(
 
     private fun setupViews() {
         orientation = HORIZONTAL
-        background = AppCompatResources.getDrawable(context, R.drawable.bg_ioka_edittext)
+        background = AppCompatResources.getDrawable(context, R.drawable.ioka_bg_edittext)
         gravity = Gravity.CENTER_VERTICAL
         setPadding(8.toPx.toInt())
     }
 
     private fun setupListeners() {
-        flowTextChangedWithDebounce = etCardNumber.textChanges().debounce(200).onEach {
+        flowTextChangedWithDebounce = etCardNumber.textChanges().debounce(100).onEach {
             onTextChangedWithDebounce(it.toString().replace(" ", ""))
         }
 
@@ -111,20 +112,22 @@ internal class CardNumberEditText @JvmOverloads constructor(
         }
     }
 
-    fun setBrand(brandOptional: Optional<Int>) {
-        if (brandOptional.isPresent()) {
-            ivBrand.setImageDrawable(context.getDrawableFromRes(brandOptional.get()))
+    fun setBrand(brandOptional: Optional<CardBrandDvo>) {
+        brandOptional.getIfNull()?.iconRes?.let {
+            ivBrand.isInvisible = false
+            ivBrand.setImageDrawable(context.getDrawableFromRes(it))
+        } ?: run {
+            ivBrand.isInvisible = true
         }
-
-        ivBrand.isInvisible = brandOptional.isNotPresent()
     }
 
-    fun setEmitter(emitterOptional: Optional<Int>) {
-        if (emitterOptional.isPresent()) {
-            ivEmitter.setImageDrawable(context.getDrawableFromRes(emitterOptional.get()))
+    fun setEmitter(emitterOptional: Optional<CardEmitterDvo>) {
+        emitterOptional.getIfNull()?.iconRes?.let {
+            ivEmitter.isInvisible = false
+            ivEmitter.setImageDrawable(context.getDrawableFromRes(it))
+        } ?: run {
+            ivEmitter.isInvisible = true
         }
-
-        ivEmitter.isInvisible = emitterOptional.isNotPresent()
     }
 
     fun getCardNumber(): String {

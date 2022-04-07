@@ -23,19 +23,34 @@ internal class CardInfoViewModel constructor(
     private val cardInfoRepository: CardInfoRepository
 ) : ViewModel() {
 
-    private val _cardBrand = MutableLiveData<Optional<Int>>()
-    val cardBrand = _cardBrand as LiveData<Optional<Int>>
+    companion object {
+        const val REGEX_BRAND_FETCHABLE = "^\\d{1,6}\$"
+        const val REGEX_EMITTER_FETCHABLE = "^\\d{6}\$"
+    }
 
-    private val _cardEmitter = MutableLiveData<Optional<Int>>()
-    val cardEmitter = _cardEmitter as LiveData<Optional<Int>>
+    private val _cardBrand = MutableLiveData<Optional<CardBrandDvo>>()
+    val cardBrand = _cardBrand as LiveData<Optional<CardBrandDvo>>
+
+    private val _cardEmitter = MutableLiveData<Optional<CardEmitterDvo>>()
+    val cardEmitter = _cardEmitter as LiveData<Optional<CardEmitterDvo>>
 
     fun onCardPanEntered(cardPan: String) {
-        if (cardPan.matches(Regex("^\\d{1,6}\$"))) {
+        if (
+            cardPan.matches(Regex(REGEX_BRAND_FETCHABLE)) &&
+            _cardBrand.value?.isNotPresent() == true
+        ) {
             getCardBrand(cardPan)
+        } else if (cardPan.isEmpty()) {
+            _cardBrand.value = Optional.empty()
         }
 
-        if (cardPan.matches(Regex("^\\d{6}\$"))) {
+        if (
+            cardPan.matches(Regex(REGEX_EMITTER_FETCHABLE)) &&
+            _cardEmitter.value?.isNotPresent() == true
+        ) {
             getCardEmitter(cardPan)
+        } else if (cardPan.length < 6) {
+            _cardEmitter.value = Optional.empty()
         }
     }
 
@@ -43,27 +58,15 @@ internal class CardInfoViewModel constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val brand = cardInfoRepository.getBrand(partialCardPan)
 
-            _cardBrand.postValue(
-                when (brand) {
-                    CardBrandModel.Visa -> R.drawable.ic_ps_visa.optional()
-                    CardBrandModel.MasterCard -> R.drawable.ic_ps_mastercard.optional()
-                    else -> Optional.empty()
-                }
-            )
+            _cardBrand.postValue(Optional.of(CardBrandDvo(brand.iconRes)))
         }
     }
 
     private fun getCardEmitter(cardPan: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val brand = cardInfoRepository.getEmitter(cardPan)
+            val emitter = cardInfoRepository.getEmitter(cardPan)
 
-            _cardEmitter.postValue(
-                when (brand) {
-                    CardEmitterModel.Alfa -> R.drawable.ic_bank_alfa.optional()
-                    CardEmitterModel.Kaspi -> R.drawable.ic_bank_kaspi.optional()
-                    else -> Optional.empty()
-                }
-            )
+            _cardEmitter.postValue(Optional.of(CardEmitterDvo(emitter.iconRes)))
         }
     }
 

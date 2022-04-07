@@ -5,7 +5,7 @@
     android:id="@+id/vRoot"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_rounded_primary"
+    android:background="@drawable/ioka_bg_rounded_primary"
     android:minWidth="320dp"
     android:padding="16dp">
 
@@ -24,7 +24,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@color/ioka_color_static_transparent"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ioka_ic_close"
         app:layout_constraintBottom_toBottomOf="@id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitle" />
@@ -34,7 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@drawable/bg_ioka_edittext"
+        android:background="@drawable/ioka_bg_edittext"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
@@ -47,8 +47,8 @@
             android:id="@+id/ivCardType"
             android:layout_width="24dp"
             android:layout_height="16dp"
-            android:background="@drawable/bg_issuing_bank"
-            tools:src="@drawable/ic_ps_visa" />
+            android:background="@drawable/ioka_bg_issuing_bank"
+            tools:src="@drawable/ioka_ic_ps_visa" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCardNumber"
@@ -78,7 +78,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
-            android:src="@drawable/ic_faq" />
+            android:src="@drawable/ioka_ic_faq" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <kz.ioka.android.ioka.uikit.IokaStateButton

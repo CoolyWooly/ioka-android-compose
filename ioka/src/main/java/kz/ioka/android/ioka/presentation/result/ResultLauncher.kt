@@ -5,7 +5,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
-import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.domain.common.Amount
 import java.math.BigDecimal
@@ -21,7 +20,7 @@ internal abstract class ResultLauncher(
 
 @Parcelize
 internal class SuccessResultLauncher(
-    override val statusIconRes: Int = R.drawable.ic_success,
+    override val statusIconRes: Int = R.drawable.ioka_ic_success,
     override val titleRes: Int = R.string.ioka_result_success_payment_title,
     override val titleColorRes: Int = R.color.ioka_color_static_green,
     override val subtitle: String,
@@ -38,7 +37,7 @@ internal class SuccessResultLauncher(
 
 @Parcelize
 internal class ErrorResultLauncher(
-    override val statusIconRes: Int = R.drawable.ic_error,
+    override val statusIconRes: Int = R.drawable.ioka_ic_error,
     override val titleRes: Int = R.string.ioka_result_failed_payment_title,
     override val titleColorRes: Int = R.color.ioka_color_text_primary,
     override val subtitle: String,

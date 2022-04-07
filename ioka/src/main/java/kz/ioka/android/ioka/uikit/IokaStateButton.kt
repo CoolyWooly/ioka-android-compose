@@ -34,7 +34,7 @@ internal class IokaStateButton @JvmOverloads constructor(
         loadAndSetText(attrs, defStyleAttr)
 
         cardElevation = 0.toFloat()
-        background = ContextCompat.getDrawable(context, R.drawable.bg_primary_button)
+        background = ContextCompat.getDrawable(context, R.drawable.ioka_bg_ioka_state_button)
     }
 
     private fun bindViews(root: View) {
@@ -80,7 +80,7 @@ internal class IokaStateButton @JvmOverloads constructor(
             ivState.setImageDrawable(
                 AppCompatResources.getDrawable(
                     context,
-                    R.drawable.ic_check
+                    R.drawable.ioka_ic_check
                 )
             )
 

@@ -59,6 +59,8 @@ internal class TooltipWindow(ctx: Context) {
     }
 
     fun showToolTip(anchor: View) {
+        if (isTooltipShown) return
+
         tipWindow.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
         tipWindow.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
 

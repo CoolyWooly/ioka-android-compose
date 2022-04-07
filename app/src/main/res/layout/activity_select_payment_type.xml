@@ -10,7 +10,7 @@
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_close"
+        app:navigationIcon="@drawable/ioka_ic_close"
         app:title="@string/order_details_payment_type"
         app:titleCentered="true"
         app:titleTextColor="@color/ioka_color_text_primary" />

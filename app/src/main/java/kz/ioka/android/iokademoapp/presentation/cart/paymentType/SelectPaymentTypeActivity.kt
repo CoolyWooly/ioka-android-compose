@@ -70,7 +70,7 @@ class SelectPaymentTypeActivity : BaseActivity() {
             bindedCards.observe(this@SelectPaymentTypeActivity) {
                 it.forEach { card ->
                     val cardView = BindedCardView(this@SelectPaymentTypeActivity)
-                    cardView.setCard(CardDvo(card.id!!, R.drawable.ic_ps_visa, card.panMasked!!))
+                    cardView.setCard(CardDvo(card.id!!, R.drawable.ic_ps_mir, card.panMasked!!))
 
                     val dividerView = View(this@SelectPaymentTypeActivity)
                     dividerView.layoutParams =

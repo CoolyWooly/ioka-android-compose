@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@drawable/bg_ioka_edittext"
+    tools:background="@drawable/ioka_bg_edittext"
     tools:gravity="center_vertical"
     tools:orientation="horizontal"
     tools:parentTag="androidx.appcompat.widget.LinearLayoutCompat">
@@ -29,5 +29,5 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="16dp"
-        app:srcCompat="@drawable/ic_faq" />
+        app:srcCompat="@drawable/ioka_ic_faq" />
 </merge>

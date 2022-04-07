@@ -13,7 +13,7 @@
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_close"
+        app:navigationIcon="@drawable/ioka_ic_close"
         app:title="@string/ioka_save_card_toolbar"
         app:titleTextColor="@color/ioka_color_text_primary" />
 
@@ -39,7 +39,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:autofillHints="creditCardNumber"
-            android:background="@drawable/bg_ioka_edittext"
+            android:background="@drawable/ioka_bg_edittext"
             android:hint="@string/ioka_common_expiry_date_hint"
             android:inputType="date"
             android:maxLength="5"
@@ -56,17 +56,27 @@
             android:layout_weight="1" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <View
+    <FrameLayout
         android:id="@+id/vGap"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1">
+
+        <kz.ioka.android.ioka.uikit.ErrorView
+            android:id="@+id/vError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="16dp" />
+    </FrameLayout>
 
     <kz.ioka.android.ioka.uikit.IokaStateButton
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:sbText="@string/ioka_save_card_save" />

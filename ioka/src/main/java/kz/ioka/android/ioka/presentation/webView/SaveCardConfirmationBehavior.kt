@@ -9,6 +9,7 @@ import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.saveCard.SaveCardStatusModel
 import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.payment.PaymentModel
 
 @Parcelize
 class SaveCardConfirmationBehavior(
@@ -29,18 +30,32 @@ class SaveCardConfirmationBehavior(
 
     override fun observeProgress() = progressFlow
 
-    override suspend fun onActionFinished(): Boolean {
+    override suspend fun onActionFinished(): ResultState {
         progressFlow.value = true
 
-        val payment = cardRepository.getSaveCardStatus(
+        val saveCardStatus = cardRepository.getSaveCardStatus(
             customerToken,
             Config.apiKey,
             cardId,
         )
 
         progressFlow.value = false
-        return payment is ResultWrapper.Success && payment.value is SaveCardStatusModel.Success
+
+        return when (saveCardStatus) {
+            is ResultWrapper.Success -> {
+                processSuccess(saveCardStatus.value)
+            }
+            is ResultWrapper.IokaError -> {
+                ResultState.Fail(saveCardStatus.message)
+            }
+            else -> ResultState.Fail()
+        }
     }
 
-
+    private fun processSuccess(saveCardStatus: SaveCardStatusModel): ResultState {
+        return when (saveCardStatus) {
+            is SaveCardStatusModel.Success -> ResultState.Success
+            is SaveCardStatusModel.Failed -> ResultState.Fail(saveCardStatus.cause)
+        }
+    }
 }

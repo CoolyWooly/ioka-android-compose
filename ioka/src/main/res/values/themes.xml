@@ -25,7 +25,7 @@
     <style name="PrimaryButton" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/ioka_color_static_white</item>
         <item name="android:elevation">0dp</item>
-        <item name="android:background">@drawable/bg_primary_button</item>
+        <item name="android:background">@drawable/ioka_bg_ioka_state_button</item>
         <item name="textAllCaps">false</item>
     </style>
 

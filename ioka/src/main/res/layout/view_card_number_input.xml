@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@drawable/bg_ioka_edittext"
+    tools:background="@drawable/ioka_bg_edittext"
     tools:gravity="center_vertical"
     tools:orientation="horizontal"
     tools:padding="8dp"
@@ -31,11 +31,11 @@
         android:layout_width="24dp"
         android:layout_height="16dp"
         android:layout_marginEnd="4dp"
-        android:background="@drawable/bg_issuing_bank"
+        android:background="@drawable/ioka_bg_issuing_bank"
         android:paddingHorizontal="6dp"
         android:paddingVertical="2dp"
         android:visibility="invisible"
-        tools:srcCompat="@drawable/ic_bank_kaspi"
+        tools:srcCompat="@drawable/ioka_ic_bank_kaspi"
         tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -43,9 +43,9 @@
         android:layout_width="24dp"
         android:layout_height="16dp"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/bg_issuing_bank"
+        android:background="@drawable/ioka_bg_issuing_bank"
         android:visibility="invisible"
-        tools:srcCompat="@drawable/ic_ps_visa"
+        tools:srcCompat="@drawable/ioka_ic_ps_visa"
         tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -55,5 +55,5 @@
         android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:background="@color/ioka_color_static_transparent"
-        app:srcCompat="@drawable/ic_camera" />
+        app:srcCompat="@drawable/ioka_ic_camera" />
 </merge>

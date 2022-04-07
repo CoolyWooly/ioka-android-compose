@@ -29,8 +29,8 @@ class WebViewViewModel(
     private val _progress = MutableLiveData(false)
     val progress = _progress as LiveData<Boolean>
 
-    private val _result = MutableLiveData<Boolean>()
-    val result = _result as LiveData<Boolean>
+    private val _result = MutableLiveData<ResultState>()
+    val result = _result as LiveData<ResultState>
 
     init {
         behavior
@@ -47,5 +47,13 @@ class WebViewViewModel(
             _result.postValue(behavior.onActionFinished())
         }
     }
+
+}
+
+sealed class ResultState {
+
+    object Success : ResultState()
+
+    class Fail(val cause: String? = null) : ResultState()
 
 }

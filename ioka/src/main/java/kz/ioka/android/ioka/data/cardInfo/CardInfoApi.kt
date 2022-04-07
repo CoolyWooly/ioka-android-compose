@@ -10,7 +10,7 @@ internal interface CardInfoApi {
     @GET("/v2/brands")
     suspend fun getBrand(
         @Query("partial_bin") partialBin: String
-    ): BrandResponseDto
+    ): Response<BrandResponseDto>
 
     @GET("/v2/bins/{bin_code}")
     suspend fun getEmitter(

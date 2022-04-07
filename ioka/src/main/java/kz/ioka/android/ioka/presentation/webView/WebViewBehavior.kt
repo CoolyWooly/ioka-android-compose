@@ -11,6 +11,6 @@ interface WebViewBehavior : Parcelable {
 
     fun observeProgress(): Flow<Boolean>
 
-    suspend fun onActionFinished(): Boolean
+    suspend fun onActionFinished(): ResultState
 
 }

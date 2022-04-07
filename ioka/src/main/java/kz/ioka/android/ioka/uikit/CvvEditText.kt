@@ -2,12 +2,8 @@ package kz.ioka.android.ioka.uikit
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.TypedArray
-import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -50,7 +46,7 @@ class CvvEditText @JvmOverloads constructor(
 
     private fun setupViews() {
         orientation = HORIZONTAL
-        background = AppCompatResources.getDrawable(context, R.drawable.bg_ioka_edittext)
+        background = AppCompatResources.getDrawable(context, R.drawable.ioka_bg_edittext)
         gravity = Gravity.CENTER_VERTICAL
     }
 

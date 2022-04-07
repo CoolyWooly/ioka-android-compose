@@ -13,7 +13,7 @@
         android:id="@+id/ivCardType"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        tools:srcCompat="@drawable/ic_ps_visa" />
+        tools:srcCompat="@drawable/ioka_ic_ps_visa" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCardPan"

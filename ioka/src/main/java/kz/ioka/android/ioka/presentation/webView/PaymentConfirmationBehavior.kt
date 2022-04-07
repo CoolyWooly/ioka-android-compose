@@ -29,7 +29,7 @@ internal class PaymentConfirmationBehavior(
 
     override fun observeProgress() = progressFlow
 
-    override suspend fun onActionFinished(): Boolean {
+    override suspend fun onActionFinished(): ResultState {
         progressFlow.value = true
 
         val payment = paymentRepository.isPaymentSuccessful(
@@ -39,7 +39,24 @@ internal class PaymentConfirmationBehavior(
         )
 
         progressFlow.value = false
-        return payment is ResultWrapper.Success && payment.value is PaymentModel.Success
+
+        return when (payment) {
+            is ResultWrapper.Success -> {
+                processSuccess(payment.value)
+            }
+            is ResultWrapper.IokaError -> {
+                ResultState.Fail(payment.message)
+            }
+            else -> ResultState.Fail()
+        }
+    }
+
+    private fun processSuccess(payment: PaymentModel): ResultState {
+        return when (payment) {
+            is PaymentModel.Success -> ResultState.Success
+            is PaymentModel.Declined -> ResultState.Fail(payment.message)
+            else -> ResultState.Fail()
+        }
     }
 
 }
