@@ -16,7 +16,6 @@
     <string name="ioka_common_understand">Понятно</string>
     <string name="ioka_common_continue">Продолжить</string>
     <string name="ioka_common_payment_confirmation">Подтверждение оплаты</string>
-    <string name="ioka_common_wrong_format">Неправильный формат поля</string>
     <string name="ioka_common_server_error">Ошибка на стороне сервера. Попробуйте еще раз</string>
     <string name="ioka_common_card_number_hint">Введите номер карты</string>
     <string name="ioka_common_expiry_date_hint">ММ/ГГ</string>
