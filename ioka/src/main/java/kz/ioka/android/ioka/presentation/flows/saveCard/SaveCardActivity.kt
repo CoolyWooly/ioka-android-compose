@@ -141,7 +141,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scanable
 
         vCvvInput.onFaqClicked = {
             if (!tipWindow.isTooltipShown)
-                tipWindow.showToolTip(vCvvInput)
+                tipWindow.showToolTip(vCvvInput.ivCvvFaq)
         }
 
         vToolbar.setNavigationOnClickListener(this)

@@ -30,7 +30,7 @@ class CvvEditText @JvmOverloads constructor(
 ) : LinearLayoutCompat(context, attrs, defStyleAttr) {
 
     private lateinit var etCvv: AppCompatEditText
-    private lateinit var ivCvvFaq: AppCompatImageView
+    lateinit var ivCvvFaq: AppCompatImageView
 
     var onTextChanged: (String) -> Unit = {}
     var onFaqClicked: () -> Unit = {}
