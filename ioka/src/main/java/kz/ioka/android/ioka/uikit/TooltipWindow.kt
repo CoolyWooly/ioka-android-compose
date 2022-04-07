@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.*
-import android.widget.FrameLayout
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -51,7 +50,7 @@ internal class TooltipWindow(ctx: Context) {
             )
         )
         inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        contentView = inflater.inflate(R.layout.view_tooltip, null)
+        contentView = inflater.inflate(R.layout.ioka_tooltip, null)
 
         tipWindow.setOnDismissListener {
             myHandler.removeCallbacks(dismissRunnable)

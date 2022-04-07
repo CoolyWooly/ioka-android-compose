@@ -36,7 +36,7 @@ internal class PayWithCardIdActivity : BasePaymentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pay_with_card_id)
+        setContentView(R.layout.ioka_activity_pay_with_card_id)
 
         observeViewModel()
     }

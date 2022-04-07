@@ -35,7 +35,7 @@ internal class ErrorView @JvmOverloads constructor(
     }
 
     init {
-        val root = LayoutInflater.from(context).inflate(R.layout.view_error, this, true)
+        val root = LayoutInflater.from(context).inflate(R.layout.ioka_error_view, this, true)
 
         bindViews(root)
         background = AppCompatResources.getDrawable(context, R.drawable.ioka_bg_error)

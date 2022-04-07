@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:cardBackgroundColor="@color/button_primary_tint"
+    tools:cardBackgroundColor="@color/ioka_color_primary"
     tools:cardCornerRadius="12dp"
     tools:cardElevation="0dp"
     tools:parentTag="androidx.cardview.widget.CardView">
@@ -20,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="@style/MediumPrimaryTextView.16"
+            android:textAppearance="@style/IokaMediumPrimaryTextView.16"
             android:textColor="@color/ioka_color_nonadaptable_text"
             tools:text="Save" />
 

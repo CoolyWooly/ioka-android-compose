@@ -8,14 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.DialogFragment
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.uikit.IokaStateButton
 
-class ResultFragment : DialogFragment(R.layout.fragment_result) {
+class ResultFragment : DialogFragment(R.layout.ioka_fragment_result) {
 
     companion object {
         private const val LAUNCHER = "ResultFragment_LAUNCHER"

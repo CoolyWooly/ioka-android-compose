@@ -7,51 +7,51 @@
     </style>
 
     <!--  TextView  -->
-    <style name="PrimaryTextView">
+    <style name="IokaPrimaryTextView">
         <item name="android:textColor">@color/text_primary_color</item>
     </style>
 
-    <style name="PrimaryTextView.14" parent="PrimaryTextView">
+    <style name="PrimaryTextView.14" parent="IokaPrimaryTextView">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="PrimaryTextView.16" parent="PrimaryTextView">
+    <style name="PrimaryTextView.16" parent="IokaPrimaryTextView">
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="PrimaryTextView.20" parent="PrimaryTextView">
+    <style name="PrimaryTextView.20" parent="IokaPrimaryTextView">
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="MediumPrimaryTextView" parent="PrimaryTextView">
+    <style name="IokaMediumPrimaryTextView" parent="IokaPrimaryTextView">
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="MediumPrimaryTextView.16" parent="MediumPrimaryTextView">
+    <style name="MediumPrimaryTextView.16" parent="IokaMediumPrimaryTextView">
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="MediumPrimaryTextView.18" parent="MediumPrimaryTextView">
+    <style name="MediumPrimaryTextView.18" parent="IokaMediumPrimaryTextView">
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="MediumPrimaryTextView.20" parent="MediumPrimaryTextView">
+    <style name="MediumPrimaryTextView.20" parent="IokaMediumPrimaryTextView">
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="MediumPrimaryTextView.28" parent="MediumPrimaryTextView">
+    <style name="MediumPrimaryTextView.28" parent="IokaMediumPrimaryTextView">
         <item name="android:textSize">28sp</item>
     </style>
 
-    <style name="SecondaryTextView">
+    <style name="IokaSecondaryTextView">
         <item name="android:textColor">@color/text_secondary_color</item>
     </style>
 
-    <style name="SecondaryTextView.14" parent="SecondaryTextView">
+    <style name="SecondaryTextView.14" parent="IokaSecondaryTextView">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="SecondaryTextView.16" parent="SecondaryTextView">
+    <style name="SecondaryTextView.16" parent="IokaSecondaryTextView">
         <item name="android:textSize">16sp</item>
     </style>
 

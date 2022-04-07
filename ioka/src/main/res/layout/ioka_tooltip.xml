@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@string/ioka_common_cvv_description"
-            android:textAppearance="@style/WhiteTextView.12" />
+            android:textAppearance="@style/IokaWhiteTextView.12" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <FrameLayout

@@ -32,7 +32,7 @@ class CvvEditText @JvmOverloads constructor(
     var onFaqClicked: () -> Unit = {}
 
     init {
-        val root = LayoutInflater.from(context).inflate(R.layout.view_cvv_input, this, true)
+        val root = LayoutInflater.from(context).inflate(R.layout.ioka_cvv_edit_text, this, true)
 
         bindViews(root)
         setupViews()

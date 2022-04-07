@@ -53,7 +53,8 @@ internal class CardNumberEditText @JvmOverloads constructor(
     var flowTextChangedWithDebounce: Flow<CharSequence?> = flow { }
 
     init {
-        val root = LayoutInflater.from(context).inflate(R.layout.view_card_number_input, this, true)
+        val root =
+            LayoutInflater.from(context).inflate(R.layout.ioka_card_number_edit_text, this, true)
 
         bindViews(root)
         setupViews()

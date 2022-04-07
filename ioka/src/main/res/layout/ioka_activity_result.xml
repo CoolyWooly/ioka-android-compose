@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:textAppearance="@style/MediumPrimaryTextView.28"
+            android:textAppearance="@style/IokaMediumPrimaryTextView.28"
             tools:text="Заказ оплачен" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -43,7 +43,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginHorizontal="48dp"
             android:gravity="center"
-            android:textAppearance="@style/SecondaryTextView.14"
+            android:textAppearance="@style/IokaSecondaryTextView.14"
             tools:text="Заказ №318831893" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -52,13 +52,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:textAppearance="@style/PrimaryTextView.24"
+            android:textAppearance="@style/IokaPrimaryTextView.24"
             tools:text="148 490 ₸" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAction"
-        style="@style/PrimaryButton.16"
+        style="@style/IokaPrimaryButton.16"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

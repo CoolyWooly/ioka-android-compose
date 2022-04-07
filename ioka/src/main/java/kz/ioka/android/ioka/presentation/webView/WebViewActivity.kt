@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebStorage
 import android.webkit.WebView
@@ -14,7 +13,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
 internal class WebViewActivity : BaseActivity() {
@@ -52,7 +50,7 @@ internal class WebViewActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_view)
+        setContentView(R.layout.ioka_activity_web_view)
 
         launcher = launcher()
         bindViews()

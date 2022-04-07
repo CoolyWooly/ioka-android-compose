@@ -28,7 +28,7 @@ internal class IokaStateButton @JvmOverloads constructor(
     private var callback: Callback? = null
 
     init {
-        val root = LayoutInflater.from(context).inflate(R.layout.view_ioka_state_button, this, true)
+        val root = LayoutInflater.from(context).inflate(R.layout.ioka_state_button, this, true)
 
         bindViews(root)
         loadAndSetText(attrs, defStyleAttr)

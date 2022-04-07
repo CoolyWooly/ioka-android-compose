@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/ioka_payment_or_pay_with_card"
-        android:textAppearance="@style/SecondaryTextView.12"
+        android:textAppearance="@style/IokaSecondaryTextView.12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGooglePay" />
@@ -112,7 +112,7 @@
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/vSaveCardSwitch"
-        style="@style/SCBSwitch"
+        style="@style/IokaSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -121,8 +121,8 @@
         android:textColor="@color/ioka_color_text"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/etExpireDate"
-        app:thumbTint="@color/switch_thumb_tint"
-        app:trackTint="@color/switch_track_tint" />
+        app:thumbTint="@color/ioka_color_switch_thumb_tint"
+        app:trackTint="@color/ioka_color_switch_track_tint" />
 
     <kz.ioka.android.ioka.uikit.IokaStateButton
         android:id="@+id/btnPay"
@@ -141,7 +141,7 @@
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:text="@string/ioka_payment_transactions_protection"
-        android:textAppearance="@style/PrimaryTextView.14"
+        android:textAppearance="@style/IokaPrimaryTextView.14"
         android:textColor="@color/ioka_color_success"
         app:drawableTint="@color/ioka_color_success"
         app:layout_constraintBottom_toBottomOf="parent"

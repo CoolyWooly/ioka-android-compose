@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/ioka_result_failed_payment_title"
-        android:textAppearance="@style/MediumPrimaryTextView.18"
+        android:textAppearance="@style/IokaMediumPrimaryTextView.18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivStateIcon" />
@@ -36,7 +36,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:textAppearance="@style/SecondaryTextView.12"
+        android:textAppearance="@style/IokaSecondaryTextView.12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvStateTitle"

@@ -23,7 +23,7 @@
         <activity
             android:name=".presentation.launcher.PaymentLauncherActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/IokaTheme.Transparent" />
     </application>
 
 </manifest>

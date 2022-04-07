@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/ioka_common_payment_confirmation"
-        android:textAppearance="@style/PrimaryTextView.18"
+        android:textAppearance="@style/IokaPrimaryTextView.18"
         app:layout_constraintEnd_toStartOf="@id/btnClose"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:textAppearance="@style/PrimaryTextView.16"
+            android:textAppearance="@style/IokaPrimaryTextView.16"
             tools:text="•••• 1234" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -74,7 +74,7 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/ivCvvFaq"
-            style="@style/SecondaryImageView"
+            style="@style/IokaSecondaryImageView"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="12dp"

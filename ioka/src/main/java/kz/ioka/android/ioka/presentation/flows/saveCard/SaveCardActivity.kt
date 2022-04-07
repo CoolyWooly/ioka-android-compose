@@ -73,7 +73,7 @@ internal class SaveCardActivity : BaseActivity(), View.OnClickListener, Scannabl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_save_card)
+        setContentView(R.layout.ioka_activity_save_card)
 
         bindViews()
         setConfiguration()

@@ -3,7 +3,6 @@ package kz.ioka.android.ioka.presentation.launcher
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -32,7 +31,7 @@ internal class PaymentLauncherActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launcher)
+        setContentView(R.layout.ioka_activity_launcher)
 
         bindViews()
         setupViews()

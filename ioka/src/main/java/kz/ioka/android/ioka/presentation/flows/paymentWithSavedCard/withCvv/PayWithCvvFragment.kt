@@ -19,7 +19,6 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
-import kz.ioka.android.ioka.presentation.flows.payment.PayLauncher
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.ResultFragment
@@ -33,7 +32,7 @@ import kz.ioka.android.ioka.util.toCardType
 import kz.ioka.android.ioka.viewBase.BaseActivity
 import kz.ioka.android.ioka.viewBase.BasePaymentFragment
 
-internal class PayWithCvvFragment : BasePaymentFragment(R.layout.fragment_cvv),
+internal class PayWithCvvFragment : BasePaymentFragment(R.layout.ioka_fragment_cvv),
     View.OnClickListener {
 
     companion object {

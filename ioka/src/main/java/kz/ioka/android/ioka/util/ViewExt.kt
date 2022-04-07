@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View.OnTouchListener
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -35,7 +34,7 @@ internal fun EditText.textChanges(): Flow<CharSequence?> {
 }
 
 internal fun Context.showErrorToast(message: String) {
-    val layout = LayoutInflater.from(this).inflate(R.layout.view_error, null)
+    val layout = LayoutInflater.from(this).inflate(R.layout.ioka_error_view, null)
     val tvErrorText = layout.findViewById<TextView>(R.id.tvErrorText)
     val btnClose = layout.findViewById<AppCompatImageButton>(R.id.btnClose)
 
