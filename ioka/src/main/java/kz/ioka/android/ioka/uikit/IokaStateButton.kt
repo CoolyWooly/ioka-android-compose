@@ -89,7 +89,7 @@ internal class IokaStateButton @JvmOverloads constructor(
             ivState.isInvisible = false
 
             val colorFrom = (background as? ColorDrawable)?.color
-            val colorTo = ContextCompat.getColor(context, R.color.ioka_color_static_green)
+            val colorTo = ContextCompat.getColor(context, R.color.ioka_color_success)
 
             if (colorFrom != null) {
                 animateColorTransition(colorFrom, colorTo)

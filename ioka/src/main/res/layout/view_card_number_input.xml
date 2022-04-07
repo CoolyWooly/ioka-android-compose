@@ -54,6 +54,6 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/ioka_color_static_transparent"
+        android:background="@color/ioka_color_nonadaptable_transparent"
         app:srcCompat="@drawable/ioka_ic_camera" />
 </merge>

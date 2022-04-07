@@ -22,7 +22,7 @@ internal abstract class ResultLauncher(
 internal class SuccessResultLauncher(
     override val statusIconRes: Int = R.drawable.ioka_ic_success,
     override val titleRes: Int = R.string.ioka_result_success_payment_title,
-    override val titleColorRes: Int = R.color.ioka_color_static_green,
+    override val titleColorRes: Int = R.color.ioka_color_success,
     override val subtitle: String,
     override val amount: Amount,
     override val btnTitleRes: Int = R.string.ioka_common_understand,
@@ -39,7 +39,7 @@ internal class SuccessResultLauncher(
 internal class ErrorResultLauncher(
     override val statusIconRes: Int = R.drawable.ioka_ic_error,
     override val titleRes: Int = R.string.ioka_result_failed_payment_title,
-    override val titleColorRes: Int = R.color.ioka_color_text_primary,
+    override val titleColorRes: Int = R.color.ioka_color_text,
     override val subtitle: String,
     override val amount: Amount = Amount(BigDecimal.ZERO),
     override val btnTitleRes: Int = R.string.ioka_common_try_again,

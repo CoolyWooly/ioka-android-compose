@@ -47,7 +47,7 @@ internal class TooltipWindow(ctx: Context) {
         tipWindow.setBackgroundDrawable(
             ContextCompat.getDrawable(
                 ctx,
-                R.color.ioka_color_static_transparent
+                R.color.ioka_color_nonadaptable_transparent
             )
         )
         inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

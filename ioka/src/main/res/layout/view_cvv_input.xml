@@ -16,7 +16,7 @@
         android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:autofillHints="creditCardNumber"
-        android:background="@color/ioka_color_static_transparent"
+        android:background="@color/ioka_color_nonadaptable_transparent"
         android:hint="@string/ioka_common_cvv_hint"
         android:inputType="numberPassword"
         android:maxLength="4"

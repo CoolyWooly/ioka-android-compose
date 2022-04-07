@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ioka_ic_close"
             app:titleCentered="true"
-            app:titleTextColor="@color/ioka_color_text_primary"
+            app:titleTextColor="@color/ioka_color_text"
             tools:title="@string/ioka_common_payment_confirmation" />
 
         <WebView
@@ -32,7 +32,7 @@
         android:id="@+id/vProgress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/ioka_color_background_transparent_overlay">
+        android:background="@color/ioka_color_foreground">
 
         <ProgressBar
             android:layout_width="wrap_content"

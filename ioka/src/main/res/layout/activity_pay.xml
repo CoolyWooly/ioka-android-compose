@@ -5,7 +5,7 @@
     android:id="@+id/vRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ioka_color_background_primary"
+    android:background="@color/ioka_color_background"
     tools:theme="@style/Theme.AppCompat">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ioka_ic_close"
         app:titleCentered="true"
-        app:titleTextColor="@color/ioka_color_text_primary"
+        app:titleTextColor="@color/ioka_color_text"
         tools:title="К оплате 12 560 ₸" />
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@color/ioka_color_static_transparent"
+        android:background="@color/ioka_color_nonadaptable_transparent"
         android:scaleType="fitXY"
         android:src="@drawable/ioka_ic_google_pay"
         app:layout_constraintTop_toBottomOf="@id/vToolbar" />
@@ -118,7 +118,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/ioka_payment_save_card"
-        android:textColor="@color/ioka_color_text_primary"
+        android:textColor="@color/ioka_color_text"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/etExpireDate"
         app:thumbTint="@color/switch_thumb_tint"
@@ -142,8 +142,8 @@
         android:gravity="center_vertical"
         android:text="@string/ioka_payment_transactions_protection"
         android:textAppearance="@style/PrimaryTextView.14"
-        android:textColor="@color/ioka_color_static_green"
-        app:drawableTint="@color/ioka_color_static_green"
+        android:textColor="@color/ioka_color_success"
+        app:drawableTint="@color/ioka_color_success"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAppearance="@style/MediumPrimaryTextView.16"
-            android:textColor="@color/ioka_color_static_white"
+            android:textColor="@color/ioka_color_nonadaptable_text"
             tools:text="Save" />
 
         <ProgressBar
@@ -29,7 +29,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:indeterminateTint="@color/ioka_color_static_white"
+            android:indeterminateTint="@color/ioka_color_nonadaptable_text"
             android:visibility="invisible" />
 
         <androidx.appcompat.widget.AppCompatImageView

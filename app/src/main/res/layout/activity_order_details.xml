@@ -172,7 +172,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/order_details_processing"
                 android:textAppearance="@style/MediumPrimaryTextView.18"
-                android:textColor="@color/ioka_color_static_white" />
+                android:textColor="@color/static_white" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

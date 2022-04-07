@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="@color/ioka_color_background_primary"
+    tools:background="@color/ioka_color_background"
     tools:theme="@style/Theme.AppCompat">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ioka_ic_close"
         app:title="@string/ioka_save_card_toolbar"
-        app:titleTextColor="@color/ioka_color_text_primary" />
+        app:titleTextColor="@color/ioka_color_text" />
 
     <kz.ioka.android.ioka.uikit.CardNumberEditText
         android:id="@+id/vCardNumberInput"

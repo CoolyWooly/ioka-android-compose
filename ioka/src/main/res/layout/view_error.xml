@@ -21,7 +21,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
-        android:background="@color/ioka_color_static_transparent"
+        android:background="@color/ioka_color_nonadaptable_transparent"
         android:src="@drawable/ioka_ic_close_outlined"
-        android:tint="@color/ioka_color_static_white" />
+        android:tint="@color/ioka_color_nonadaptable_text" />
 </androidx.appcompat.widget.LinearLayoutCompat>
