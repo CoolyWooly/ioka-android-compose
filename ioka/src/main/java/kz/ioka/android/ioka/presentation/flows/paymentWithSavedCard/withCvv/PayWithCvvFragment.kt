@@ -1,6 +1,7 @@
 package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -8,18 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
+import kz.ioka.android.ioka.presentation.flows.payment.PayLauncher
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.ResultFragment
@@ -61,6 +61,7 @@ internal class PayWithCvvFragment : BasePaymentFragment(R.layout.fragment_cvv),
 
     private lateinit var vRoot: ConstraintLayout
     private lateinit var btnClose: AppCompatImageButton
+    private lateinit var vContainer: LinearLayoutCompat
     private lateinit var ivCardType: AppCompatImageView
     private lateinit var tvCardNumber: AppCompatTextView
     private lateinit var etCvv: AppCompatEditText
@@ -83,6 +84,7 @@ internal class PayWithCvvFragment : BasePaymentFragment(R.layout.fragment_cvv),
         super.onViewCreated(view, savedInstanceState)
 
         bindViews(view)
+        setConfiguration()
         setupListeners()
         setInitialData()
         observeViewModel()
@@ -93,11 +95,34 @@ internal class PayWithCvvFragment : BasePaymentFragment(R.layout.fragment_cvv),
 
         vRoot = root.findViewById(R.id.vRoot)
         btnClose = root.findViewById(R.id.btnClose)
+        vContainer = root.findViewById(R.id.vContainer)
         ivCardType = root.findViewById(R.id.ivCardType)
         tvCardNumber = root.findViewById(R.id.tvCardNumber)
         etCvv = root.findViewById(R.id.etCvv)
         ivCvvFaq = root.findViewById(R.id.ivCvvFaq)
         btnContinue = root.findViewById(R.id.btnContinue)
+    }
+
+    private fun setConfiguration() {
+        arguments?.getParcelable<PayWithCvvLauncher>(LAUNCHER)?.configuration?.apply {
+            vRoot.setBackgroundColor(
+                ContextCompat.getColor(requireContext(), backgroundColor)
+            )
+
+            ImageViewCompat.setImageTintList(
+                ivCvvFaq,
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), iconColor))
+            )
+
+            buttonText?.let { btnContinue.setText(buttonText) }
+
+            fieldBackground?.let {
+                vContainer.background = ContextCompat.getDrawable(requireContext(), it)
+            }
+            buttonBackground?.let {
+                btnContinue.background = ContextCompat.getDrawable(requireContext(), it)
+            }
+        }
     }
 
     private fun setupListeners() {

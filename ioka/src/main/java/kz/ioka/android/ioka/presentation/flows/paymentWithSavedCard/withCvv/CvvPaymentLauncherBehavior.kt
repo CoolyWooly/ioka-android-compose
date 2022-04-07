@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.api.Configuration
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.order.OrderRepositoryImpl
@@ -20,6 +21,7 @@ internal class CvvPaymentLauncherBehavior(
     private val cardId: String,
     private val cardNumber: String,
     private val cardType: String,
+    private val configuration: Configuration? = null
 ) : PaymentLauncherBehavior {
 
     @IgnoredOnParcel
@@ -62,6 +64,7 @@ internal class CvvPaymentLauncherBehavior(
                         cardId,
                         cardNumber,
                         cardType,
+                        configuration
                     )
                 )
                 newFragment.show(

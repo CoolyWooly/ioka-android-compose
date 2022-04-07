@@ -50,7 +50,8 @@ object Ioka {
 
     fun startPaymentWithSavedCardFlow(
         orderToken: String,
-        card: CardDvo
+        card: CardDvo,
+        configuration: Configuration? = null
     ): (Activity) -> Unit {
         if (card.cvvRequired) {
             return { activity ->
@@ -61,6 +62,7 @@ object Ioka {
                         card.cardId,
                         card.cardNumber,
                         card.cardType,
+                        configuration
                     )
                 )
 

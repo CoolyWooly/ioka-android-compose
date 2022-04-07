@@ -12,6 +12,6 @@ enum class CardType(@DrawableRes val cardTypeRes: Int, val code: String) {
     MIR(R.drawable.ic_ps_mir, "MIR"),
     UNION_PAY(R.drawable.ic_ps_unionpay, "UNION_PAY"),
     VISA(R.drawable.ic_ps_visa, "VISA"),
-    UNKNOWN(R.drawable.ic_ps_unknown, "UNKNOWN")
+    UNKNOWN(R.drawable.ic_ps_visa, "UNKNOWN")
 
 }

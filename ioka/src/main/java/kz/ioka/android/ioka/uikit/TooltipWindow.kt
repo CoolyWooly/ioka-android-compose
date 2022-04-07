@@ -93,7 +93,7 @@ internal class TooltipWindow(ctx: Context) {
     private fun getRect(view: View): Rect {
         val screenPos = IntArray(2)
 
-        view.getLocationOnScreen(screenPos)
+        view.getLocationInWindow(screenPos)
 
         return Rect(
             screenPos[0], screenPos[1], screenPos[0] + view.width, screenPos[1] + view.height
