@@ -10,7 +10,7 @@ class iokaDemoApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Ioka.init(BuildConfig.API_KEY)
+        Ioka.init(BuildConfig.TEST_API_KEY)
     }
 
 }

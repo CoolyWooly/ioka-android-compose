@@ -9,12 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.api.Ioka
-import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.ListItem
 import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.data.CustomerRepository
 import kz.ioka.android.iokademoapp.data.SettingsRepository
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +29,10 @@ class SavedCardsViewModel @Inject constructor(
 
     lateinit var customerToken: String
 
+    init {
+        fetchCards()
+    }
+
     fun fetchCards() {
         viewModelScope.launch(Dispatchers.IO) {
             _progress.postValue(true)
@@ -42,7 +44,7 @@ class SavedCardsViewModel @Inject constructor(
             cardsList.addAll(Ioka.getCards(customerToken).map {
                 CardDvo(
                     id = it.id ?: "",
-                    cardType = R.drawable.ic_ps_visa,
+                    cardType = it.paymentSystem.iconRes,
                     cardPan = it.panMasked?.shortPanMask() ?: "",
                 )
             })

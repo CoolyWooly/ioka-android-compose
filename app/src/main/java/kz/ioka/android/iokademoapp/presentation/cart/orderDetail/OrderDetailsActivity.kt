@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
-import kz.ioka.android.ioka.api.Ioka
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.toAmountFormat

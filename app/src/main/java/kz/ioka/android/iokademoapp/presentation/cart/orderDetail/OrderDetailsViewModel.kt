@@ -52,19 +52,20 @@ class OrderDetailsViewModel @Inject constructor(
         _paymentAction.value = when (selectedPaymentType.value) {
             PaymentTypeDvo.GooglePayDvo ->
                 { activity: Activity ->
-                    Ioka.startPaymentFlow(orderToken).invoke(activity)
+                    Ioka.startPaymentFlow(activity, orderToken)
                 }
             PaymentTypeDvo.PayWithCardDvo -> { activity: Activity ->
-                Ioka.startPaymentFlow(orderToken).invoke(activity)
+                Ioka.startPaymentFlow(activity, orderToken)
             }
             PaymentTypeDvo.PayWithCashDvo -> { activity: Activity ->
-                Ioka.startPaymentFlow(orderToken).invoke(activity)
+                Ioka.startPaymentFlow(activity, orderToken)
             }
             is PaymentTypeDvo.PayWithSavedCardDvo -> {
                 val cardDvo = selectedPaymentType.value as PaymentTypeDvo.PayWithSavedCardDvo
 
                 { activity: Activity ->
                     Ioka.startPaymentWithSavedCardFlow(
+                        activity,
                         orderToken,
                         CardDvo(
                             cardDvo.cardId,
@@ -72,11 +73,11 @@ class OrderDetailsViewModel @Inject constructor(
                             cardDvo.cardType.code,
                             cardDvo.cvvRequired,
                         )
-                    ).invoke(activity)
+                    )
                 }
             }
             null -> { activity: Activity ->
-                Ioka.startPaymentFlow(orderToken).invoke(activity)
+                Ioka.startPaymentFlow(activity, orderToken)
             }
         }
     }

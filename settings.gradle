@@ -3,9 +3,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "ioka Demo App"
 include ':app'
-include ':ioka'

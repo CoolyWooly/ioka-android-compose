@@ -2,6 +2,7 @@ package kz.ioka.android.iokademoapp.presentation.cart
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kz.ioka.android.ioka.api.CardBrandModel
 
 sealed class PaymentTypeDvo : Parcelable {
 
@@ -18,7 +19,7 @@ sealed class PaymentTypeDvo : Parcelable {
     class PayWithSavedCardDvo(
         val cardId: String,
         val maskedCardNumber: String,
-        val cardType: CardType,
+        val cardType: CardBrandModel,
         val cvvRequired: Boolean
     ) : PaymentTypeDvo()
 

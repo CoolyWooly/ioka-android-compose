@@ -1,5 +1,6 @@
 package kz.ioka.android.iokademoapp.presentation.profile.savedCards
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ProgressBar
 import androidx.activity.viewModels
@@ -10,7 +11,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import kz.ioka.android.ioka.api.Ioka
+import kz.ioka.android.ioka.api.*
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
 
@@ -35,12 +36,6 @@ class SavedCardsActivity : BaseActivity() {
         observeData()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        viewModel.fetchCards()
-    }
-
     private fun bindViews() {
         vToolbar = findViewById(R.id.vToolbar)
         vCardsContainer = findViewById(R.id.vCardsContainer)
@@ -55,7 +50,7 @@ class SavedCardsActivity : BaseActivity() {
             itemList = emptyList(),
             onRemoveCardClicked = { viewModel.onRemoveCardClicked(it) },
             onAddCardClicked = {
-                Ioka.startSaveCardFlow(viewModel.customerToken).invoke(this)
+                Ioka.startSaveCardFlow(this, viewModel.customerToken)
             }
         )
 
@@ -72,6 +67,20 @@ class SavedCardsActivity : BaseActivity() {
 
         viewModel.savedCards.observe(this) {
             adapter.updateList(it)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == IOKA_SAVE_CARD_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                val result = data?.getParcelableExtra<FlowResult>(IOKA_EXTRA_RESULT_NAME)
+
+                result?.let {
+                    if (it is FlowResult.Succeeded) viewModel.fetchCards()
+                }
+            }
         }
     }
 
