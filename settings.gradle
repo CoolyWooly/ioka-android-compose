@@ -1,11 +1,13 @@
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-        jcenter() // Warning: this repository is going to shut down soon
+if (!System.env.JITPACK) {
+    dependencyResolutionManagement {
+        repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+        repositories {
+            google()
+            mavenCentral()
+        }
     }
+    rootProject.name = "ioka Demo App"
+
+    include ':app'
 }
-rootProject.name = "ioka Demo App"
-include ':app'
+include ':ioka'
