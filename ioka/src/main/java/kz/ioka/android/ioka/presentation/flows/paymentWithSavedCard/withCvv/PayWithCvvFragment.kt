@@ -25,7 +25,7 @@ import kz.ioka.android.ioka.api.IOKA_EXTRA_RESULT_NAME
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
-import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
+import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherFragment
 import kz.ioka.android.ioka.presentation.result.FailedResultFragment
 import kz.ioka.android.ioka.presentation.result.ResultActivity
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
@@ -220,8 +220,8 @@ internal class PayWithCvvFragment : DialogFragment(R.layout.ioka_fragment_cvv),
         )
 
         startActivity(intent)
-        if (activity is PaymentLauncherActivity)
-            activity?.finish()
+
+        activity?.finish()
     }
 
     override fun onFailedAttempt(cause: String?) {
@@ -235,13 +235,11 @@ internal class PayWithCvvFragment : DialogFragment(R.layout.ioka_fragment_cvv),
         when (v) {
             btnClose -> {
                 dismiss()
-                if (activity is PaymentLauncherActivity) {
-                    activity?.setResult(
-                        RESULT_CANCELED,
-                        Intent().putExtra(IOKA_EXTRA_RESULT_NAME, FlowResult.Cancelled)
-                    )
-                    activity?.finish()
-                }
+                activity?.setResult(
+                    RESULT_CANCELED,
+                    Intent().putExtra(IOKA_EXTRA_RESULT_NAME, FlowResult.Cancelled)
+                )
+                activity?.finish()
             }
 
             ivCvvFaq -> {

@@ -15,7 +15,6 @@ import androidx.fragment.app.DialogFragment
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.api.FlowResult
 import kz.ioka.android.ioka.api.IOKA_EXTRA_RESULT_NAME
-import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.uikit.IokaStateButton
 
 internal class FailedResultFragment : DialogFragment(R.layout.ioka_fragment_failed_result) {
@@ -73,18 +72,16 @@ internal class FailedResultFragment : DialogFragment(R.layout.ioka_fragment_fail
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-        if (activity is PaymentLauncherActivity) {
-            activity?.setResult(
-                RESULT_OK,
-                Intent().putExtra(
-                    IOKA_EXTRA_RESULT_NAME,
-                    FlowResult.Failed(
-                        cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
-                    )
+        activity?.setResult(
+            RESULT_OK,
+            Intent().putExtra(
+                IOKA_EXTRA_RESULT_NAME,
+                FlowResult.Failed(
+                    cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
                 )
             )
-            activity?.finish()
-        }
+        )
+        activity?.finish()
     }
 
 }

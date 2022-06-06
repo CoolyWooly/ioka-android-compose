@@ -13,7 +13,7 @@ import java.util.*
 
 @Suppress("UNCHECKED_CAST")
 internal class PayWithCardViewModelFactory(
-    val launcher: PayLauncher,
+    val launcher: PaymentFormLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -22,7 +22,7 @@ internal class PayWithCardViewModelFactory(
 }
 
 internal class PayWithCardViewModel constructor(
-    launcher: PayLauncher,
+    launcher: PaymentFormLauncher,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 

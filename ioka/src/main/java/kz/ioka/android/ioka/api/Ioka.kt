@@ -3,12 +3,10 @@ package kz.ioka.android.ioka.api
 import android.app.Activity
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.presentation.flows.payment.PaymentLauncherBehavior
-import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.CvvPaymentLauncherBehavior
+import kz.ioka.android.ioka.presentation.flows.payment.PaymentActivity
 import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdActivity
 import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdLauncher
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity
-import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherActivity
 import kz.ioka.android.ioka.util.getCustomerId
 import java.net.ProtocolException
 
@@ -33,10 +31,7 @@ object Ioka {
             throw RuntimeException("Init Ioka with your API_KEY")
         }
 
-        val intent = PaymentLauncherActivity.provideIntent(
-            activity,
-            PaymentLauncherBehavior(orderToken, false, configuration)
-        )
+        val intent = PaymentActivity.provideIntent(activity, orderToken, configuration)
 
         activity.startActivityForResult(intent, IOKA_PAYMENT_REQUEST_CODE)
     }
@@ -48,9 +43,8 @@ object Ioka {
         configuration: Configuration? = null
     ) {
         val intent = if (card.cvvRequired) {
-            PaymentLauncherActivity.provideIntent(
-                activity,
-                CvvPaymentLauncherBehavior(orderToken, card, configuration)
+            PayWithCardIdActivity.provideIntent(
+                activity, PayWithCardIdLauncher(orderToken, card.cardId)
             )
         } else {
             PayWithCardIdActivity.provideIntent(

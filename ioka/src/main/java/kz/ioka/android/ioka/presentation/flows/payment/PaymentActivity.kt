@@ -1,28 +1,27 @@
-package kz.ioka.android.ioka.presentation.flows.saveCard
+package kz.ioka.android.ioka.presentation.flows.payment
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.api.Configuration
-import kz.ioka.android.ioka.api.FlowResult
-import kz.ioka.android.ioka.api.IOKA_EXTRA_RESULT_NAME
+import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherFragment
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-internal class SaveCardActivity : BaseActivity() {
+internal class PaymentActivity : BaseActivity() {
 
     companion object {
         fun provideIntent(
             activity: Activity,
-            customerToken: String, configuration: Configuration?,
+            customerToken: String,
+            configuration: Configuration?,
         ): Intent {
-            return Intent(activity, SaveCardActivity::class.java).apply {
+            return Intent(activity, PaymentActivity::class.java).apply {
                 putExtra(
                     LAUNCHER,
-                    SaveCardLauncher(customerToken, configuration)
+                    PaymentLauncher(customerToken, configuration)
                 )
             }
         }
@@ -32,7 +31,7 @@ internal class SaveCardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ioka_activity_save_card)
+        setContentView(R.layout.ioka_activity_payment)
 
         bindViews()
         showForm()
@@ -43,15 +42,21 @@ internal class SaveCardActivity : BaseActivity() {
     }
 
     private fun showForm() {
-        val launcher = launcher<SaveCardLauncher>()
+        val launcher = launcher<PaymentLauncher>()
 
         if (launcher != null)
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
                 addToBackStack(null)
-                add(R.id.fcvContainer, CardFormFragment.getInstance(launcher))
+                add(
+                    R.id.fcvContainer,
+                    PaymentLauncherFragment.getInstance(
+                        PaymentLauncherBehavior(launcher.orderToken, false, launcher.configuration)
+                    )
+                )
             }
         else
             finish()
     }
+
 }
