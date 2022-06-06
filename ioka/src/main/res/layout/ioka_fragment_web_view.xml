@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ioka_color_background"
     tools:theme="@style/Theme.AppCompat">
 
     <androidx.appcompat.widget.LinearLayoutCompat

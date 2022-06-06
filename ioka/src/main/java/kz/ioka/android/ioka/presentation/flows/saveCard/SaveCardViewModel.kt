@@ -5,18 +5,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
+import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
 import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
 internal class SaveCardViewModelFactory(
-    val launcher: SaveCardLauncher,
-    private val repository: CardRepository
+    val launcher: SaveCardLauncher
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SaveCardViewModel(launcher, repository) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return SaveCardViewModel(
+            launcher,
+            CardRepositoryImpl(DependencyInjector.cardApi)
+        ) as T
     }
 }
 

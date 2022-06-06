@@ -17,11 +17,11 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.launchIn
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.api.FlowResult
+import kz.ioka.android.ioka.api.IOKA_EXTRA_RESULT_NAME
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
-import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
 import kz.ioka.android.ioka.presentation.result.ResultActivity
@@ -39,11 +39,7 @@ import kz.ioka.android.ioka.viewBase.ThreeDSecurable
 
 internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
 
-    private val cardInfoViewModel: CardInfoViewModel by viewModels {
-        CardInfoViewModelFactory(
-            CardInfoRepositoryImpl(DependencyInjector.cardInfoApi)
-        )
-    }
+    private val cardInfoViewModel: CardInfoViewModel by viewModels()
 
     private val viewModel: PayWithCardViewModel by viewModels {
         PayWithCardViewModelFactory(
@@ -263,7 +259,9 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
     }
 
     override fun onBackPressed() {
-        setResult(RESULT_CANCELED)
+        setResult(RESULT_OK, Intent().apply {
+            putExtra(IOKA_EXTRA_RESULT_NAME, FlowResult.Cancelled)
+        })
         super.onBackPressed()
     }
 

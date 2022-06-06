@@ -2,23 +2,17 @@ package kz.ioka.android.ioka.presentation.flows.common
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.cardInfo.CardBrandModel
 import kz.ioka.android.ioka.domain.cardInfo.CardEmitterModel
 import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepository
+import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.util.Optional
 
-@Suppress("UNCHECKED_CAST")
-internal class CardInfoViewModelFactory(
-    private val cardInfoRepository: CardInfoRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CardInfoViewModel(cardInfoRepository) as T
-    }
-}
-
 internal class CardInfoViewModel constructor(
-    private val cardInfoRepository: CardInfoRepository
+    private var cardInfoRepository: CardInfoRepository =
+        CardInfoRepositoryImpl(DependencyInjector.cardInfoApi)
 ) : ViewModel() {
 
     companion object {

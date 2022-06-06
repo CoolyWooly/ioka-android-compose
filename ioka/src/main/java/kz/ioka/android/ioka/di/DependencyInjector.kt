@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 internal object DependencyInjector {
 
-    const val DEBUG_BASE_URL = "https://stage-api.ioka.kz/"
-    const val RELEASE_BASE_URL = "https://api.ioka.kz/"
+    private const val DEBUG_BASE_URL = "https://stage-api.ioka.kz/"
+    private const val RELEASE_BASE_URL = "https://api.ioka.kz/"
 
     private val baseUrl by lazy {
         if (Config.isDebug) DEBUG_BASE_URL

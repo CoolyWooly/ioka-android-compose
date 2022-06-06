@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.api.*
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SavedCardsActivity : BaseActivity() {
@@ -74,12 +75,11 @@ class SavedCardsActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == IOKA_SAVE_CARD_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                val result = data?.getParcelableExtra<FlowResult>(IOKA_EXTRA_RESULT_NAME)
+            val result = data?.getParcelableExtra<FlowResult>(IOKA_EXTRA_RESULT_NAME)
+            Timber.d("isOk = ${resultCode == RESULT_OK}, result = ${result?.javaClass?.simpleName}")
 
-                result?.let {
-                    if (it is FlowResult.Succeeded) viewModel.fetchCards()
-                }
+            if (resultCode == RESULT_OK && result is FlowResult.Succeeded) {
+                viewModel.fetchCards()
             }
         }
     }
