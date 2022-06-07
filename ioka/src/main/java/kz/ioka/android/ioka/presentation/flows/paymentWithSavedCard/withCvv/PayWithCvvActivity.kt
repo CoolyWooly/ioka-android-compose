@@ -1,4 +1,4 @@
-package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv
+package kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv
 
 import android.content.Context
 import android.content.Intent
@@ -9,11 +9,11 @@ import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherFragment
 import kz.ioka.android.ioka.util.addFragment
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
-internal class PayWithCardIdActivity : BaseActivity() {
+internal class PayWithCvvActivity : BaseActivity() {
 
     companion object {
-        fun provideIntent(context: Context, launcher: PayWithCardIdLauncher): Intent {
-            val intent = Intent(context, PayWithCardIdActivity::class.java)
+        fun provideIntent(context: Context, launcher: CvvPaymentLauncher): Intent {
+            val intent = Intent(context, PayWithCvvActivity::class.java)
             intent.putExtra(LAUNCHER, launcher)
 
             return intent
@@ -35,14 +35,15 @@ internal class PayWithCardIdActivity : BaseActivity() {
     }
 
     private fun showForm() {
-        val launcher = launcher<PayWithCardIdLauncher>()
+        val launcher = launcher<CvvPaymentLauncher>()
 
         launcher?.let {
             supportFragmentManager.addFragment(
                 PaymentLauncherFragment.getInstance(
-                    CardIdPaymentLauncherBehavior(
+                    CvvPaymentLauncherBehavior(
                         launcher.orderToken,
-                        launcher.cardId
+                        launcher.cardDvo,
+                        launcher.configuration
                     )
                 )
             )

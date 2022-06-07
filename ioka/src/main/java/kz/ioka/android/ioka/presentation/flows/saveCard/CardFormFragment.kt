@@ -22,6 +22,7 @@ import kz.ioka.android.ioka.presentation.webView.WebViewFragment
 import kz.ioka.android.ioka.presentation.webView.WebViewFragment.Companion.WEB_VIEW_REQUEST_KEY
 import kz.ioka.android.ioka.presentation.webView.WebViewFragment.Companion.WEB_VIEW_RESULT_BUNDLE_KEY
 import kz.ioka.android.ioka.uikit.*
+import kz.ioka.android.ioka.util.addFragment
 import kz.ioka.android.ioka.viewBase.BaseFragment
 import kz.ioka.android.ioka.viewBase.Scannable
 
@@ -195,7 +196,7 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
         vCvvInput.isEnabled = state !is SaveCardRequestState.LOADING
 
         if (state is SaveCardRequestState.PENDING) {
-            addFragment(
+            parentFragmentManager.addFragment(
                 WebViewFragment.getInstance(
                     SaveCardConfirmationBehavior(
                         url = state.actionUrl,

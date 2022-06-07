@@ -4,6 +4,8 @@ import android.app.Activity
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.presentation.flows.payment.PaymentActivity
+import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.CvvPaymentLauncher
+import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.PayWithCvvActivity
 import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdActivity
 import kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdLauncher
 import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardActivity
@@ -43,8 +45,8 @@ object Ioka {
         configuration: Configuration? = null
     ) {
         val intent = if (card.cvvRequired) {
-            PayWithCardIdActivity.provideIntent(
-                activity, PayWithCardIdLauncher(orderToken, card.cardId)
+            PayWithCvvActivity.provideIntent(
+                activity, CvvPaymentLauncher(orderToken, card, configuration)
             )
         } else {
             PayWithCardIdActivity.provideIntent(

@@ -6,7 +6,7 @@ import kz.ioka.android.ioka.api.Configuration
 import kz.ioka.android.ioka.presentation.flows.common.OrderDvo
 
 @Parcelize
-internal data class PayWithCvvLauncher(
+internal data class CvvFormLauncher(
     val orderToken: String,
     val order: OrderDvo,
     val cardId: String,

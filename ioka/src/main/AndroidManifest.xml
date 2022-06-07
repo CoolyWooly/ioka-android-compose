@@ -15,7 +15,7 @@
             android:name="kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withoutCvv.PayWithCardIdActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.result.ResultActivity"
+            android:name="kz.ioka.android.ioka.presentation.flows.paymentWithSavedCard.withCvv.PayWithCvvActivity"
             android:screenOrientation="portrait" />
 
         <meta-data

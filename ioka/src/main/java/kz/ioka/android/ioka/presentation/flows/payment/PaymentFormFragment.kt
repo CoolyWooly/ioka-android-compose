@@ -22,7 +22,7 @@ import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
-import kz.ioka.android.ioka.presentation.result.ResultActivity
+import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.ResultState
@@ -31,6 +31,8 @@ import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.CvvEditText
 import kz.ioka.android.ioka.uikit.IokaStateButton
+import kz.ioka.android.ioka.util.addFragment
+import kz.ioka.android.ioka.util.replaceFragment
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
@@ -78,7 +80,8 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
         super.onCreate(savedInstanceState)
 
         setFragmentResultListener(WebViewFragment.WEB_VIEW_REQUEST_KEY) { _, bundle ->
-            val result = bundle.getParcelable<ResultState>(WebViewFragment.WEB_VIEW_RESULT_BUNDLE_KEY)
+            val result =
+                bundle.getParcelable<ResultState>(WebViewFragment.WEB_VIEW_RESULT_BUNDLE_KEY)
 
             if (result is ResultState.Success) onSuccessfulAttempt()
             else if (result is ResultState.Fail) onFailedAttempt(result.cause)
@@ -197,7 +200,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
             is PaymentState.PENDING -> {
                 btnPay.setState(ButtonState.Default)
 
-                addFragment(
+                parentFragmentManager.addFragment(
                     WebViewFragment.getInstance(
                         PaymentConfirmationBehavior(
                             url = state.actionUrl,
@@ -254,27 +257,27 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     }
 
     private fun onSuccessfulAttempt() {
-        val intent = ResultActivity.provideIntent(
-            requireContext(), SuccessResultLauncher(
-                subtitle = getString(
-                    R.string.ioka_result_success_payment_subtitle,
-                    viewModel.order.externalId
-                ),
-                amount = viewModel.order.amount
+        parentFragmentManager.replaceFragment(
+            ResultFragment.getInstance(
+                SuccessResultLauncher(
+                    subtitle = getString(
+                        R.string.ioka_result_success_payment_subtitle,
+                        viewModel.order.externalId
+                    ),
+                    amount = viewModel.order.amount
+                )
             )
         )
-
-        startActivity(intent)
     }
 
     private fun onFailedAttempt(cause: String?) {
-        val intent = ResultActivity.provideIntent(
-            requireContext(), ErrorResultLauncher(
-                subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
+        parentFragmentManager.replaceFragment(
+            ResultFragment.getInstance(
+                ErrorResultLauncher(
+                    subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
+                )
             )
         )
-
-        startActivity(intent)
     }
 
     private fun onBackPressed() {

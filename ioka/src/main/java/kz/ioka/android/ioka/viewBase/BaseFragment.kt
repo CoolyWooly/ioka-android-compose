@@ -15,12 +15,4 @@ abstract class BaseFragment(layoutResId: Int) : Fragment(layoutResId) {
         return arguments?.getParcelable(FRAGMENT_LAUNCHER)
     }
 
-    fun addFragment(fragment: Fragment) {
-        parentFragmentManager.commit {
-            addToBackStack(null)
-            add((requireView().parent as ViewGroup).id, fragment)
-            setReorderingAllowed(true)
-        }
-    }
-
 }

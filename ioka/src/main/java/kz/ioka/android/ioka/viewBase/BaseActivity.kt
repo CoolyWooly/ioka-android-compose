@@ -35,7 +35,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
         finishWithResult(RESULT_OK, FlowResult.Failed(cause))
     }
 
-    private fun finishWithResult(resultCode: Int, flowResult: FlowResult) {
+    fun finishWithResult(resultCode: Int, flowResult: FlowResult) {
         setResult(resultCode, Intent().apply {
             putExtra(IOKA_EXTRA_RESULT_NAME, flowResult)
         })
