@@ -12,7 +12,7 @@ import kz.ioka.android.ioka.util.getOrderId
 
 @Suppress("UNCHECKED_CAST")
 internal class CvvViewModelFactory(
-    val launcher: PayWithCvvLauncher,
+    val launcher: CvvFormLauncher,
     private val repository: PaymentRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -22,7 +22,7 @@ internal class CvvViewModelFactory(
 
 
 internal class CvvViewModel(
-    launcher: PayWithCvvLauncher,
+    launcher: CvvFormLauncher,
     private val repository: PaymentRepository
 ) : ViewModel() {
 

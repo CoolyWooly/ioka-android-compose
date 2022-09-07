@@ -1,12 +1,13 @@
 package kz.ioka.android.ioka.presentation.webView
 
+import android.os.Parcelable
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 internal class WebViewViewModelFactory(
     private val behavior: WebViewBehavior
@@ -50,10 +51,15 @@ internal class WebViewViewModel(
 
 }
 
-internal sealed class ResultState {
+internal sealed class ResultState : Parcelable {
 
+    @Parcelize
     object Success : ResultState()
 
+    @Parcelize
     class Fail(val cause: String? = null) : ResultState()
+
+    @Parcelize
+    object Canceled : ResultState()
 
 }

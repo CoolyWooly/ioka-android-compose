@@ -1,6 +1,7 @@
 package kz.ioka.android.ioka.presentation.flows.payment
 
 import android.content.Intent
+import androidx.fragment.app.commit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.IgnoredOnParcel
@@ -51,25 +52,29 @@ internal class PaymentLauncherBehavior(
 
     override fun doAfterLoading(): ViewAction {
         return if (order == null) {
-            ViewAction {
-                it.showErrorToast(it.getString(R.string.ioka_common_server_error))
-                it.finish()
+            ViewAction { activity ->
+                activity.showErrorToast(activity.getString(R.string.ioka_common_server_error))
+
+                (activity as? BaseActivity)?.let {
+                    it.finishWithFailedResult(it.getString(R.string.ioka_common_server_error))
+                } ?: run { activity.finish() }
             }
         } else {
             ViewAction {
-                val intent = Intent(it, PayActivity::class.java)
-                intent.putExtra(
-                    BaseActivity.LAUNCHER,
-                    PayLauncher(
-                        orderToken,
-                        order!!,
-                        withGooglePay,
-                        customerId != null,
-                        configuration
+                it.supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace(
+                        R.id.fcvContainer, PaymentFormFragment.getInstance(
+                            PaymentFormLauncher(
+                                orderToken,
+                                order!!,
+                                withGooglePay,
+                                customerId != null,
+                                configuration
+                            )
+                        )
                     )
-                )
-                it.startActivity(intent)
-                it.finish()
+                }
             }
         }
     }

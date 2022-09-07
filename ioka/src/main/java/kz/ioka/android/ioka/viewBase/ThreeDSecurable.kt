@@ -5,8 +5,8 @@ import android.content.Intent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
-import kz.ioka.android.ioka.presentation.webView.WebViewActivity
 import kz.ioka.android.ioka.presentation.webView.WebViewBehavior
+import kz.ioka.android.ioka.presentation.webView.WebViewFragment
 
 /**
  * Интерфейс для вьюшек (фрагментов, активити), которые вызывают проверку 3DSecure
@@ -38,9 +38,9 @@ internal interface ThreeDSecurable {
      */
     fun activityResultCallback(): ActivityResultCallback<ActivityResult> =
         ActivityResultCallback<ActivityResult> {
-            if (it.resultCode == WebViewActivity.RESULT_SUCCESS) {
+            if (it.resultCode == WebViewFragment.RESULT_SUCCESS) {
                 onSuccessfulAttempt()
-            } else if (it.resultCode == WebViewActivity.RESULT_FAIL) {
+            } else if (it.resultCode == WebViewFragment.RESULT_FAIL) {
                 onFailedAttempt()
             }
         }
@@ -52,8 +52,8 @@ internal interface ThreeDSecurable {
         context: Context,
         behavior: WebViewBehavior
     ) {
-        val intent = WebViewActivity.provideIntent(context, behavior)
+        val intent = WebViewFragment.getInstance(behavior)
 
-        activityResultLauncher.launch(intent)
+//        activityResultLauncher.launch(intent)
     }
 }

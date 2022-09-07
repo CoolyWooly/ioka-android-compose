@@ -13,12 +13,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
+import kz.ioka.android.ioka.api.FlowResult
+import kz.ioka.android.ioka.api.IOKA_EXTRA_RESULT_NAME
 import kz.ioka.android.iokademoapp.BaseActivity
 import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.toAmountFormat
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
 import kz.ioka.android.iokademoapp.presentation.cart.paymentType.SelectPaymentTypeActivity
 import kz.ioka.android.iokademoapp.presentation.cart.paymentType.SelectedPaymentTypeView
+import timber.log.Timber
 import java.math.BigDecimal
 
 @AndroidEntryPoint
@@ -116,5 +119,13 @@ class OrderDetailsActivity : BaseActivity(), View.OnClickListener {
                 onBackPressed()
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val result = data?.getParcelableExtra<FlowResult>(IOKA_EXTRA_RESULT_NAME)
+
+        Timber.d("resultCodeIsOk = ${resultCode == RESULT_OK}, result = ${result?.javaClass?.simpleName}")
     }
 }

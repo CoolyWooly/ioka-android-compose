@@ -2,9 +2,7 @@ package kz.ioka.android.ioka.presentation.flows.payment
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
+import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.SwitchCompat
@@ -14,36 +12,48 @@ import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.launchIn
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.cardInfo.CardInfoRepositoryImpl
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
 import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModel
-import kz.ioka.android.ioka.presentation.flows.common.CardInfoViewModelFactory
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.result.ErrorResultLauncher
-import kz.ioka.android.ioka.presentation.result.ResultActivity
+import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
+import kz.ioka.android.ioka.presentation.webView.ResultState
+import kz.ioka.android.ioka.presentation.webView.WebViewFragment
 import kz.ioka.android.ioka.uikit.ButtonState
 import kz.ioka.android.ioka.uikit.CardNumberEditText
 import kz.ioka.android.ioka.uikit.CvvEditText
 import kz.ioka.android.ioka.uikit.IokaStateButton
+import kz.ioka.android.ioka.util.addFragment
+import kz.ioka.android.ioka.util.replaceFragment
 import kz.ioka.android.ioka.util.showErrorToast
 import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
+import kz.ioka.android.ioka.viewBase.BaseFragment
 import kz.ioka.android.ioka.viewBase.Scannable
-import kz.ioka.android.ioka.viewBase.ThreeDSecurable
 
-internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
+internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment_form), Scannable {
 
-    private val cardInfoViewModel: CardInfoViewModel by viewModels {
-        CardInfoViewModelFactory(
-            CardInfoRepositoryImpl(DependencyInjector.cardInfoApi)
-        )
+    companion object {
+        internal fun getInstance(launcher: PaymentFormLauncher): PaymentFormFragment {
+            val bundle = Bundle()
+            bundle.putParcelable(FRAGMENT_LAUNCHER, launcher)
+
+            val fragment = PaymentFormFragment()
+            fragment.arguments = bundle
+
+            return fragment
+        }
     }
+
+    private val cardInfoViewModel: CardInfoViewModel by viewModels()
 
     private val viewModel: PayWithCardViewModel by viewModels {
         PayWithCardViewModelFactory(
@@ -62,40 +72,47 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
     private lateinit var switchSaveCard: SwitchCompat
     private lateinit var btnPay: IokaStateButton
 
-    override val activityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(), activityResultCallback()
-    )
-
     override fun onCardScanned(cardNumber: String) {
         etCardNumber.setCardNumber(cardNumber)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ioka_activity_pay)
 
-        bindViews()
+        setFragmentResultListener(WebViewFragment.WEB_VIEW_REQUEST_KEY) { _, bundle ->
+            val result =
+                bundle.getParcelable<ResultState>(WebViewFragment.WEB_VIEW_RESULT_BUNDLE_KEY)
+
+            if (result is ResultState.Success) onSuccessfulAttempt()
+            else if (result is ResultState.Fail) onFailedAttempt(result.cause)
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        bindViews(view)
         setConfiguration()
         setupListeners()
         observeData()
     }
 
-    private fun bindViews() {
-        vRoot = findViewById(R.id.vRoot)
-        vToolbar = findViewById(R.id.vToolbar)
-        groupGooglePay = findViewById(R.id.groupGooglePay)
-        btnGooglePay = findViewById(R.id.btnGooglePay)
-        etCardNumber = findViewById(R.id.vCardNumberInput)
-        etExpireDate = findViewById(R.id.etExpireDate)
-        vCvvInput = findViewById(R.id.vCvvInput)
-        switchSaveCard = findViewById(R.id.vSaveCardSwitch)
-        btnPay = findViewById(R.id.btnPay)
+    private fun bindViews(view: View) {
+        vRoot = view.findViewById(R.id.vRoot)
+        vToolbar = view.findViewById(R.id.vToolbar)
+        groupGooglePay = view.findViewById(R.id.groupGooglePay)
+        btnGooglePay = view.findViewById(R.id.btnGooglePay)
+        etCardNumber = view.findViewById(R.id.vCardNumberInput)
+        etExpireDate = view.findViewById(R.id.etExpireDate)
+        vCvvInput = view.findViewById(R.id.vCvvInput)
+        switchSaveCard = view.findViewById(R.id.vSaveCardSwitch)
+        btnPay = view.findViewById(R.id.btnPay)
     }
 
     private fun setConfiguration() {
-        launcher<PayLauncher>()?.configuration?.apply {
+        launcher<PaymentFormLauncher>()?.configuration?.apply {
             vRoot.setBackgroundColor(
-                ContextCompat.getColor(this@PayActivity, backgroundColor)
+                ContextCompat.getColor(requireContext(), backgroundColor)
             )
 
             etCardNumber.setIconColor(iconColor)
@@ -104,12 +121,12 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
             buttonText?.let { btnPay.setText(buttonText) }
 
             fieldBackground?.let {
-                etCardNumber.background = ContextCompat.getDrawable(this@PayActivity, it)
-                etExpireDate.background = ContextCompat.getDrawable(this@PayActivity, it)
-                vCvvInput.background = ContextCompat.getDrawable(this@PayActivity, it)
+                etCardNumber.background = ContextCompat.getDrawable(requireContext(), it)
+                etExpireDate.background = ContextCompat.getDrawable(requireContext(), it)
+                vCvvInput.background = ContextCompat.getDrawable(requireContext(), it)
             }
             buttonBackground?.let {
-                btnPay.background = ContextCompat.getDrawable(this@PayActivity, it)
+                btnPay.background = ContextCompat.getDrawable(requireContext(), it)
             }
         }
     }
@@ -129,7 +146,7 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
         }
 
         etCardNumber.onScanClicked = {
-            startCardScanner(this)
+            startCardScanner(requireContext())
         }
 
         etExpireDate.doOnTextChanged { text, _, _, _ ->
@@ -163,7 +180,7 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
             groupGooglePay.isVisible = withGooglePay
             switchSaveCard.isVisible = canSaveCard
 
-            payState.observe(this@PayActivity) {
+            payState.observe(viewLifecycleOwner) {
                 handleState(it)
             }
         }
@@ -183,12 +200,13 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
             is PaymentState.PENDING -> {
                 btnPay.setState(ButtonState.Default)
 
-                onActionRequired(
-                    this,
-                    PaymentConfirmationBehavior(
-                        url = state.actionUrl,
-                        orderToken = viewModel.orderToken,
-                        paymentId = viewModel.paymentId
+                parentFragmentManager.addFragment(
+                    WebViewFragment.getInstance(
+                        PaymentConfirmationBehavior(
+                            url = state.actionUrl,
+                            orderToken = viewModel.orderToken,
+                            paymentId = viewModel.paymentId
+                        )
                     )
                 )
             }
@@ -202,7 +220,9 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
             is PaymentState.ERROR -> {
                 btnPay.setState(ButtonState.Default)
 
-                showErrorToast(state.cause ?: getString(R.string.ioka_common_server_error))
+                requireContext().showErrorToast(
+                    state.cause ?: getString(R.string.ioka_common_server_error)
+                )
             }
 
             is PaymentState.FAILED -> {
@@ -236,40 +256,36 @@ internal class PayActivity : BaseActivity(), Scannable, ThreeDSecurable {
         btnGooglePay.isEnabled = false
     }
 
-    override fun onSuccessfulAttempt() {
-        val intent = ResultActivity.provideIntent(
-            this, SuccessResultLauncher(
-                subtitle = getString(
-                    R.string.ioka_result_success_payment_subtitle,
-                    viewModel.order.externalId
-                ),
-                amount = viewModel.order.amount
+    private fun onSuccessfulAttempt() {
+        parentFragmentManager.replaceFragment(
+            ResultFragment.getInstance(
+                SuccessResultLauncher(
+                    subtitle = getString(
+                        R.string.ioka_result_success_payment_subtitle,
+                        viewModel.order.externalId
+                    ),
+                    amount = viewModel.order.amount
+                )
             )
         )
-
-        startActivity(intent)
-        finish()
     }
 
-    override fun onFailedAttempt(cause: String?) {
-        val intent = ResultActivity.provideIntent(
-            this, ErrorResultLauncher(
-                subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
+    private fun onFailedAttempt(cause: String?) {
+        parentFragmentManager.replaceFragment(
+            ResultFragment.getInstance(
+                ErrorResultLauncher(
+                    subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
+                )
             )
         )
-
-        startActivity(intent)
-        finish()
     }
 
-    override fun onBackPressed() {
-        setResult(RESULT_CANCELED)
-        super.onBackPressed()
+    private fun onBackPressed() {
+        (activity as? BaseActivity)?.finishWithCanceledResult()
     }
 
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super<BaseActivity>.onActivityResult(requestCode, resultCode, data)
         super<Scannable>.onActivityResult(requestCode, resultCode, data)
     }
 

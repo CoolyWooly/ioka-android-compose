@@ -67,16 +67,16 @@ internal class IokaStateButton @JvmOverloads constructor(
     }
 
     fun setState(state: ButtonState) {
-        isEnabled = state != ButtonState.Disabled
+        isEnabled = state !is ButtonState.Disabled
 
-        isClickable = state == ButtonState.Default
-        isFocusable = state == ButtonState.Default
+        isClickable = state is ButtonState.Default
+        isFocusable = state is ButtonState.Default
 
-        tvTitle.isInvisible = state != ButtonState.Default && state != ButtonState.Disabled
-        vProgress.isInvisible = state != ButtonState.Loading
-        ivState.isInvisible = state != ButtonState.Success
+        tvTitle.isInvisible = state !is ButtonState.Default && state !is ButtonState.Disabled
+        vProgress.isInvisible = state !is ButtonState.Loading
+        ivState.isInvisible = state !is ButtonState.Success
 
-        if (state == ButtonState.Success) {
+        if (state is ButtonState.Success) {
             ivState.setImageDrawable(
                 AppCompatResources.getDrawable(
                     context,
@@ -88,33 +88,14 @@ internal class IokaStateButton @JvmOverloads constructor(
             vProgress.isInvisible = true
             ivState.isInvisible = false
 
-            val colorFrom = (background as? ColorDrawable)?.color
             val colorTo = ContextCompat.getColor(context, R.color.ioka_color_success)
 
-            if (colorFrom != null) {
-                animateColorTransition(colorFrom, colorTo)
-            } else {
-                (background as? GradientDrawable)?.setTint(colorTo)
-                postDelayed({ resultCallback?.onSuccess()?.invoke() }, 250)
-            }
+            background.mutate()
+            background.setTint(colorTo)
+
+            post { resultCallback?.onSuccess()?.invoke() }
         }
     }
-
-    private fun animateColorTransition(colorFrom: Int, colorTo: Int) {
-        val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-        colorAnimation.duration = 250
-
-        colorAnimation.addUpdateListener { animator ->
-            setCardBackgroundColor(animator.animatedValue as Int)
-
-            if ((animator.animatedValue as Int) == colorTo) {
-                resultCallback?.onSuccess()?.invoke()
-            }
-        }
-
-        colorAnimation.start()
-    }
-
 }
 
 internal sealed class ButtonState {

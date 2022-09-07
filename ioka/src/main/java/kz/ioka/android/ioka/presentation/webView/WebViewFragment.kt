@@ -1,38 +1,40 @@
 package kz.ioka.android.ioka.presentation.webView
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebStorage
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
-import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import kz.ioka.android.ioka.R
-import kz.ioka.android.ioka.viewBase.BaseActivity
+import kz.ioka.android.ioka.viewBase.BaseFragment
 
-internal class WebViewActivity : BaseActivity() {
+internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
 
     companion object {
+        const val WEB_VIEW_REQUEST_KEY = "WEB_VIEW_REQUEST_KEY"
+        const val WEB_VIEW_RESULT_BUNDLE_KEY = "WEB_VIEW_RESULT_BUNDLE_KEY"
+
         const val REDIRECT_URL = "https://ioka.kz/"
 
         const val RESULT_SUCCESS = 1_000
         const val RESULT_FAIL = 1_001
 
-        const val EXTRA_FAIL_CAUSE = "EXTRA_FAIL_CAUSE"
-
-        fun provideIntent(
-            context: Context,
+        fun getInstance(
             behavior: WebViewBehavior
-        ): Intent {
-            val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra(LAUNCHER, behavior)
+        ): WebViewFragment {
+            val bundle = Bundle()
+            bundle.putParcelable(FRAGMENT_LAUNCHER, behavior)
 
-            return intent
+            val fragment = WebViewFragment()
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
@@ -48,26 +50,29 @@ internal class WebViewActivity : BaseActivity() {
     private lateinit var webView: WebView
     private lateinit var vProgress: FrameLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.ioka_activity_web_view)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         launcher = launcher()
-        bindViews()
+        bindViews(view)
         setupViews()
         observeData()
     }
 
-    private fun bindViews() {
-        vToolbar = findViewById(R.id.vToolbar)
-        webView = findViewById(R.id.webView)
-        vProgress = findViewById(R.id.vProgress)
+    private fun bindViews(view: View) {
+        vToolbar = view.findViewById(R.id.vToolbar)
+        webView = view.findViewById(R.id.webView)
+        vProgress = view.findViewById(R.id.vProgress)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
         vToolbar.setNavigationOnClickListener {
-            finish()
+            val data = Bundle()
+            data.putParcelable(WEB_VIEW_RESULT_BUNDLE_KEY, ResultState.Canceled)
+
+            setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
+            parentFragmentManager.popBackStack()
         }
 
         webView.settings.javaScriptEnabled = true
@@ -87,21 +92,16 @@ internal class WebViewActivity : BaseActivity() {
             vToolbar.setTitle(toolbarTitleRes)
             webView.loadUrl(actionUrl)
 
-            progress.observe(this@WebViewActivity) {
+            progress.observe(viewLifecycleOwner) {
                 vProgress.isVisible = it
             }
 
-            result.observe(this@WebViewActivity) {
-                if (it is ResultState.Success) {
-                    setResult(RESULT_SUCCESS)
-                } else if (it is ResultState.Fail) {
-                    val data = Intent()
+            result.observe(viewLifecycleOwner) {
+                val data = Bundle()
+                data.putParcelable(WEB_VIEW_RESULT_BUNDLE_KEY, it)
 
-                    data.putExtra(EXTRA_FAIL_CAUSE, it.cause)
-                    setResult(RESULT_FAIL, data)
-                }
-
-                finish()
+                setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
+                parentFragmentManager.popBackStack()
             }
         }
     }

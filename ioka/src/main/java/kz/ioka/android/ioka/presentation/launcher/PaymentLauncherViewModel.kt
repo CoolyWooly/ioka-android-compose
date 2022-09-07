@@ -12,7 +12,7 @@ internal class PaymentLauncherViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PaymentLauncherViewModel(behavior) as T
     }
 }
