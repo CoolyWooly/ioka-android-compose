@@ -3,10 +3,7 @@ package kz.ioka.android.ioka.presentation.flows.payment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.SwitchCompat
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
@@ -64,6 +61,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
 
     private lateinit var vRoot: ConstraintLayout
     private lateinit var vToolbar: Toolbar
+    private lateinit var vToolbarTitle: AppCompatTextView
     private lateinit var groupGooglePay: Group
     private lateinit var btnGooglePay: AppCompatImageButton
     private lateinit var etCardNumber: CardNumberEditText
@@ -100,6 +98,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     private fun bindViews(view: View) {
         vRoot = view.findViewById(R.id.vRoot)
         vToolbar = view.findViewById(R.id.vToolbar)
+        vToolbarTitle = view.findViewById(R.id.tvToolbarTitle)
         groupGooglePay = view.findViewById(R.id.groupGooglePay)
         btnGooglePay = view.findViewById(R.id.btnGooglePay)
         etCardNumber = view.findViewById(R.id.vCardNumberInput)
@@ -169,7 +168,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
 
     private fun observeData() {
         viewModel.apply {
-            vToolbar.title =
+            vToolbarTitle.text =
                 getString(R.string.ioka_payment_toolbar, order.amount.amount.toAmountFormat())
             btnPay.setText(
                 getString(

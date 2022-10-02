@@ -13,9 +13,16 @@
         android:id="@+id/vToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ioka_ic_close"
-        app:title="@string/ioka_save_card_toolbar"
-        app:titleTextColor="@color/ioka_color_text" />
+        app:navigationIcon="@drawable/ioka_ic_close">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/IokaMediumPrimaryTextView.18"
+            android:text="@string/ioka_save_card_toolbar" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <kz.ioka.android.ioka.uikit.CardNumberEditText
         android:id="@+id/vCardNumberInput"

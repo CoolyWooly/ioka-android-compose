@@ -13,9 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ioka_ic_close"
-        app:titleTextColor="@color/ioka_color_text"
-        tools:title="К оплате 12 560 ₸" />
+        app:navigationIcon="@drawable/ioka_ic_close">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvToolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/IokaMediumPrimaryTextView.18"
+            tools:text="К оплате 12 560 ₸" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnGooglePay"

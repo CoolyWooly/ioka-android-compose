@@ -3,6 +3,7 @@ package kz.ioka.android.ioka.uikit
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
+import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -120,6 +121,10 @@ internal class CardNumberEditText @JvmOverloads constructor(
 
     fun setCardNumber(cardNumber: String) {
         etCardNumber.setText(cardNumber, TextView.BufferType.EDITABLE)
+    }
+
+    fun setCardNumberLength(length: Int) {
+        etCardNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(length))
     }
 
     override fun setEnabled(enabled: Boolean) {
