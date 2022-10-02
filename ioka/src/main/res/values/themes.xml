@@ -33,10 +33,10 @@
     </style>
 
     <!--  Switch  -->
-    <style name="IokaSwitch" parent="Theme.AppCompat">
+    <style name="ThemeOverlay.MySwitchCompat" parent="">
         <item name="colorControlActivated">@color/ioka_color_primary</item>
         <item name="colorSwitchThumbNormal">@color/ioka_color_nonadaptable_text</item>
-        <item name="android:colorForeground">#9494A6</item>
+        <item name="android:colorForeground">@color/ioka_color_icon_secondary</item>
     </style>
 
     <!--  ImageView  -->

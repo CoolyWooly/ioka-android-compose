@@ -119,7 +119,6 @@
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/vSaveCardSwitch"
-        style="@style/IokaSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -127,9 +126,9 @@
         android:text="@string/ioka_payment_save_card"
         android:textColor="@color/ioka_color_text"
         android:textSize="16sp"
+        android:theme="@style/ThemeOverlay.MySwitchCompat"
         app:layout_constraintTop_toBottomOf="@id/etExpireDate"
-        app:thumbTint="@color/ioka_color_switch_thumb_tint"
-        app:trackTint="@color/ioka_color_switch_track_tint" />
+        app:theme="@style/ThemeOverlay.MySwitchCompat" />
 
     <kz.ioka.android.ioka.uikit.IokaStateButton
         android:id="@+id/btnPay"
