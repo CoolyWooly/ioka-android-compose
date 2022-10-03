@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
-import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
+import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
 import java.util.*
 
 @Suppress("UNCHECKED_CAST")
@@ -36,6 +36,8 @@ internal class SaveCardViewModel constructor(
     private val _isExpireDateValid = MutableStateFlow(false)
     private val _isCvvValid = MutableStateFlow(false)
 
+    private var cardPanLengthRange = 15..19
+
     private val allFieldsAreValid: Flow<Boolean> = combine(
         _isCardPanValid,
         _isExpireDateValid,
@@ -60,9 +62,12 @@ internal class SaveCardViewModel constructor(
         }
     }
 
+    fun onCardPanLengthReceived(maxLength: IntRange) {
+        this.cardPanLengthRange = maxLength
+    }
 
     fun onCardPanEntered(cardPan: String) {
-        _isCardPanValid.value = cardPan.length in 15..19
+        _isCardPanValid.value = cardPan.length in cardPanLengthRange
     }
 
     fun onExpireDateEntered(expireDate: String) {

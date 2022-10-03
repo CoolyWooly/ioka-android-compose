@@ -211,6 +211,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
     }
 
     private fun onSuccessfulAttempt() {
+        dismiss()
         parentFragmentManager.replaceFragment(
             ResultFragment.getInstance(
                 SuccessResultLauncher(
@@ -226,7 +227,8 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
     }
 
     private fun onFailedAttempt(cause: String?) {
-        parentFragmentManager.replaceFragment(FailedResultFragment.newInstance(cause))
+        dismiss()
+        FailedResultFragment.newInstance(cause).show(parentFragmentManager, null)
     }
 
     override fun onClick(v: View?) {

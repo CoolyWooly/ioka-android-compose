@@ -26,6 +26,9 @@ internal class CardInfoViewModel constructor(
     private val _cardEmitter = MutableLiveData<Optional<CardEmitterDvo>>()
     val cardEmitter = _cardEmitter as LiveData<Optional<CardEmitterDvo>>
 
+    private val _cardNumberLength = MutableLiveData<IntRange>()
+    val cardNumberLength = _cardNumberLength as LiveData<IntRange>
+
     fun onCardPanEntered(cardPan: String) {
         if (
             cardPan.matches(Regex(REGEX_BRAND_FETCHABLE)) &&
@@ -52,8 +55,10 @@ internal class CardInfoViewModel constructor(
 
             if (brandResponse is ResultWrapper.Success) {
                 _cardBrand.postValue(Optional.of(CardBrandDvo(brandResponse.value.iconRes)))
+                _cardNumberLength.postValue(brandResponse.value.cardNumberLength)
             } else {
                 _cardBrand.postValue(Optional.of(CardBrandDvo(CardBrandModel.Unknown.iconRes)))
+                _cardNumberLength.postValue(CardBrandModel.Unknown.cardNumberLength)
             }
         }
     }

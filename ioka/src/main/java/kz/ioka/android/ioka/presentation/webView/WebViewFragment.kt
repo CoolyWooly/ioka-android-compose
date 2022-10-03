@@ -104,7 +104,6 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
                 data.putParcelable(WEB_VIEW_RESULT_BUNDLE_KEY, it)
 
                 setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
-                parentFragmentManager.popBackStack()
             }
         }
     }

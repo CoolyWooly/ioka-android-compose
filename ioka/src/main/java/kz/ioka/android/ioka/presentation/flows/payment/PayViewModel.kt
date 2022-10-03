@@ -37,6 +37,8 @@ internal class PayWithCardViewModel constructor(
     private val _isExpireDateValid = MutableStateFlow(false)
     private val _isCvvValid = MutableStateFlow(false)
 
+    private var cardPanLengthRange = 15..19
+
     private val allFieldsAreValid: Flow<Boolean> = combine(
         _isCardPanValid,
         _isExpireDateValid,
@@ -60,8 +62,12 @@ internal class PayWithCardViewModel constructor(
         }
     }
 
+    fun onCardPanLengthReceived(maxLength: IntRange) {
+        this.cardPanLengthRange = maxLength
+    }
+
     fun onCardPanEntered(cardPan: String) {
-        _isCardPanValid.value = cardPan.length in 15..19
+        _isCardPanValid.value = cardPan.length in cardPanLengthRange
     }
 
     fun onExpireDateEntered(expireDate: String) {

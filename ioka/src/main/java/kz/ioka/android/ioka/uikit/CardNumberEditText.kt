@@ -29,6 +29,8 @@ import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.presentation.flows.common.CardBrandDvo
 import kz.ioka.android.ioka.presentation.flows.common.CardEmitterDvo
 import kz.ioka.android.ioka.util.*
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 internal class CardNumberEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -39,12 +41,10 @@ internal class CardNumberEditText @JvmOverloads constructor(
     private lateinit var ivBrand: AppCompatImageView
     private lateinit var btnScan: AppCompatImageButton
 
+    var onScanClicked: () -> Unit = {}
     var onTextChanged: (String) -> Unit = {}
     var onTextChangedWithDebounce: (String) -> Unit = {}
-
     var flowTextChangedWithDebounce: Flow<CharSequence?> = flow { }
-
-    var onScanClicked: () -> Unit = {}
 
     init {
         val root =
@@ -124,7 +124,10 @@ internal class CardNumberEditText @JvmOverloads constructor(
     }
 
     fun setCardNumberLength(length: Int) {
-        etCardNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(length))
+        val sectionsCount = length / 4.0
+        val roundedCount = ceil(sectionsCount).roundToInt() - 1
+
+        etCardNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(length + roundedCount))
     }
 
     override fun setEnabled(enabled: Boolean) {

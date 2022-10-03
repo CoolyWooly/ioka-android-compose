@@ -166,6 +166,11 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
                 etCardNumber.setBrand(it)
             }
 
+            cardNumberLength.observe(viewLifecycleOwner) {
+                etCardNumber.setCardNumberLength(it.last)
+                saveCardViewModel.onCardPanLengthReceived(it)
+            }
+
             cardEmitter.observe(viewLifecycleOwner) {
                 etCardNumber.setEmitter(it)
             }

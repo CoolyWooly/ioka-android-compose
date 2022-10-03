@@ -167,6 +167,21 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     }
 
     private fun observeData() {
+        with(cardInfoViewModel) {
+            cardBrand.observe(viewLifecycleOwner) {
+                etCardNumber.setBrand(it)
+            }
+
+            cardNumberLength.observe(viewLifecycleOwner) {
+                etCardNumber.setCardNumberLength(it.last)
+                viewModel.onCardPanLengthReceived(it)
+            }
+
+            cardEmitter.observe(viewLifecycleOwner) {
+                etCardNumber.setEmitter(it)
+            }
+        }
+
         viewModel.apply {
             vToolbarTitle.text =
                 getString(R.string.ioka_payment_toolbar, order.amount.amount.toAmountFormat())
