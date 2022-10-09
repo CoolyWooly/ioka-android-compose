@@ -17,6 +17,7 @@ internal abstract class ResultLauncher(
     open val subtitle: String,
     open val amount: Amount,
     @StringRes open val btnTitleRes: Int,
+    open val isTryAgainAvailable: Boolean,
     open val flowResult: FlowResult
 ) : Parcelable
 
@@ -36,6 +37,7 @@ internal class SuccessResultLauncher(
     subtitle,
     amount,
     btnTitleRes,
+    isTryAgainAvailable = false,
     flowResult
 )
 
@@ -55,5 +57,6 @@ internal class ErrorResultLauncher(
     subtitle,
     amount,
     btnTitleRes,
+    isTryAgainAvailable = true,
     flowResult
 )

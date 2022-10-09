@@ -245,6 +245,8 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                 onFailedAttempt(
                     state.cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
                 )
+                enableInputs()
+                clearInputs()
             }
 
             PaymentState.DEFAULT -> {
@@ -270,6 +272,13 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
         btnGooglePay.isEnabled = false
     }
 
+    private fun clearInputs() {
+        etCardNumber.setCardNumber("")
+        vCvvInput.setCvv("")
+        etExpireDate.setText("")
+        switchSaveCard.isChecked = false
+    }
+
     private fun onSuccessfulAttempt() {
         parentFragmentManager.replaceFragment(
             ResultFragment.getInstance(
@@ -285,7 +294,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     }
 
     private fun onFailedAttempt(cause: String?) {
-        parentFragmentManager.replaceFragment(
+        parentFragmentManager.addFragment(
             ResultFragment.getInstance(
                 ErrorResultLauncher(
                     subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)

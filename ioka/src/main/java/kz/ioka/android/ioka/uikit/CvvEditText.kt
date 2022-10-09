@@ -81,6 +81,10 @@ internal class CvvEditText @JvmOverloads constructor(
         )
     }
 
+    fun setCvv(cvv: String) {
+        etCvv.setText(cvv)
+    }
+
     fun getCvv(): String {
         return etCvv.text.toString()
     }
