@@ -9,22 +9,22 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import kz.ioka.android.ioka.R
 
-internal class FormattedNumberEditText : AppCompatEditText {
+internal open class FormattedNumberEditText : AppCompatEditText {
 
     var prefix = ""
-        private set
+        protected set
 
     var groupSeparator = ' '
-        private set
+        protected set
 
     var numberOfGroups = 4
-        private set
+        protected set
 
     var groupLength = 4
-        private set
+        protected set
 
     var inputLength = numberOfGroups * (groupLength + 1) - 1
-        private set
+        protected set
 
     private val digitsKeyListener = DigitsKeyListener.getInstance("0123456789")
 

@@ -135,7 +135,7 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
         }
 
         etCardNumber.onScanClicked = {
-            startCardScanner(requireContext())
+            startCardScanner(this)
         }
 
         etCardNumber.onTextChangedWithDebounce = {
@@ -167,7 +167,7 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
             }
 
             cardNumberLength.observe(viewLifecycleOwner) {
-                etCardNumber.setCardNumberLength(it.last)
+                etCardNumber.setCardNumberLengthRange(it)
                 saveCardViewModel.onCardPanLengthReceived(it)
             }
 

@@ -21,6 +21,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.setPadding
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
@@ -28,13 +29,18 @@ import kotlinx.coroutines.flow.onEach
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.presentation.flows.common.CardBrandDvo
 import kz.ioka.android.ioka.presentation.flows.common.CardEmitterDvo
-import kz.ioka.android.ioka.util.*
+import kz.ioka.android.ioka.util.Optional
+import kz.ioka.android.ioka.util.getDrawableFromRes
+import kz.ioka.android.ioka.util.textChanges
+import kz.ioka.android.ioka.util.toPx
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 internal class CardNumberEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayoutCompat(context, attrs, defStyleAttr) {
+
+    private val validator = CardNumberValidator()
 
     private lateinit var etCardNumber: AppCompatEditText
     private lateinit var ivEmitter: AppCompatImageView
@@ -45,6 +51,9 @@ internal class CardNumberEditText @JvmOverloads constructor(
     var onTextChanged: (String) -> Unit = {}
     var onTextChangedWithDebounce: (String) -> Unit = {}
     var flowTextChangedWithDebounce: Flow<CharSequence?> = flow { }
+
+    var isValid = MutableLiveData(false)
+    private var isValidationEnabled = false
 
     init {
         val root =
@@ -70,31 +79,50 @@ internal class CardNumberEditText @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
-        flowTextChangedWithDebounce = etCardNumber.textChanges().debounce(100).onEach {
-            onTextChangedWithDebounce(it.toString().replace(" ", ""))
-        }
-
         etCardNumber.doOnTextChanged { text, _, _, _ ->
-            onTextChanged(text.toString().replace(" ", ""))
+            val newIsValid = validator.validate(text.toString().replace(" ", ""))
+            val isValidationChanged = this.isValid.value != newIsValid
+            this.isValid.value = newIsValid
+
+            if (isValidationChanged && isValidationEnabled) {
+                setValidationStroke(!(isValid.value ?: false))
+            }
         }
 
         etCardNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val strokeWidth = if (hasFocus) 1.toPx.toInt() else 0
+            if (!hasFocus && !isValidationEnabled && getCardNumber().isNotEmpty()) {
+                isValidationEnabled = true
 
-            val back = background as GradientDrawable
+                setValidationStroke(!(isValid.value ?: false))
+            }
+        }
 
-            back.mutate()
-            back.setStroke(
-                strokeWidth,
-                context.getPrimaryColor()
-            )
-
-            background = back
+        flowTextChangedWithDebounce = etCardNumber.textChanges().debounce(100).onEach {
+            onTextChangedWithDebounce(it.toString().replace(" ", ""))
         }
 
         btnScan.setOnClickListener {
             onScanClicked()
         }
+    }
+
+    private fun setValidationStroke(isError: Boolean) {
+        val (strokeWidth, strokeColor) = if (!isError) {
+            0.toPx.roundToInt() to R.color.ioka_color_nonadaptable_transparent
+        } else {
+            1.toPx.roundToInt() to R.color.ioka_color_error
+        }
+
+        val back = background as GradientDrawable
+
+        back.mutate()
+        back.setStroke(strokeWidth, ContextCompat.getColor(context, strokeColor))
+
+        background = back
+    }
+
+    fun getCardNumber(): String {
+        return etCardNumber.text.toString().replace(" ", "")
     }
 
     fun setBrand(brandOptional: Optional<CardBrandDvo>) {
@@ -115,26 +143,8 @@ internal class CardNumberEditText @JvmOverloads constructor(
         }
     }
 
-    fun getCardNumber(): String {
-        return etCardNumber.text.toString().replace(" ", "")
-    }
-
     fun setCardNumber(cardNumber: String) {
         etCardNumber.setText(cardNumber, TextView.BufferType.EDITABLE)
-    }
-
-    fun setCardNumberLength(length: Int) {
-        val sectionsCount = length / 4.0
-        val roundedCount = ceil(sectionsCount).roundToInt() - 1
-
-        etCardNumber.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(length + roundedCount))
-    }
-
-    override fun setEnabled(enabled: Boolean) {
-        etCardNumber.isEnabled = enabled
-        btnScan.isEnabled = enabled
-
-        super.setEnabled(enabled)
     }
 
     fun setIconColor(@ColorRes iconColor: Int) {
@@ -142,6 +152,32 @@ internal class CardNumberEditText @JvmOverloads constructor(
             btnScan,
             ColorStateList.valueOf(ContextCompat.getColor(context, iconColor))
         )
+    }
+
+    fun setCardNumberLengthRange(lengthRange: IntRange) {
+        val maxCount = lengthRange.last
+        val sectionsCount = maxCount / 4.0
+        val roundedCount = ceil(sectionsCount).roundToInt() - 1
+
+        etCardNumber.filters =
+            arrayOf<InputFilter>(InputFilter.LengthFilter(maxCount + roundedCount))
+
+        validator.setCardNumberLengthRange(lengthRange)
+    }
+
+    fun clear() {
+        etCardNumber.setText("")
+        isValidationEnabled = false
+        isValid.value = false
+
+        setValidationStroke(false)
+    }
+
+    override fun setEnabled(enabled: Boolean) {
+        etCardNumber.isEnabled = enabled
+        btnScan.isEnabled = enabled
+
+        super.setEnabled(enabled)
     }
 
 }

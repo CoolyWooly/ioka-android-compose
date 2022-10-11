@@ -2,9 +2,7 @@
 
 package kz.ioka.android.ioka.viewBase
 
-import android.content.Context
 import android.content.Intent
-import androidx.core.app.ActivityCompat
 import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 import kz.ioka.android.ioka.SCAN_REQUEST_CODE
@@ -29,8 +27,8 @@ internal interface Scannable {
      * @param context
      *              текущий контекст, из которого вызывается метод
      */
-    fun startCardScanner(context: Context) {
-        val scanIntent = Intent(context, CardIOActivity::class.java)
+    fun startCardScanner(fragment: BaseFragment) {
+        val scanIntent = Intent(fragment.context, CardIOActivity::class.java)
 
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true)
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false)
@@ -40,8 +38,7 @@ internal interface Scannable {
         scanIntent.putExtra(CardIOActivity.EXTRA_HIDE_CARDIO_LOGO, true)
         scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true)
 
-        ActivityCompat.startActivityForResult(
-            context as BaseActivity,
+        fragment.startActivityForResult(
             scanIntent,
             SCAN_REQUEST_CODE,
             null

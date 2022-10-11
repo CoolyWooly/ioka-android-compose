@@ -1,10 +1,6 @@
 package kz.ioka.android.ioka.uikit
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -67,12 +63,7 @@ internal class IokaStateButton @JvmOverloads constructor(
     }
 
     fun setState(state: ButtonState) {
-        isEnabled = state !is ButtonState.Disabled
-
-        isClickable = state is ButtonState.Default
-        isFocusable = state is ButtonState.Default
-
-        tvTitle.isInvisible = state !is ButtonState.Default && state !is ButtonState.Disabled
+        tvTitle.isInvisible = state !is ButtonState.Default
         vProgress.isInvisible = state !is ButtonState.Loading
         ivState.isInvisible = state !is ButtonState.Success
 
