@@ -48,7 +48,6 @@ internal class CardNumberEditText @JvmOverloads constructor(
     private lateinit var btnScan: AppCompatImageButton
 
     var onScanClicked: () -> Unit = {}
-    var onTextChanged: (String) -> Unit = {}
     var onTextChangedWithDebounce: (String) -> Unit = {}
     var flowTextChangedWithDebounce: Flow<CharSequence?> = flow { }
 

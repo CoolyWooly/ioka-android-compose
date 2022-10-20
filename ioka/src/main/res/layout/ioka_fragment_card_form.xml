@@ -5,8 +5,8 @@
     android:id="@+id/vRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/ioka_color_background"
+    android:orientation="vertical"
     tools:theme="@style/Theme.AppCompat">
 
     <androidx.appcompat.widget.Toolbar
@@ -19,8 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="@style/IokaMediumPrimaryTextView.18"
-            android:text="@string/ioka_save_card_toolbar" />
+            android:text="@string/ioka_save_card_toolbar"
+            android:textAppearance="@style/IokaMediumPrimaryTextView.18" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -38,8 +38,8 @@
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
-        <kz.ioka.android.ioka.uikit.FormattedNumberEditText
-            android:id="@+id/etExpireDate"
+        <kz.ioka.android.ioka.uikit.ExpiryDateEditText
+            android:id="@+id/etExpiryDate"
             style="@style/PrimaryEditText.16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

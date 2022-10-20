@@ -3,11 +3,9 @@ package kz.ioka.android.ioka.presentation.flows.saveCard
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -40,17 +38,18 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
         }
     }
 
-    private val infoViewModel: CardInfoViewModel by viewModels()
+    private val cardInfoViewModel: CardInfoViewModel by viewModels()
 
     private val saveCardViewModel: SaveCardViewModel by viewModels {
         SaveCardViewModelFactory(launcher()!!)
     }
 
     private lateinit var tipWindow: TooltipWindow
+
     private lateinit var vRoot: LinearLayoutCompat
     private lateinit var vToolbar: Toolbar
     private lateinit var etCardNumber: CardNumberEditText
-    private lateinit var etExpireDate: AppCompatEditText
+    private lateinit var etExpiryDate: ExpiryDateEditText
     private lateinit var vCvvInput: CvvEditText
     private lateinit var vError: ErrorView
     private lateinit var btnSave: IokaStateButton
@@ -82,10 +81,11 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
 
     private fun bindViews(view: View) {
         tipWindow = TooltipWindow(requireContext())
+
         vRoot = view.findViewById(R.id.vRoot)
         vToolbar = view.findViewById(R.id.vToolbar)
         etCardNumber = view.findViewById(R.id.vCardNumberInput)
-        etExpireDate = view.findViewById(R.id.etExpireDate)
+        etExpiryDate = view.findViewById(R.id.etExpiryDate)
         vCvvInput = view.findViewById(R.id.vCvvInput)
         vError = view.findViewById(R.id.vError)
         btnSave = view.findViewById(R.id.btnSave)
@@ -100,11 +100,11 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
             etCardNumber.setIconColor(iconColor)
             vCvvInput.setIconColor(iconColor)
 
-            btnSave.setText(buttonText ?: getString(R.string.ioka_save_card_save))
+            buttonText?.let { btnSave.setText(buttonText) }
 
             fieldBackground?.let {
                 etCardNumber.background = ContextCompat.getDrawable(requireContext(), it)
-                etExpireDate.background = ContextCompat.getDrawable(requireContext(), it)
+                etExpiryDate.background = ContextCompat.getDrawable(requireContext(), it)
                 vCvvInput.background = ContextCompat.getDrawable(requireContext(), it)
             }
             buttonBackground?.let {
@@ -130,45 +130,31 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
     }
 
     private fun setupListeners() {
-        etCardNumber.onTextChanged = {
-            saveCardViewModel.onCardPanEntered(it)
+        vToolbar.setNavigationOnClickListener(this)
+        btnSave.setOnClickListener(this)
+
+        etCardNumber.onTextChangedWithDebounce = {
+            cardInfoViewModel.onCardPanEntered(it)
         }
+        etCardNumber.flowTextChangedWithDebounce.launchIn(lifecycleScope)
 
         etCardNumber.onScanClicked = {
             startCardScanner(this)
         }
 
-        etCardNumber.onTextChangedWithDebounce = {
-            infoViewModel.onCardPanEntered(it)
-        }
-
-        etCardNumber.flowTextChangedWithDebounce.launchIn(lifecycleScope)
-
-        etExpireDate.doOnTextChanged { text, _, _, _ ->
-            saveCardViewModel.onExpireDateEntered(text.toString().replace("/", ""))
-        }
-
-        vCvvInput.onTextChanged = {
-            saveCardViewModel.onCvvEntered(it)
-        }
-
         vCvvInput.onFaqClicked = {
             tipWindow.showToolTip(vCvvInput.ivCvvFaq)
         }
-
-        vToolbar.setNavigationOnClickListener(this)
-        btnSave.setOnClickListener(this)
     }
 
     private fun observeData() {
-        with(infoViewModel) {
-            cardBrand.observe(viewLifecycleOwner) {
-                etCardNumber.setBrand(it)
-            }
-
+        with(cardInfoViewModel) {
             cardNumberLength.observe(viewLifecycleOwner) {
                 etCardNumber.setCardNumberLengthRange(it)
-                saveCardViewModel.onCardPanLengthReceived(it)
+            }
+
+            cardBrand.observe(viewLifecycleOwner) {
+                etCardNumber.setBrand(it)
             }
 
             cardEmitter.observe(viewLifecycleOwner) {
@@ -177,27 +163,63 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
         }
 
         saveCardViewModel.apply {
+            isPayAvailable.observe(viewLifecycleOwner) {
+                btnSave.isEnabled = it
+                btnSave.isClickable = it
+                btnSave.isFocusable = it
+            }
+
             saveRequestState.observe(viewLifecycleOwner) {
                 handleState(it)
             }
         }
+
+        etCardNumber.isValid.observe(viewLifecycleOwner) {
+            saveCardViewModel.setIsCardNumberValid(it)
+        }
+        etExpiryDate.isValid.observe(viewLifecycleOwner) {
+            saveCardViewModel.setIsExpiryDateValid(it)
+        }
+        vCvvInput.isValid.observe(viewLifecycleOwner) {
+            saveCardViewModel.setIsCvvValid(it)
+        }
     }
 
     private fun handleState(state: SaveCardRequestState) {
-        val buttonState = when (state) {
-            SaveCardRequestState.SUCCESS -> ButtonState.Success
+        when (state) {
+            SaveCardRequestState.LOADING -> {
+                btnSave.setState(ButtonState.Loading)
+            }
 
-            SaveCardRequestState.LOADING -> ButtonState.Loading
+            is SaveCardRequestState.PENDING -> {
+                btnSave.setState(ButtonState.Default)
+            }
 
-            SaveCardRequestState.DISABLED -> ButtonState.Disabled
+            SaveCardRequestState.SUCCESS -> {
+                btnSave.setState(ButtonState.Success)
+            }
 
-            else -> ButtonState.Default
+            is SaveCardRequestState.ERROR -> {
+                btnSave.setState(ButtonState.Default)
+            }
+
+            SaveCardRequestState.DEFAULT -> {
+                btnSave.setState(ButtonState.Default)
+            }
         }
 
-        btnSave.setState(buttonState)
+//        val buttonState = when (state) {
+//            SaveCardRequestState.SUCCESS -> ButtonState.Success
+//
+//            SaveCardRequestState.LOADING -> ButtonState.Loading
+//
+//            else -> ButtonState.Default
+//        }
+//
+//        btnSave.setState(buttonState)
 
         etCardNumber.isEnabled = state !is SaveCardRequestState.LOADING
-        etExpireDate.isEnabled = state !is SaveCardRequestState.LOADING
+        etExpiryDate.isEnabled = state !is SaveCardRequestState.LOADING
         vCvvInput.isEnabled = state !is SaveCardRequestState.LOADING
 
         if (state is SaveCardRequestState.PENDING) {
@@ -228,7 +250,7 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
             btnSave -> {
                 saveCardViewModel.onSaveClicked(
                     etCardNumber.getCardNumber(),
-                    etExpireDate.text.toString(),
+                    etExpiryDate.text.toString(),
                     vCvvInput.getCvv()
                 )
             }
