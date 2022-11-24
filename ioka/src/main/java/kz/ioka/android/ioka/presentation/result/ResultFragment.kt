@@ -74,7 +74,11 @@ internal class ResultFragment : BaseFragment(R.layout.ioka_fragment_result) {
         }
 
         btnAction.setOnClickListener {
-            finishWithResult()
+            if (launcher.isTryAgainAvailable) {
+                parentFragmentManager.popBackStack()
+            } else {
+                finishWithResult()
+            }
         }
     }
 

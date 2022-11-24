@@ -21,7 +21,6 @@
         android:inputType="number"
         android:maxLength="23"
         android:padding="8dp"
-        android:textCursorDrawable="@color/ioka_color_primary"
         app:groupLength="4"
         app:groupSeparator=" "
         app:numberOfGroups="5" />

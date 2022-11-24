@@ -1,16 +1,13 @@
 package kz.ioka.android.ioka.presentation.flows.saveCard
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
-import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
-import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
+import kz.ioka.android.ioka.domain.saveCard.CardRepository
 import kz.ioka.android.ioka.domain.saveCard.CardRepositoryImpl
-import java.util.*
+import kz.ioka.android.ioka.domain.saveCard.SaveCardResultModel
 
 @Suppress("UNCHECKED_CAST")
 internal class SaveCardViewModelFactory(
@@ -32,63 +29,22 @@ internal class SaveCardViewModel constructor(
     var cardId: String? = null
     var customerToken: String = launcher.customerToken
 
-    private val _isCardPanValid = MutableStateFlow(false)
-    private val _isExpireDateValid = MutableStateFlow(false)
-    private val _isCvvValid = MutableStateFlow(false)
+    private var isCardNumberValid = false
+    private var isExpiryDateValid = false
+    private var isCvvValid = false
 
-    private val allFieldsAreValid: Flow<Boolean> = combine(
-        _isCardPanValid,
-        _isExpireDateValid,
-        _isCvvValid
-    ) { isCardPanValid, isExpireDateValid, isCvvValid ->
-        isCardPanValid && isExpireDateValid && isCvvValid
-    }
+    private val _isPayAvailable = MutableLiveData(false)
+    val isPayAvailable = _isPayAvailable as LiveData<Boolean>
 
     private val _saveRequestState =
         MutableLiveData<SaveCardRequestState>(SaveCardRequestState.DEFAULT)
     val saveRequestState = _saveRequestState as LiveData<SaveCardRequestState>
 
-    init {
-        viewModelScope.launch(Dispatchers.Default) {
-            allFieldsAreValid.collect { areAllFieldsValid ->
-                if (areAllFieldsValid) {
-                    _saveRequestState.postValue(SaveCardRequestState.DEFAULT)
-                } else {
-                    _saveRequestState.postValue(SaveCardRequestState.DISABLED)
-                }
-            }
-        }
-    }
-
-
-    fun onCardPanEntered(cardPan: String) {
-        _isCardPanValid.value = cardPan.length in 15..19
-    }
-
-    fun onExpireDateEntered(expireDate: String) {
-        _isExpireDateValid.value = if (expireDate.length < 4) {
-            false
-        } else {
-            val month = expireDate.substring(0..1).toInt()
-            val year = expireDate.substring(2).toInt()
-
-            val currentTime = Calendar.getInstance()
-            val currentMonth = currentTime.get(Calendar.MONTH)
-            val currentYear = currentTime.get(Calendar.YEAR) - 2000
-
-            month <= 12 && (year > currentYear || (year == currentYear && month >= currentMonth))
-        }
-    }
-
-    fun onCvvEntered(cvv: String) {
-        _isCvvValid.value = cvv.length in 3..4
-    }
-
     fun onSaveClicked(cardPan: String, expireDate: String, cvv: String) {
         viewModelScope.launch {
-            val areAllFieldsValid = allFieldsAreValid.first()
+            val areAllFieldsValid = _isPayAvailable.value
 
-            if (areAllFieldsValid) {
+            if (areAllFieldsValid == true) {
                 _saveRequestState.value = SaveCardRequestState.LOADING
 
                 val saveCard = repository.saveCard(
@@ -125,12 +81,29 @@ internal class SaveCardViewModel constructor(
         }
     }
 
+    fun setIsCardNumberValid(isValid: Boolean) {
+        isCardNumberValid = isValid
+
+        _isPayAvailable.value = isCardNumberValid && isExpiryDateValid && isCvvValid
+    }
+
+    fun setIsExpiryDateValid(isValid: Boolean) {
+        isExpiryDateValid = isValid
+
+        _isPayAvailable.value = isCardNumberValid && isExpiryDateValid && isCvvValid
+    }
+
+    fun setIsCvvValid(isValid: Boolean) {
+        isCvvValid = isValid
+
+        _isPayAvailable.value = isCardNumberValid && isExpiryDateValid && isCvvValid
+    }
+
 }
 
 internal sealed class SaveCardRequestState {
 
     object DEFAULT : SaveCardRequestState()
-    object DISABLED : SaveCardRequestState()
     object LOADING : SaveCardRequestState()
     object SUCCESS : SaveCardRequestState()
 

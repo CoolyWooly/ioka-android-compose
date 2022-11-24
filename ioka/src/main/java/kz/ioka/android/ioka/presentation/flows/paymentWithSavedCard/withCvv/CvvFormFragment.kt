@@ -143,6 +143,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
         etCvv.doAfterTextChanged {
             viewModel.onCvvChanged(it.toString())
         }
+
         btnClose.setOnClickListener(this)
         ivCvvFaq.setOnClickListener(this)
         btnContinue.setOnClickListener(this)
@@ -160,6 +161,12 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
 
     private fun observeViewModel() {
         viewModel.apply {
+            isPayAvailable.observe(viewLifecycleOwner) {
+                btnContinue.isEnabled = it
+                btnContinue.isClickable = it
+                btnContinue.isFocusable = it
+            }
+
             payState.observe(viewLifecycleOwner) {
                 processPaymentState(it)
             }
@@ -211,6 +218,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
     }
 
     private fun onSuccessfulAttempt() {
+        dismiss()
         parentFragmentManager.replaceFragment(
             ResultFragment.getInstance(
                 SuccessResultLauncher(
@@ -226,7 +234,8 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
     }
 
     private fun onFailedAttempt(cause: String?) {
-        parentFragmentManager.replaceFragment(FailedResultFragment.newInstance(cause))
+        dismiss()
+        FailedResultFragment.newInstance(cause).show(parentFragmentManager, null)
     }
 
     override fun onClick(v: View?) {

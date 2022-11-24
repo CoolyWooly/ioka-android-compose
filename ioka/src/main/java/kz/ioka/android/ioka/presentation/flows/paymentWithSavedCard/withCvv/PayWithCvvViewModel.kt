@@ -8,6 +8,7 @@ import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepository
 import kz.ioka.android.ioka.presentation.flows.common.PaymentState
+import kz.ioka.android.ioka.uikit.CvvValidator
 import kz.ioka.android.ioka.util.getOrderId
 
 @Suppress("UNCHECKED_CAST")
@@ -16,14 +17,15 @@ internal class CvvViewModelFactory(
     private val repository: PaymentRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CvvViewModel(launcher, repository) as T
+        return CvvViewModel(launcher, repository, CvvValidator()) as T
     }
 }
 
 
 internal class CvvViewModel(
     launcher: CvvFormLauncher,
-    private val repository: PaymentRepository
+    private val repository: PaymentRepository,
+    private val cvvValidator: CvvValidator
 ) : ViewModel() {
 
     val orderToken = launcher.orderToken
@@ -34,7 +36,10 @@ internal class CvvViewModel(
 
     var paymentId: String = ""
 
-    private val _payState = MutableLiveData<PaymentState>(PaymentState.DISABLED)
+    private val _isPayAvailable = MutableLiveData(false)
+    val isPayAvailable = _isPayAvailable as LiveData<Boolean>
+
+    private val _payState = MutableLiveData<PaymentState>(PaymentState.DEFAULT)
     val payState = _payState as LiveData<PaymentState>
 
     fun onContinueClicked(cvv: String) {
@@ -74,8 +79,6 @@ internal class CvvViewModel(
     }
 
     fun onCvvChanged(newValue: String) {
-        _payState.value =
-            if (newValue.length in 3..4) PaymentState.DEFAULT else PaymentState.DISABLED
+        _isPayAvailable.value = cvvValidator.validate(newValue)
     }
-
 }

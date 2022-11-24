@@ -6,16 +6,17 @@ import kz.ioka.android.ioka.R
 internal enum class CardBrandModel(
     val code: String,
     @DrawableRes val iconRes: Int,
+    val cardNumberLength: IntRange
 ) {
 
-    Amex("AMERICAN_EXPRESS", R.drawable.ioka_ic_ps_amex),
-    DinerClub("DINER_CLUB", R.drawable.ioka_ic_ps_dinersclub),
-    Maestro("MAESTRO", R.drawable.ioka_ic_ps_maestro),
-    MasterCard("MASTERCARD", R.drawable.ioka_ic_ps_mastercard),
-    Mir("MIR", R.drawable.ioka_ic_ps_mir),
-    UnionPay("UNION_PAY", R.drawable.ioka_ic_ps_unionpay),
-    Visa("VISA", R.drawable.ioka_ic_ps_visa),
-    Unknown("UNKNOWN", R.drawable.ioka_ic_ps_unknown);
+    Amex("AMERICAN_EXPRESS", R.drawable.ioka_ic_ps_amex, 15..15),
+    DinerClub("DINER_CLUB", R.drawable.ioka_ic_ps_dinersclub, 16..16),
+    Maestro("MAESTRO", R.drawable.ioka_ic_ps_maestro, 12..19),
+    MasterCard("MASTERCARD", R.drawable.ioka_ic_ps_mastercard, 16..16),
+    Mir("MIR", R.drawable.ioka_ic_ps_mir, 16..19),
+    UnionPay("UNION_PAY", R.drawable.ioka_ic_ps_unionpay, 16..19),
+    Visa("VISA", R.drawable.ioka_ic_ps_visa, 16..16),
+    Unknown("UNKNOWN", R.drawable.ioka_ic_ps_unknown, 16..16);
 
     companion object {
         fun getByCode(code: String): CardBrandModel {

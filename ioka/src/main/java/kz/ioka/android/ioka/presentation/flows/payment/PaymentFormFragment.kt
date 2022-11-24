@@ -3,15 +3,14 @@ package kz.ioka.android.ioka.presentation.flows.payment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,10 +26,7 @@ import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
 import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.ResultState
 import kz.ioka.android.ioka.presentation.webView.WebViewFragment
-import kz.ioka.android.ioka.uikit.ButtonState
-import kz.ioka.android.ioka.uikit.CardNumberEditText
-import kz.ioka.android.ioka.uikit.CvvEditText
-import kz.ioka.android.ioka.uikit.IokaStateButton
+import kz.ioka.android.ioka.uikit.*
 import kz.ioka.android.ioka.util.addFragment
 import kz.ioka.android.ioka.util.replaceFragment
 import kz.ioka.android.ioka.util.showErrorToast
@@ -39,7 +35,8 @@ import kz.ioka.android.ioka.viewBase.BaseActivity
 import kz.ioka.android.ioka.viewBase.BaseFragment
 import kz.ioka.android.ioka.viewBase.Scannable
 
-internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment_form), Scannable {
+internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment_form), Scannable,
+    View.OnClickListener {
 
     companion object {
         internal fun getInstance(launcher: PaymentFormLauncher): PaymentFormFragment {
@@ -55,20 +52,23 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
 
     private val cardInfoViewModel: CardInfoViewModel by viewModels()
 
-    private val viewModel: PayWithCardViewModel by viewModels {
+    private val payViewModel: PayWithCardViewModel by viewModels {
         PayWithCardViewModelFactory(
             launcher()!!,
             PaymentRepositoryImpl(DependencyInjector.paymentApi)
         )
     }
 
+    private lateinit var tipWindow: TooltipWindow
+
     private lateinit var vRoot: ConstraintLayout
     private lateinit var vToolbar: Toolbar
+    private lateinit var vToolbarTitle: AppCompatTextView
     private lateinit var groupGooglePay: Group
     private lateinit var btnGooglePay: AppCompatImageButton
     private lateinit var etCardNumber: CardNumberEditText
-    private lateinit var etExpireDate: AppCompatEditText
-    private lateinit var vCvvInput: CvvEditText
+    private lateinit var etExpiryDate: ExpiryDateEditText
+    private lateinit var etCvv: CvvEditText
     private lateinit var switchSaveCard: SwitchCompat
     private lateinit var btnPay: IokaStateButton
 
@@ -98,13 +98,16 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     }
 
     private fun bindViews(view: View) {
+        tipWindow = TooltipWindow(requireContext())
+
         vRoot = view.findViewById(R.id.vRoot)
         vToolbar = view.findViewById(R.id.vToolbar)
+        vToolbarTitle = view.findViewById(R.id.tvToolbarTitle)
         groupGooglePay = view.findViewById(R.id.groupGooglePay)
         btnGooglePay = view.findViewById(R.id.btnGooglePay)
         etCardNumber = view.findViewById(R.id.vCardNumberInput)
-        etExpireDate = view.findViewById(R.id.etExpireDate)
-        vCvvInput = view.findViewById(R.id.vCvvInput)
+        etExpiryDate = view.findViewById(R.id.etExpiryDate)
+        etCvv = view.findViewById(R.id.etCvvInput)
         switchSaveCard = view.findViewById(R.id.vSaveCardSwitch)
         btnPay = view.findViewById(R.id.btnPay)
     }
@@ -116,14 +119,14 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
             )
 
             etCardNumber.setIconColor(iconColor)
-            vCvvInput.setIconColor(iconColor)
+            etCvv.setIconColor(iconColor)
 
             buttonText?.let { btnPay.setText(buttonText) }
 
             fieldBackground?.let {
                 etCardNumber.background = ContextCompat.getDrawable(requireContext(), it)
-                etExpireDate.background = ContextCompat.getDrawable(requireContext(), it)
-                vCvvInput.background = ContextCompat.getDrawable(requireContext(), it)
+                etExpiryDate.background = ContextCompat.getDrawable(requireContext(), it)
+                etCvv.background = ContextCompat.getDrawable(requireContext(), it)
             }
             buttonBackground?.let {
                 btnPay.background = ContextCompat.getDrawable(requireContext(), it)
@@ -132,57 +135,71 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     }
 
     private fun setupListeners() {
-        vToolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
+        vToolbar.setNavigationOnClickListener(this)
+        btnPay.setOnClickListener(this)
 
         etCardNumber.onTextChangedWithDebounce = {
             cardInfoViewModel.onCardPanEntered(it)
         }
         etCardNumber.flowTextChangedWithDebounce.launchIn(lifecycleScope)
 
-        etCardNumber.onTextChanged = {
-            viewModel.onCardPanEntered(it)
-        }
-
         etCardNumber.onScanClicked = {
-            startCardScanner(requireContext())
+            startCardScanner(this)
         }
 
-        etExpireDate.doOnTextChanged { text, _, _, _ ->
-            viewModel.onExpireDateEntered(text.toString().replace("/", ""))
-        }
-
-        vCvvInput.onTextChanged = {
-            viewModel.onCvvEntered(it)
-        }
-
-        btnPay.setOnClickListener {
-            viewModel.onPayClicked(
-                etCardNumber.getCardNumber(),
-                etExpireDate.text.toString(),
-                vCvvInput.getCvv(),
-                switchSaveCard.isChecked
-            )
+        etCvv.onFaqClicked = {
+            tipWindow.showToolTip(etCvv.ivCvvFaq)
         }
     }
 
     private fun observeData() {
-        viewModel.apply {
-            vToolbar.title =
+        with(cardInfoViewModel) {
+            cardNumberLength.observe(viewLifecycleOwner) {
+                etCardNumber.setCardNumberLengthRange(it)
+            }
+
+            cardBrand.observe(viewLifecycleOwner) {
+                etCardNumber.setBrand(it)
+            }
+
+            cardEmitter.observe(viewLifecycleOwner) {
+                etCardNumber.setEmitter(it)
+            }
+        }
+
+        payViewModel.apply {
+            vToolbarTitle.text =
                 getString(R.string.ioka_payment_toolbar, order.amount.amount.toAmountFormat())
-            btnPay.setText(
-                getString(
-                    R.string.ioka_payment_button,
-                    order.amount.amount.toAmountFormat()
+
+            if (launcher<PaymentFormLauncher>()?.configuration?.buttonText == null)
+                btnPay.setText(
+                    getString(
+                        R.string.ioka_payment_button,
+                        order.amount.amount.toAmountFormat()
+                    )
                 )
-            )
             groupGooglePay.isVisible = withGooglePay
             switchSaveCard.isVisible = canSaveCard
+
+            isPayAvailable.observe(viewLifecycleOwner) {
+                btnPay.isEnabled = it
+                btnPay.isClickable = it
+                btnPay.isFocusable = it
+            }
 
             payState.observe(viewLifecycleOwner) {
                 handleState(it)
             }
+        }
+
+        etCardNumber.isValid.observe(viewLifecycleOwner) {
+            payViewModel.setIsCardNumberValid(it)
+        }
+        etExpiryDate.isValid.observe(viewLifecycleOwner) {
+            payViewModel.setIsExpiryDateValid(it)
+        }
+        etCvv.isValid.observe(viewLifecycleOwner) {
+            payViewModel.setIsCvvValid(it)
         }
     }
 
@@ -193,10 +210,6 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                 disableInputs()
             }
 
-            PaymentState.DISABLED -> {
-                btnPay.setState(ButtonState.Disabled)
-            }
-
             is PaymentState.PENDING -> {
                 btnPay.setState(ButtonState.Default)
 
@@ -204,8 +217,8 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                     WebViewFragment.getInstance(
                         PaymentConfirmationBehavior(
                             url = state.actionUrl,
-                            orderToken = viewModel.orderToken,
-                            paymentId = viewModel.paymentId
+                            orderToken = payViewModel.orderToken,
+                            paymentId = payViewModel.paymentId
                         )
                     )
                 )
@@ -231,29 +244,40 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                 onFailedAttempt(
                     state.cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
                 )
+                enableInputs()
+                clearInputs()
             }
 
             PaymentState.DEFAULT -> {
                 btnPay.setState(ButtonState.Default)
                 enableInputs()
             }
+
+            PaymentState.DISABLED -> {}
         }
     }
 
     private fun enableInputs() {
         etCardNumber.isEnabled = true
-        vCvvInput.isEnabled = true
-        etExpireDate.isEnabled = true
+        etExpiryDate.isEnabled = true
+        etCvv.isEnabled = true
         switchSaveCard.isEnabled = true
         btnGooglePay.isEnabled = true
     }
 
     private fun disableInputs() {
         etCardNumber.isEnabled = false
-        vCvvInput.isEnabled = false
-        etExpireDate.isEnabled = false
+        etExpiryDate.isEnabled = false
+        etCvv.isEnabled = false
         switchSaveCard.isEnabled = false
         btnGooglePay.isEnabled = false
+    }
+
+    private fun clearInputs() {
+        etCardNumber.clear()
+        etExpiryDate.clear()
+        etCvv.clear()
+        switchSaveCard.isChecked = false
     }
 
     private fun onSuccessfulAttempt() {
@@ -262,16 +286,16 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                 SuccessResultLauncher(
                     subtitle = getString(
                         R.string.ioka_result_success_payment_subtitle,
-                        viewModel.order.externalId
+                        payViewModel.order.externalId
                     ),
-                    amount = viewModel.order.amount
+                    amount = payViewModel.order.amount
                 )
             )
         )
     }
 
     private fun onFailedAttempt(cause: String?) {
-        parentFragmentManager.replaceFragment(
+        parentFragmentManager.addFragment(
             ResultFragment.getInstance(
                 ErrorResultLauncher(
                     subtitle = cause ?: getString(R.string.ioka_result_failed_payment_common_cause)
@@ -282,6 +306,23 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
 
     private fun onBackPressed() {
         (activity as? BaseActivity)?.finishWithCanceledResult()
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            btnPay -> {
+                payViewModel.onPayClicked(
+                    etCardNumber.getCardNumber(),
+                    etExpiryDate.getExpiryDate(),
+                    etCvv.getCvv(),
+                    switchSaveCard.isChecked
+                )
+            }
+
+            else -> {
+                onBackPressed()
+            }
+        }
     }
 
     @Suppress("DEPRECATION")

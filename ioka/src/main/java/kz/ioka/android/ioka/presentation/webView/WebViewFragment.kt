@@ -8,6 +8,7 @@ import android.webkit.WebStorage
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
@@ -47,6 +48,7 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
     private var launcher: WebViewBehavior? = null
 
     private lateinit var vToolbar: Toolbar
+    private lateinit var vToolbarTitle: AppCompatTextView
     private lateinit var webView: WebView
     private lateinit var vProgress: FrameLayout
 
@@ -61,6 +63,7 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
 
     private fun bindViews(view: View) {
         vToolbar = view.findViewById(R.id.vToolbar)
+        vToolbarTitle = view.findViewById(R.id.tvToolbarTitle)
         webView = view.findViewById(R.id.webView)
         vProgress = view.findViewById(R.id.vProgress)
     }
@@ -89,7 +92,7 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
 
     private fun observeData() {
         viewModel.apply {
-            vToolbar.setTitle(toolbarTitleRes)
+            vToolbarTitle.text = getString(toolbarTitleRes)
             webView.loadUrl(actionUrl)
 
             progress.observe(viewLifecycleOwner) {
@@ -100,8 +103,8 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
                 val data = Bundle()
                 data.putParcelable(WEB_VIEW_RESULT_BUNDLE_KEY, it)
 
-                setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
                 parentFragmentManager.popBackStack()
+                setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
             }
         }
     }
