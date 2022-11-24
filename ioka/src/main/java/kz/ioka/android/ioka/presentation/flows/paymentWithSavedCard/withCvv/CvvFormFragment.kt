@@ -143,6 +143,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
         etCvv.doAfterTextChanged {
             viewModel.onCvvChanged(it.toString())
         }
+
         btnClose.setOnClickListener(this)
         ivCvvFaq.setOnClickListener(this)
         btnContinue.setOnClickListener(this)
@@ -160,6 +161,12 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
 
     private fun observeViewModel() {
         viewModel.apply {
+            isPayAvailable.observe(viewLifecycleOwner) {
+                btnContinue.isEnabled = it
+                btnContinue.isClickable = it
+                btnContinue.isFocusable = it
+            }
+
             payState.observe(viewLifecycleOwner) {
                 processPaymentState(it)
             }

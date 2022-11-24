@@ -29,12 +29,12 @@ internal class SaveCardViewModel constructor(
     var cardId: String? = null
     var customerToken: String = launcher.customerToken
 
-    private val _isPayAvailable = MutableLiveData(false)
-    val isPayAvailable = _isPayAvailable as LiveData<Boolean>
-
     private var isCardNumberValid = false
     private var isExpiryDateValid = false
     private var isCvvValid = false
+
+    private val _isPayAvailable = MutableLiveData(false)
+    val isPayAvailable = _isPayAvailable as LiveData<Boolean>
 
     private val _saveRequestState =
         MutableLiveData<SaveCardRequestState>(SaveCardRequestState.DEFAULT)

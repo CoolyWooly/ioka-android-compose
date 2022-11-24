@@ -14,7 +14,7 @@ class CardNumberValidator : Validator {
         return input.length in cardNumberLengthRange
     }
 
-    public fun setCardNumberLengthRange(cardNumberLengthRange: IntRange) {
+    fun setCardNumberLengthRange(cardNumberLengthRange: IntRange) {
         this.cardNumberLengthRange = cardNumberLengthRange
     }
 
