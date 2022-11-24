@@ -17,6 +17,10 @@ Ioka.startSaveCardFlow(customerToken: String, configuration: Configuration?): (A
 ```kotlin
 Ioka.getCards(customerToken: String): List<CardModel>
 ```
+Для получения сохраненной карты пользователя по ее идентификатору, вызовите следующий `suspend` метод:
+```kotlin
+Ioka.getCardById(customerToken: String, cardId: String): CardModel
+```
 Для удаления сохраненной карты пользователя, вызовите следующий `suspend` метод:
 ```kotlin
 // cardId достаем из CardModel
