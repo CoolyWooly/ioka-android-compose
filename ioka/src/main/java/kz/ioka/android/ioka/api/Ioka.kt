@@ -97,6 +97,27 @@ object Ioka {
         }
     }
 
+    suspend fun getCardById(customerToken: String, cardId: String): CardModel {
+        if (Config.isApiKeyInitialized().not()) {
+            throw RuntimeException("Init Ioka with your API_KEY")
+        }
+
+        val cardResponse =
+            cardApi.getCardById(Config.apiKey, customerToken, customerToken.getCustomerId(), cardId)
+
+        return CardModel(
+            id = cardResponse.id,
+            customerId = cardResponse.customer_id,
+            createdAt = cardResponse.created_at,
+            panMasked = cardResponse.pan_masked,
+            expiryDate = cardResponse.expiry_date,
+            holder = cardResponse.holder,
+            paymentSystem = CardBrandModel.getByCode(cardResponse.payment_system),
+            emitter = CardEmitterModel.getByCode(cardResponse.emitter),
+            cvcRequired = cardResponse.cvc_required,
+        )
+    }
+
     suspend fun removeCard(
         customerToken: String,
         cardId: String
