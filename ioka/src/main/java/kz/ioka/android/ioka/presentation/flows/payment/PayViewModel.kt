@@ -64,8 +64,11 @@ internal class PayWithCardViewModel constructor(
                     is ResultWrapper.IokaError -> {
                         _payState.postValue(PaymentState.FAILED(cardPayment.message))
                     }
-                    else -> {
-                        _payState.postValue(PaymentState.ERROR())
+                    is ResultWrapper.NetworkError -> {
+                        _payState.postValue(PaymentState.ERROR("NetworkError"))
+                    }
+                    is ResultWrapper.HttpError -> {
+                        _payState.postValue(PaymentState.ERROR("HttpError"))
                     }
                 }
             }
