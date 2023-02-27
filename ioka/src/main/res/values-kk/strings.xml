@@ -12,13 +12,13 @@
     <string name="ioka_payment_transactions_protection">Барлық транзакциялар қорғалған</string>
 
     <!--  COMMON  -->
-    <string name="ioka_common_try_again">Қайтадан қайталап көріңіз</string>
+    <string name="ioka_common_try_again">Қайталап көріңіз</string>
     <string name="ioka_common_understand">Түсінікті</string>
     <string name="ioka_common_continue">Жалғастыру</string>
     <string name="ioka_common_payment_confirmation">Төлемді растау</string>
-    <string name="ioka_common_server_error">Сервер тарапындағы қате. Кейінірек қайталап көріңіз</string>
-    <string name="ioka_common_network_error">Интренетке қосылу сәтсіз аяқталды. Кейінірек қайталап көріңіз</string>
-    <string name="ioka_common_http_error">Төлем жасауда қателік туындады. Кейінірек қайталап көріңіз</string>
+    <string name="ioka_common_server_error">Сервер тарапындағы қате. Қайталап көріңіз</string>
+    <string name="ioka_common_network_error">Интернетке қосылу сәтсіз аяқталды. Қайталап көріңіз</string>
+    <string name="ioka_common_http_error">Төлем жасауда қателік туындады. Қайталап көріңіз</string>
     <string name="ioka_common_card_number_hint">Карта нөмірін енгізіңіз</string>
     <string name="ioka_common_expiry_date_hint">АА/ЖЖ</string>
     <string name="ioka_common_cvv_hint">CVV</string>
