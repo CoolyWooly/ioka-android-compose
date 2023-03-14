@@ -1,4 +1,4 @@
-# ioka-android-sdk 🚀
+# ioka-android 🚀
 [![](https://jitpack.io/v/iokadev/ioka-android.svg)](https://jitpack.io/#iokadev/ioka-android)
 
 **ioka Android SDK** дает возможность легко и быстро подключать оплату через ioka.kz в Android-проектах.
