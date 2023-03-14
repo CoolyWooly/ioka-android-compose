@@ -17,6 +17,8 @@
     <string name="ioka_common_continue">Continue</string>
     <string name="ioka_common_payment_confirmation">Confirm payment</string>
     <string name="ioka_common_server_error">Server side error. Try again</string>
+    <string name="ioka_common_network_error">Internet connection error. Try again</string>
+    <string name="ioka_common_http_error">Payment error. Try again</string>
     <string name="ioka_common_card_number_hint">Enter card number</string>
     <string name="ioka_common_expiry_date_hint">MM/YY</string>
     <string name="ioka_common_cvv_hint">CVV</string>

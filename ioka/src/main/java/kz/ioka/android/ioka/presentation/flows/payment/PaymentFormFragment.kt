@@ -234,7 +234,17 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                 btnPay.setState(ButtonState.Default)
 
                 requireContext().showErrorToast(
-                    state.cause ?: getString(R.string.ioka_common_server_error)
+                    when (state.cause) {
+                        "NetworkError" -> {
+                            getString(R.string.ioka_common_network_error)
+                        }
+                        "HttpError" -> {
+                            getString(R.string.ioka_common_server_error)
+                        }
+                        else -> {
+                            getString(R.string.ioka_common_server_error)
+                        }
+                    }
                 )
             }
 
