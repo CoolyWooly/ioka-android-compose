@@ -140,7 +140,7 @@ allprojects {
 ### В файле `build.gradle` в пакете модуля:
 ```Gradle
 dependencies {
-  implementation 'com.github.iokadev:ioka-android-sdk:<LATEST_ACTUAL_VERSION>'
+  implementation 'com.github.iokadev:ioka-android:<LATEST_ACTUAL_VERSION>'
 }
 ```
 # Пример использования 🤖
