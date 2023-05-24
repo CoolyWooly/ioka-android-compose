@@ -203,6 +203,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
                 )
             }
             is PaymentState.PENDING -> {
+                dismiss()
                 parentFragmentManager.addFragment(
                     WebViewFragment.getInstance(
                         PaymentConfirmationBehavior(
