@@ -27,7 +27,7 @@ internal object ApiModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://ioka-example-mobile-backend.herokuapp.com")
+            .baseUrl("https://balanced-shepherd-huge.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()
