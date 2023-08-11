@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.viewBase.BaseFragment
@@ -59,6 +60,7 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
         bindViews(view)
         setupViews()
         observeData()
+        initResultListener()
     }
 
     private fun bindViews(view: View) {
@@ -66,6 +68,15 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
         vToolbarTitle = view.findViewById(R.id.tvToolbarTitle)
         webView = view.findViewById(R.id.webView)
         vProgress = view.findViewById(R.id.vProgress)
+    }
+
+    private fun initResultListener() {
+        setFragmentResultListener(WEB_VIEW_REQUEST_KEY) { _, result ->
+            val state = result.getParcelable<ResultState>(WEB_VIEW_RESULT_BUNDLE_KEY)
+            if (state is ResultState.Success) {
+                requireActivity().finish()
+            }
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -103,8 +114,8 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
                 val data = Bundle()
                 data.putParcelable(WEB_VIEW_RESULT_BUNDLE_KEY, it)
 
-                parentFragmentManager.popBackStack()
                 setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
+                parentFragmentManager.popBackStack()
             }
         }
     }
