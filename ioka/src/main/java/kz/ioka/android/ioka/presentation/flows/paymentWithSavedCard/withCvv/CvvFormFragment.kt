@@ -209,7 +209,8 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
                         PaymentConfirmationBehavior(
                             url = state.actionUrl,
                             orderToken = viewModel.orderToken,
-                            paymentId = viewModel.paymentId
+                            paymentId = viewModel.paymentId,
+                            order = viewModel.order,
                         )
                     )
                 )

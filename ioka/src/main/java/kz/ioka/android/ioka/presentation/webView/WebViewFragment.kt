@@ -15,6 +15,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.presentation.result.ResultFragment
+import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
+import kz.ioka.android.ioka.util.replaceFragment
 import kz.ioka.android.ioka.viewBase.BaseFragment
 
 internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
@@ -73,8 +76,19 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
     private fun initResultListener() {
         setFragmentResultListener(WEB_VIEW_REQUEST_KEY) { _, result ->
             val state = result.getParcelable<ResultState>(WEB_VIEW_RESULT_BUNDLE_KEY)
-            if (state is ResultState.Success) {
-                requireActivity().finish()
+            if (state is ResultState.Success && launcher is PaymentConfirmationBehavior) {
+                parentFragmentManager.replaceFragment(
+                    ResultFragment.getInstance(
+                        SuccessResultLauncher(
+                            subtitle = if ((launcher as PaymentConfirmationBehavior).order.externalId.isBlank()) ""
+                            else getString(
+                                R.string.ioka_result_success_payment_subtitle,
+                                (launcher as PaymentConfirmationBehavior).order.externalId
+                            ),
+                            amount = (launcher as PaymentConfirmationBehavior).order.amount
+                        )
+                    )
+                )
             }
         }
     }
@@ -114,8 +128,8 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
                 val data = Bundle()
                 data.putParcelable(WEB_VIEW_RESULT_BUNDLE_KEY, it)
 
-                setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
                 parentFragmentManager.popBackStack()
+                setFragmentResult(WEB_VIEW_REQUEST_KEY, data)
             }
         }
     }
