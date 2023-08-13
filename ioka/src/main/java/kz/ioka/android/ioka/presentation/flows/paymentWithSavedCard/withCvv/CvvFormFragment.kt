@@ -40,6 +40,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
 
     companion object {
         const val LAUNCHER = "CvvFragment_LAUNCHER"
+        const val TAG = "CVV_FROM_FRAGMENT_TAG"
 
         fun newInstance(launcher: CvvFormLauncher): CvvFormFragment {
             val fragment = CvvFormFragment()

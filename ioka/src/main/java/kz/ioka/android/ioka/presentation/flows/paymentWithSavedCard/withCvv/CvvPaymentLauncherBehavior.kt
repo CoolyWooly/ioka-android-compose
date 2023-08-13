@@ -14,7 +14,6 @@ import kz.ioka.android.ioka.presentation.flows.common.OrderDvo
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherBehavior
 import kz.ioka.android.ioka.util.ViewAction
 import kz.ioka.android.ioka.util.getOrderId
-import kz.ioka.android.ioka.util.replaceFragment
 import kz.ioka.android.ioka.util.showErrorToast
 
 @Parcelize
@@ -57,6 +56,9 @@ internal class CvvPaymentLauncherBehavior(
             progressFlow.value = false
 
             ViewAction {
+                val fragment = it.supportFragmentManager.findFragmentByTag(CvvFormFragment.TAG)
+                if (fragment != null && fragment.isVisible) return@ViewAction
+
                 val newFragment: CvvFormFragment = CvvFormFragment.newInstance(
                     CvvFormLauncher(
                         orderToken,
@@ -67,8 +69,7 @@ internal class CvvPaymentLauncherBehavior(
                         configuration
                     )
                 )
-
-                newFragment.show(it.supportFragmentManager, null)
+                newFragment.show(it.supportFragmentManager, CvvFormFragment.TAG)
             }
         }
     }
