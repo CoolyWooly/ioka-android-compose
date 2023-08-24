@@ -65,7 +65,10 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
         bindViews(view)
         setupViews()
         observeData()
-        initResultListener()
+
+        if (launcher is PaymentConfirmationBehavior) {
+            initResultListener()
+        }
     }
 
     private fun bindViews(view: View) {
