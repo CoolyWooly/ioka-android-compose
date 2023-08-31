@@ -9,13 +9,15 @@ import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.domain.errorHandler.ResultWrapper
 import kz.ioka.android.ioka.domain.payment.PaymentModel
 import kz.ioka.android.ioka.domain.payment.PaymentRepositoryImpl
+import kz.ioka.android.ioka.presentation.flows.common.OrderDvo
 
 @Parcelize
-internal class PaymentConfirmationBehavior(
+internal class CVCPaymentConfirmationBehavior(
     override val toolbarTitleRes: Int = R.string.ioka_common_payment_confirmation,
     private val url: String,
     private val orderToken: String,
-    private val paymentId: String
+    private val paymentId: String,
+    val order: OrderDvo,
 ) : WebViewBehavior {
 
     @IgnoredOnParcel

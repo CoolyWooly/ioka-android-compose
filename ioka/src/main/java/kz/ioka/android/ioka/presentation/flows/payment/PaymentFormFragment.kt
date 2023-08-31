@@ -218,8 +218,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                         PaymentConfirmationBehavior(
                             url = state.actionUrl,
                             orderToken = payViewModel.orderToken,
-                            paymentId = payViewModel.paymentId,
-                            order = payViewModel.order
+                            paymentId = payViewModel.paymentId
                         )
                     )
                 )

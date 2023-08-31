@@ -21,7 +21,7 @@
     <string name="ioka_common_http_error">Төлем жасауда қателік туындады. Қайталап көріңіз</string>
     <string name="ioka_common_card_number_hint">Карта нөмірін енгізіңіз</string>
     <string name="ioka_common_expiry_date_hint">АА/ЖЖ</string>
-    <string name="ioka_common_cvv_hint">CVV</string>
+    <string name="ioka_common_cvv_hint">CVC</string>
     <string name="ioka_common_cvv_description">Картаның артқы жағындағы 3 сан</string>
     <string name="ioka_common_processing_payment">Төлем жасалуда…</string>
 

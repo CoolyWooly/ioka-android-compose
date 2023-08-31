@@ -23,7 +23,7 @@ import kz.ioka.android.ioka.presentation.flows.common.PaymentState
 import kz.ioka.android.ioka.presentation.result.FailedResultFragment
 import kz.ioka.android.ioka.presentation.result.ResultFragment
 import kz.ioka.android.ioka.presentation.result.SuccessResultLauncher
-import kz.ioka.android.ioka.presentation.webView.PaymentConfirmationBehavior
+import kz.ioka.android.ioka.presentation.webView.CVCPaymentConfirmationBehavior
 import kz.ioka.android.ioka.presentation.webView.ResultState
 import kz.ioka.android.ioka.presentation.webView.WebViewFragment
 import kz.ioka.android.ioka.uikit.ButtonState
@@ -207,7 +207,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
                 dismiss()
                 parentFragmentManager.addFragment(
                     WebViewFragment.getInstance(
-                        PaymentConfirmationBehavior(
+                        CVCPaymentConfirmationBehavior(
                             url = state.actionUrl,
                             orderToken = viewModel.orderToken,
                             paymentId = viewModel.paymentId,

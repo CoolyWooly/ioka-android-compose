@@ -66,6 +66,10 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
         setupViews()
         observeData()
 
+        if (launcher is CVCPaymentConfirmationBehavior) {
+            initResultListener()
+        }
+
         if (launcher is PaymentConfirmationBehavior) {
             initResultListener()
         }
@@ -83,13 +87,13 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
             val state =
                 result.getParcelable<ResultState>(WEB_VIEW_RESULT_BUNDLE_KEY)
                     ?: return@setFragmentResultListener
-            (launcher as? PaymentConfirmationBehavior)?.let {
+            (launcher as? CVCPaymentConfirmationBehavior)?.let {
                 showResultScreen(state, it)
             }
         }
     }
 
-    private fun showResultScreen(state: ResultState, launcher: PaymentConfirmationBehavior) {
+    private fun showResultScreen(state: ResultState, launcher: CVCPaymentConfirmationBehavior) {
         val resultLauncher: ResultLauncher? =
             when (state) {
                 is ResultState.Success -> {
