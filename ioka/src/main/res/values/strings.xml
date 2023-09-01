@@ -21,7 +21,7 @@
     <string name="ioka_common_http_error">Ошибка при оплате. Попробуйте еще раз</string>
     <string name="ioka_common_card_number_hint">Введите номер карты</string>
     <string name="ioka_common_expiry_date_hint">ММ/ГГ</string>
-    <string name="ioka_common_cvv_hint">CVV</string>
+    <string name="ioka_common_cvv_hint">CVC</string>
     <string name="ioka_common_cvv_description">3 цифры на \nобороте карты</string>
     <string name="ioka_common_processing_payment">Проводим оплату…</string>
 

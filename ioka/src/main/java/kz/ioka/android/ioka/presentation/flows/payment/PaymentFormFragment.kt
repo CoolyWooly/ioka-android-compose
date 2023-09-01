@@ -39,6 +39,9 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
     View.OnClickListener {
 
     companion object {
+
+        const val TAG = "PAYMENT_FROM_FRAGMENT_TAG"
+
         internal fun getInstance(launcher: PaymentFormLauncher): PaymentFormFragment {
             val bundle = Bundle()
             bundle.putParcelable(FRAGMENT_LAUNCHER, launcher)
@@ -95,6 +98,13 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
         setConfiguration()
         setupListeners()
         observeData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        enableInputs()
+        clearInputs()
     }
 
     private fun bindViews(view: View) {
@@ -218,8 +228,7 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                         PaymentConfirmationBehavior(
                             url = state.actionUrl,
                             orderToken = payViewModel.orderToken,
-                            paymentId = payViewModel.paymentId,
-                            order = payViewModel.order
+                            paymentId = payViewModel.paymentId
                         )
                     )
                 )
