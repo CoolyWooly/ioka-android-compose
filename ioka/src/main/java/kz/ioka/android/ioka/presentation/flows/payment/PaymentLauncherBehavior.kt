@@ -72,7 +72,8 @@ internal class PaymentLauncherBehavior(
                                 customerId != null,
                                 configuration
                             )
-                        )
+                        ),
+                        PaymentFormFragment.TAG
                     )
                 }
             }

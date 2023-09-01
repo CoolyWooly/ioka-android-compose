@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import kz.ioka.android.ioka.R
+import kz.ioka.android.ioka.presentation.flows.payment.PaymentFormFragment
 import kz.ioka.android.ioka.util.getDrawableFromRes
 import kz.ioka.android.ioka.util.toAmountFormat
 import kz.ioka.android.ioka.viewBase.BaseActivity
@@ -76,6 +77,8 @@ internal class ResultFragment : BaseFragment(R.layout.ioka_fragment_result) {
         btnAction.setOnClickListener {
             if (launcher.isTryAgainAvailable) {
                 parentFragmentManager.popBackStack()
+                val fragment = parentFragmentManager.findFragmentByTag(PaymentFormFragment.TAG)
+                fragment?.onResume()
             } else {
                 finishWithResult()
             }
