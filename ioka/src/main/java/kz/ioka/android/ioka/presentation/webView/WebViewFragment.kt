@@ -69,10 +69,6 @@ internal class WebViewFragment : BaseFragment(R.layout.ioka_fragment_web_view) {
         if (launcher is CVCPaymentConfirmationBehavior) {
             initResultListener()
         }
-
-        if (launcher is PaymentConfirmationBehavior) {
-            initResultListener()
-        }
     }
 
     private fun bindViews(view: View) {
