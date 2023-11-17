@@ -1,6 +1,9 @@
 package kz.ioka.android.ioka.api
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContract
 import kz.ioka.android.ioka.Config
 import kz.ioka.android.ioka.di.DependencyInjector
 import kz.ioka.android.ioka.presentation.flows.payment.PaymentActivity
@@ -139,4 +142,80 @@ object Ioka {
         }
     }
 
+}
+
+
+class PaymentContract : ActivityResultContract<PaymentContract.Input, FlowResult>() {
+
+    data class Input(
+        val orderToken: String,
+        val configuration: Configuration? = null
+    )
+
+    override fun createIntent(context: Context, inputData: Input): Intent {
+        if (Config.isApiKeyInitialized().not()) {
+            throw RuntimeException("Init Ioka with your API_KEY")
+        }
+        return PaymentActivity.provideIntent(
+            context,
+            inputData.orderToken,
+            inputData.configuration
+        )
+    }
+
+    override fun parseResult(resultCode: Int, intent: Intent?): FlowResult? {
+        return intent?.getParcelableExtra(IOKA_EXTRA_RESULT_NAME)
+    }
+}
+
+class PaymentWithSavedCardContract : ActivityResultContract<PaymentWithSavedCardContract.Input, FlowResult>() {
+
+    data class Input(
+        val orderToken: String,
+        val card: CardDvo,
+        val configuration: Configuration? = null
+    )
+
+    override fun createIntent(context: Context, inputData: Input): Intent {
+        if (Config.isApiKeyInitialized().not()) {
+            throw RuntimeException("Init Ioka with your API_KEY")
+        }
+
+        return if (inputData.card.cvvRequired) {
+            PayWithCvvActivity.provideIntent(
+                context, CvvPaymentLauncher(inputData.orderToken, inputData.card, inputData.configuration)
+            )
+        } else {
+            PayWithCardIdActivity.provideIntent(
+                context, PayWithCardIdLauncher(inputData.orderToken, inputData.card.cardId)
+            )
+        }
+    }
+
+    override fun parseResult(resultCode: Int, intent: Intent?): FlowResult? {
+        return intent?.getParcelableExtra(IOKA_EXTRA_RESULT_NAME)
+    }
+}
+
+class SaveCardContract : ActivityResultContract<SaveCardContract.Input, FlowResult>() {
+
+    data class Input(
+        val customerToken: String,
+        val configuration: Configuration? = null
+    )
+
+    override fun createIntent(context: Context, inputData: Input): Intent {
+        if (Config.isApiKeyInitialized().not()) {
+            throw RuntimeException("Init Ioka with your API_KEY")
+        }
+        return SaveCardActivity.provideIntent(
+            context,
+            inputData.customerToken,
+            inputData.configuration
+        )
+    }
+
+    override fun parseResult(resultCode: Int, intent: Intent?): FlowResult? {
+        return intent?.getParcelableExtra(IOKA_EXTRA_RESULT_NAME)
+    }
 }

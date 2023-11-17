@@ -1,6 +1,6 @@
 package kz.ioka.android.ioka.presentation.flows.payment
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentContainerView
@@ -14,11 +14,11 @@ internal class PaymentActivity : BaseActivity() {
 
     companion object {
         fun provideIntent(
-            activity: Activity,
+            context: Context,
             customerToken: String,
             configuration: Configuration?,
         ): Intent {
-            return Intent(activity, PaymentActivity::class.java).apply {
+            return Intent(context, PaymentActivity::class.java).apply {
                 putExtra(
                     LAUNCHER,
                     PaymentLauncher(customerToken, configuration)
