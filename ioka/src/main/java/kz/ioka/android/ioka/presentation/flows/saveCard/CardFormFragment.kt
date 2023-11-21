@@ -107,9 +107,7 @@ class CardFormFragment : BaseFragment(R.layout.ioka_fragment_card_form),
                 etExpiryDate.background = ContextCompat.getDrawable(requireContext(), it)
                 vCvvInput.background = ContextCompat.getDrawable(requireContext(), it)
             }
-            buttonBackground?.let {
-                btnSave.background = ContextCompat.getDrawable(requireContext(), it)
-            }
+            btnSave.backgroundTintList = ContextCompat.getColorStateList(requireContext(), buttonColor)
         }
     }
 

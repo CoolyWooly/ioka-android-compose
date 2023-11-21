@@ -134,9 +134,7 @@ internal class CvvFormFragment : DialogFragment(R.layout.ioka_fragment_cvv),
             fieldBackground?.let {
                 vContainer.background = ContextCompat.getDrawable(requireContext(), it)
             }
-            buttonBackground?.let {
-                btnContinue.background = ContextCompat.getDrawable(requireContext(), it)
-            }
+            btnContinue.backgroundTintList = ContextCompat.getColorStateList(requireContext(), buttonColor)
         }
     }
 
