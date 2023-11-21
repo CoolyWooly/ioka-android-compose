@@ -25,10 +25,6 @@ internal class PayWithCardIdActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val launcher = launcher<SaveCardLauncher>()
-        if (launcher?.configuration?.themeId != null) {
-            setTheme(launcher.configuration.themeId)
-        }
         setContentView(R.layout.ioka_activity_pay_with_card_id)
 
         bindViews()

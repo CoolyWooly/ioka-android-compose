@@ -32,7 +32,7 @@ internal class PaymentActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val launcher = launcher<SaveCardLauncher>()
+        val launcher = launcher<PaymentLauncher>()
         if (launcher?.configuration?.themeId != null) {
             setTheme(launcher.configuration.themeId)
         }

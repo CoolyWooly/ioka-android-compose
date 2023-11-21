@@ -25,7 +25,7 @@ internal class PayWithCvvActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val launcher = launcher<SaveCardLauncher>()
+        val launcher = launcher<CvvPaymentLauncher>()
         if (launcher?.configuration?.themeId != null) {
             setTheme(launcher.configuration.themeId)
         }
