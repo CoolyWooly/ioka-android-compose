@@ -131,8 +131,6 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
 
             etCardNumber.setIconColor(iconColor)
             etCvv.setIconColor(iconColor)
-            btnPay.backgroundTintList = ContextCompat.getColorStateList(requireContext(), buttonColor)
-            switchSaveCard.thumbTintList = ContextCompat.getColorStateList(requireContext(), buttonColor)
 
             buttonText?.let { btnPay.setText(buttonText) }
 
@@ -140,6 +138,9 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
                 etCardNumber.background = ContextCompat.getDrawable(requireContext(), it)
                 etExpiryDate.background = ContextCompat.getDrawable(requireContext(), it)
                 etCvv.background = ContextCompat.getDrawable(requireContext(), it)
+            }
+            buttonBackground?.let {
+                btnPay.background = ContextCompat.getDrawable(requireContext(), it)
             }
         }
     }

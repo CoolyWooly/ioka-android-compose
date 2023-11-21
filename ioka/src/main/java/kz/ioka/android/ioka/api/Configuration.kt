@@ -1,8 +1,10 @@
 package kz.ioka.android.ioka.api
 
+import android.content.res.Resources.Theme
 import android.os.Parcelable
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StyleRes
 import kotlinx.parcelize.Parcelize
 import kz.ioka.android.ioka.R
 
@@ -10,7 +12,8 @@ import kz.ioka.android.ioka.R
 data class Configuration(
     val buttonText: String? = null,
     @DrawableRes val fieldBackground: Int? = null,
-    @ColorRes val buttonColor: Int = R.color.ioka_color_primary,
+    @DrawableRes val buttonBackground: Int? = null,
+    @StyleRes val themeId: Int = R.style.IokaTheme_Transparent,
     @ColorRes val backgroundColor: Int = R.color.ioka_color_background,
     @ColorRes val iconColor: Int = R.color.ioka_color_icon_secondary,
     @ColorRes val textColor: Int = R.color.ioka_color_text,

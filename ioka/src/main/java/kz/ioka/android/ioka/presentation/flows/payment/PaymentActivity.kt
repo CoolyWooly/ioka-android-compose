@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 import kz.ioka.android.ioka.R
 import kz.ioka.android.ioka.api.Configuration
+import kz.ioka.android.ioka.presentation.flows.saveCard.SaveCardLauncher
 import kz.ioka.android.ioka.presentation.launcher.PaymentLauncherFragment
 import kz.ioka.android.ioka.viewBase.BaseActivity
 
@@ -31,6 +32,10 @@ internal class PaymentActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val launcher = launcher<SaveCardLauncher>()
+        if (launcher?.configuration?.themeId != null) {
+            setTheme(launcher.configuration.themeId)
+        }
         setContentView(R.layout.ioka_activity_payment)
 
         bindViews()
