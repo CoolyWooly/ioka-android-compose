@@ -3,8 +3,8 @@
 package kz.ioka.android.ioka.viewBase
 
 import android.content.Intent
-import io.card.payment.CardIOActivity
-import io.card.payment.CreditCard
+//import io.card.payment.CardIOActivity
+//import io.card.payment.CreditCard
 import kz.ioka.android.ioka.SCAN_REQUEST_CODE
 
 /**
@@ -28,15 +28,16 @@ internal interface Scannable {
      *              текущий контекст, из которого вызывается метод
      */
     fun startCardScanner(fragment: BaseFragment) {
-        val scanIntent = Intent(fragment.context, CardIOActivity::class.java)
-
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true)
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false)
-        scanIntent.putExtra(CardIOActivity.EXTRA_USE_PAYPAL_ACTIONBAR_ICON, false)
-        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true)
-        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_CONFIRMATION, true)
-        scanIntent.putExtra(CardIOActivity.EXTRA_HIDE_CARDIO_LOGO, true)
-        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true)
+        val scanIntent = Intent()
+//        val scanIntent = Intent(fragment.context, CardIOActivity::class.java)
+//
+//        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true)
+//        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false)
+//        scanIntent.putExtra(CardIOActivity.EXTRA_USE_PAYPAL_ACTIONBAR_ICON, false)
+//        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true)
+//        scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_CONFIRMATION, true)
+//        scanIntent.putExtra(CardIOActivity.EXTRA_HIDE_CARDIO_LOGO, true)
+//        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true)
 
         fragment.startActivityForResult(
             scanIntent,
@@ -49,16 +50,16 @@ internal interface Scannable {
      * Перехватывает результат активности сканера, надо вызвать в одноименном методе активности
      */
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (
-            requestCode == SCAN_REQUEST_CODE &&
-            data != null &&
-            data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)
-        ) {
-            val scanResult: CreditCard? =
-                data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT)
-
-            onCardScanned(scanResult?.formattedCardNumber ?: "")
-        }
+//        if (
+//            requestCode == SCAN_REQUEST_CODE &&
+//            data != null &&
+//            data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)
+//        ) {
+//            val scanResult: CreditCard? =
+//                data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT)
+//
+//            onCardScanned(scanResult?.formattedCardNumber ?: "")
+//        }
     }
 
 }

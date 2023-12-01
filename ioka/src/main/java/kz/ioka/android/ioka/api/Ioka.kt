@@ -145,7 +145,7 @@ object Ioka {
 }
 
 
-class PaymentContract : ActivityResultContract<PaymentContract.Input, FlowResult>() {
+class PaymentContract : ActivityResultContract<PaymentContract.Input, FlowResult?>() {
 
     data class Input(
         val orderToken: String,
@@ -168,7 +168,7 @@ class PaymentContract : ActivityResultContract<PaymentContract.Input, FlowResult
     }
 }
 
-class PaymentWithSavedCardContract : ActivityResultContract<PaymentWithSavedCardContract.Input, FlowResult>() {
+class PaymentWithSavedCardContract : ActivityResultContract<PaymentWithSavedCardContract.Input, FlowResult?>() {
 
     data class Input(
         val orderToken: String,
@@ -197,7 +197,7 @@ class PaymentWithSavedCardContract : ActivityResultContract<PaymentWithSavedCard
     }
 }
 
-class SaveCardContract : ActivityResultContract<SaveCardContract.Input, FlowResult>() {
+class SaveCardContract : ActivityResultContract<SaveCardContract.Input, FlowResult?>() {
 
     data class Input(
         val customerToken: String,
