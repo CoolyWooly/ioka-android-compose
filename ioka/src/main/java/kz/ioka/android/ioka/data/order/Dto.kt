@@ -1,8 +1,10 @@
 package kz.ioka.android.ioka.data.order
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+@Keep
 internal data class OrderResponseDto(
     @Expose @SerializedName("id") val id: String? = null,
     @Expose @SerializedName("status") val status: String? = null,

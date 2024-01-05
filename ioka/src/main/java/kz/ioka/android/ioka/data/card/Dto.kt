@@ -1,10 +1,12 @@
 package kz.ioka.android.ioka.data.card
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kz.ioka.android.ioka.data.ActionDto
 import kz.ioka.android.ioka.data.ErrorDto
 
+@Keep
 internal data class CardResultDto(
     @Expose @SerializedName("id") val id: String?,
     @Expose @SerializedName("customer_id") val customer_id: String?,
@@ -20,6 +22,7 @@ internal data class CardResultDto(
     @Expose @SerializedName("action") val action: ActionDto?
 )
 
+@Keep
 internal data class SaveCardRequestDto(
     @Expose @SerializedName("pan") val pan: String,
     @Expose @SerializedName("exp") val exp: String,
@@ -27,6 +30,7 @@ internal data class SaveCardRequestDto(
     @Expose @SerializedName("holder") val holder: String? = null,
 )
 
+@Keep
 internal data class SaveCardResponseDto(
     @Expose @SerializedName("id") val id: String,
     @Expose @SerializedName("customer_id") val customerId: String,

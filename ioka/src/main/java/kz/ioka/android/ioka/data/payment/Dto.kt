@@ -1,10 +1,12 @@
 package kz.ioka.android.ioka.data.payment
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kz.ioka.android.ioka.data.ActionDto
 import kz.ioka.android.ioka.data.ErrorDto
 
+@Keep
 internal data class PaymentRequestDto(
     @Expose @SerializedName("pan") val pan: String? = null,
     @Expose @SerializedName("exp") val exp: String? = null,
@@ -13,6 +15,7 @@ internal data class PaymentRequestDto(
     @Expose @SerializedName("card_id") val cardId: String? = null,
 )
 
+@Keep
 internal data class PaymentResponseDto(
     @Expose @SerializedName("id") val id: String,
     @Expose @SerializedName("order_id") val orderId: String,
