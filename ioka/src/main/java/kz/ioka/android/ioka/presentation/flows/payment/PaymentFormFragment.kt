@@ -105,7 +105,8 @@ internal class PaymentFormFragment : BaseFragment(R.layout.ioka_fragment_payment
         super.onResume()
 
         enableInputs()
-        clearInputs()
+//        Commented this line because clients copied card data from another app, so it should not be deleted on app switch
+//        clearInputs()
     }
 
     private fun bindViews(view: View) {
