@@ -10,7 +10,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.appcompat.widget.Toolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.iokademoapp.BaseActivity
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.common.Locale
 
 @AndroidEntryPoint

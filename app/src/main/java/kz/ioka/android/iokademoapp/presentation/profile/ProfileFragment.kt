@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.switchmaterial.SwitchMaterial
 import dagger.hilt.android.AndroidEntryPoint
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.common.Locale
 import kz.ioka.android.iokademoapp.presentation.profile.language.SelectLanguageActivity
 import kz.ioka.android.iokademoapp.presentation.profile.savedCards.SavedCardsActivity

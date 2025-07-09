@@ -11,8 +11,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.BaseActivity
-import kz.ioka.android.iokademoapp.R
 import kz.ioka.android.iokademoapp.common.toPx
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo
 import kz.ioka.android.iokademoapp.presentation.profile.savedCards.CardDvo
@@ -82,11 +82,11 @@ class SelectPaymentTypeActivity : BaseActivity() {
                         LinearLayoutCompat.LayoutParams(MATCH_PARENT, 1.toPx.toInt())
                     (dividerView.layoutParams as LinearLayoutCompat.LayoutParams).marginStart =
                         52.toPx.toInt()
-                    dividerView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this@SelectPaymentTypeActivity, R.color.ioka_color_divider
-                        )
-                    )
+//                    dividerView.setBackgroundColor(
+//                        ContextCompat.getColor(
+//                            this@SelectPaymentTypeActivity, R.color.ioka_color_divider
+//                        )
+//                    )
 
                     vCardContainer.addView(dividerView)
                     vCardContainer.addView(cardView)
@@ -123,6 +123,12 @@ class SelectPaymentTypeActivity : BaseActivity() {
                 selectedPaymentTypeCheck = ivCheckPayWithCard
             }
             PaymentTypeDvo.PayWithCashDvo -> {
+                ivCheckCash.isVisible = true
+                selectedPaymentTypeCheck?.isVisible = false
+                selectedPaymentTypeCheck = ivCheckCash
+            }
+
+            is PaymentTypeDvo.PayWithSavedCardDvo -> {
                 ivCheckCash.isVisible = true
                 selectedPaymentTypeCheck?.isVisible = false
                 selectedPaymentTypeCheck = ivCheckCash

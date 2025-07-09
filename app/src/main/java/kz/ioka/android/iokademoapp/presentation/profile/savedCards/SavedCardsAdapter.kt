@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.common.ListItem
 
 class SavedCardsAdapter(

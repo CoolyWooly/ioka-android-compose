@@ -12,15 +12,3 @@ import kz.ioka.android.ioka.R
 internal fun Context.getDrawableFromRes(@DrawableRes drawableRes: Int): Drawable? {
     return ContextCompat.getDrawable(this, drawableRes)
 }
-
-internal fun Context.getPrimaryColor(): Int {
-    val typedValue = TypedValue()
-
-    val a: TypedArray =
-        obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorPrimary))
-    val color = a.getColor(0, 0)
-
-    a.recycle()
-
-    return color
-}

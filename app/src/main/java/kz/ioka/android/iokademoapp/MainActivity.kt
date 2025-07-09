@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.common.DARK_MODE_ENABLED
 import kz.ioka.android.iokademoapp.common.dataStore
 import kz.ioka.android.iokademoapp.presentation.profile.language.SelectLanguageActivity.Companion.LANGUAGE_SELECTED_REQUEST_CODE

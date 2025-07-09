@@ -2,6 +2,7 @@ package kz.ioka.android.iokademoapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import kz.ioka.android.BuildConfig
 import kz.ioka.android.ioka.api.Ioka
 import timber.log.Timber
 

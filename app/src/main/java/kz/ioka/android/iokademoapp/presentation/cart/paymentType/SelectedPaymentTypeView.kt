@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.common.shortPanMask
 import kz.ioka.android.iokademoapp.common.toPx
 import kz.ioka.android.iokademoapp.presentation.cart.PaymentTypeDvo

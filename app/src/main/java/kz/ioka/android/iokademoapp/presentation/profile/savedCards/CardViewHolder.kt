@@ -5,7 +5,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 
 class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

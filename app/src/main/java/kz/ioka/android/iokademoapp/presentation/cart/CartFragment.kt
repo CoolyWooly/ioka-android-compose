@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 import kz.ioka.android.iokademoapp.common.toAmountFormat
 import kz.ioka.android.iokademoapp.presentation.cart.orderDetail.OrderDetailsActivity
 import kz.ioka.android.iokademoapp.presentation.cart.orderDetail.OrderLauncher

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kz.ioka.android.ioka.api.*
 import kz.ioka.android.iokademoapp.BaseActivity
-import kz.ioka.android.iokademoapp.R
+import kz.ioka.android.R
 import timber.log.Timber
 
 @AndroidEntryPoint

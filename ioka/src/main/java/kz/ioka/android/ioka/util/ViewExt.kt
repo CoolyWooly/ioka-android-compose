@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResult
 import androidx.appcompat.widget.AppCompatImageButton
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
@@ -25,7 +26,7 @@ internal fun EditText.textChanges(): Flow<CharSequence?> {
                 Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                sendBlocking(s)
+                trySendBlocking(s)
             }
         }
         addTextChangedListener(listener)
